@@ -1,0 +1,87 @@
+{
+  "name": "angular-test-explorer",
+  "displayName": "Angular Test Explorer",
+  "description": "Run your Example tests in the Sidebar of Visual Studio Code",
+  "icon": "img/icon.png",
+  "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
+  "publisher": "raagh",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "test",
+    "testing"
+  ],
+  "main": "out/main.js",
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "clean": "rimraf out *.vsix",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "rebuild": "npm run clean && npm run build",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "dependencies": {
+    "tslib": "^1.9.3",
+    "vscode-test-adapter-api": "^1.0.1",
+    "vscode-test-adapter-util": "^0.5.0",
+    "jasmine-core": "~3.3.0",
+    "karma": "~3.1.1",
+    "karma-jasmine": "~2.0.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-phantomjs-launcher": "~1.0.4",
+    "@angular/cli": "~6.1.0",
+    "@angular-devkit/build-angular": "~0.6.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.0.3",
+    "vsce": "^1.47.0",
+    "vscode": "^1.1.21",
+    "@types/jasmine": "~2.8.6",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
+    "@types/decamelize": "^1.2.0",
+    "@types/express": "~4.16.0",
+    "@types/karma": "^3.0.1",
+    "@types/semver": "~5.5.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0"
+  },
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "extensionDependencies": [
+    "hbenl.vscode-test-explorer"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Example Test Explorer configuration",
+      "properties": {
+        "exampleExplorer.logpanel": {
+          "description": "write diagnotic logs to an output panel",
+          "type": "boolean",
+          "scope": "resource"
+        },
+        "exampleExplorer.logfile": {
+          "description": "write diagnostic logs to the given file",
+          "type": "string",
+          "scope": "resource"
+        }
+      }
+    }
+  }
+}
