@@ -1,12 +1,8 @@
 import * as vscode from "vscode";
 import { TestAdapter, TestLoadStartedEvent, TestLoadFinishedEvent, TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
-import { loadFakeTests, runFakeTests } from "./tests-mock";
-
-/**
- * This class is intended as a starting point for implementing a "real" TestAdapter.
- * The file `README.md` contains further instructions.
- */
+import { AngularRunner } from "./angular-runner";
+import { KarmaTestsRunner } from "./karma-tests-runner";
 
 export class ExampleAdapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
@@ -14,6 +10,7 @@ export class ExampleAdapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
+  private readonly testRunner: KarmaTestsRunner;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -28,6 +25,10 @@ export class ExampleAdapter implements TestAdapter {
   constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log) {
     this.log.info("Initializing example adapter");
 
+    this.testRunner = KarmaTestsRunner.GetInstance();
+    const angularRunner = new AngularRunner();
+    angularRunner.Start();
+
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
@@ -38,7 +39,10 @@ export class ExampleAdapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    const loadedTests = await loadFakeTests();
+    await this.testRunner.RunServer();
+
+    // const loadedTests = await loadFakeTests();
+    const loadedTests = undefined;
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
@@ -49,7 +53,7 @@ export class ExampleAdapter implements TestAdapter {
     this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
     // in a "real" TestAdapter this would start a test run in a child process
-    await runFakeTests(tests, this.testStatesEmitter);
+    // await runFakeTests(tests, this.testStatesEmitter);
 
     this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
   }
