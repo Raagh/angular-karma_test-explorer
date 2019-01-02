@@ -1,15 +1,14 @@
 import { EventEmitter } from "events";
 import * as karma from "karma";
 
-export default class AngularReporter extends EventEmitter {
-  public static GetInstance(): AngularReporter {
-    if (!this.instance) {
-      this.instance = new AngularReporter();
+export class AngularReporter extends EventEmitter {
+  private static _instance = new AngularReporter();
+  static get instance(): AngularReporter {
+    if (!this._instance) {
+      this._instance = new AngularReporter();
     }
-    return this.instance;
+    return this._instance;
   }
-
-  private static instance: AngularReporter;
   public adapters: any[] = [];
 
   private constructor() {

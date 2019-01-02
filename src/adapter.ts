@@ -1,5 +1,13 @@
 import * as vscode from "vscode";
-import { TestAdapter, TestLoadStartedEvent, TestLoadFinishedEvent, TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
+import {
+  TestAdapter,
+  TestLoadStartedEvent,
+  TestLoadFinishedEvent,
+  TestRunStartedEvent,
+  TestRunFinishedEvent,
+  TestSuiteEvent,
+  TestEvent,
+} from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularRunner } from "./angular-runner";
 import { KarmaTestsRunner } from "./karma-tests-runner";
@@ -10,7 +18,7 @@ export class ExampleAdapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
-  private readonly testRunner: KarmaTestsRunner;
+  private testRunner: KarmaTestsRunner;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -25,10 +33,6 @@ export class ExampleAdapter implements TestAdapter {
   constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log) {
     this.log.info("Initializing example adapter");
 
-    this.testRunner = KarmaTestsRunner.GetInstance();
-    const angularRunner = new AngularRunner();
-    angularRunner.Start();
-
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
@@ -39,7 +43,16 @@ export class ExampleAdapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    await this.testRunner.RunServer();
+    this.testRunner = KarmaTestsRunner.getInstance();
+    const angularRunner = new AngularRunner(
+      "/Users/pferraggi/Documents/GitHub/torneo-luefi.web",
+      "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/karma.conf.js",
+      ""
+    );
+
+    await angularRunner.start();
+
+    // await this.testRunner.runServer();
 
     // const loadedTests = await loadFakeTests();
     const loadedTests = undefined;

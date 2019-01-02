@@ -1,7 +1,7 @@
 import * as karma from "karma";
 
 export class KarmaTestsRunner {
-  public static GetInstance() {
+  public static getInstance() {
     if (this.instance == null) {
       this.instance = new KarmaTestsRunner();
     }
@@ -10,19 +10,15 @@ export class KarmaTestsRunner {
 
   private static instance: KarmaTestsRunner;
 
-  private constructor() {
-    const Server = require("karma").Server;
-    const createdServer = new Server({ port: 9876 }, (exitCode: number) => {
+  private constructor() {}
+
+  public async runServer(): Promise<void> {
+    karma.runner.run({ port: 9876 }, (exitCode: number) => {
       global.console.log("karma run done with ", exitCode);
     });
-    createdServer.start();
   }
 
-  public async RunServer(): Promise<void> {
-    karma.runner.run();
-  }
-
-  public StopServer(): void {
+  public stopServer(): void {
     karma.stopper.stop();
   }
 }
