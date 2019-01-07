@@ -9,7 +9,7 @@ export class AngularRunner {
       return;
     }
 
-    const cliArgs = ["test", `--karma-config=${require.resolve(this.baseKarmaConfigFilePath)}`];
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
 
     const command = `ng ${cliArgs.join(" ")}`;
     global.console.log(`Starting Angular tests: ${command}`);

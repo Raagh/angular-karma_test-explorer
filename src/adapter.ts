@@ -42,7 +42,7 @@ export class ExampleAdapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    await this.testExplorer.LoadTests();
+    await this.testExplorer.loadTests();
 
     // const loadedTests = await loadFakeTests();
     const loadedTests = undefined;

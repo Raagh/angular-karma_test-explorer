@@ -18,19 +18,52 @@ export class TestExplorer {
     this.listenToError();
   }
 
-  public async LoadTests(): Promise<void> {
+  public async loadTests(): Promise<void> {
     const angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
 
     await angularRunner.start();
 
     await this.testRunner.runServer();
+
+    
+
+    // var http = require('http');
+
+    // var options = {
+    //   hostname: "localhost",
+    //   path: "http://localhost:9876/" + 'run',
+    //   port: 9876,
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // };
+  
+    // var request = http.request(options, function(response: any) {
+    //   response.on('data', function(buffer: any) {
+    //     global.console.log(this.stripExitCodeInfo(buffer));
+    //   });
+    // });
+  
+    // request.on('error', function(e: any) {
+    //   if (e.code === 'ECONNREFUSED') {
+    //     global.console.log('There is no server listening on port %d', options.port);
+    //   } else {
+    //     throw e;
+    //   }
+    // });
+
+    // request.end(() => {
+    //   global.console.log("request end");
+    // });
+
   }
 
-  public RunTests(): void {
+  public runTests(): void {
     throw new Error("Not Implemented");
   }
 
-  public DebugTests(): void {
+  public debugTests(): void {
     throw new Error("Not Implemented");
   }
 
@@ -56,5 +89,26 @@ export class TestExplorer {
     AngularReporter.instance.on("compile_error", (errors: string[]) => {
       global.console.log("compile_error");
     });
+  }
+
+  private stripExitCodeInfo(buffer: any) {
+    const EXIT_CODE_BUF = new Buffer('\x1FEXIT');
+
+    if (!Buffer.isBuffer(buffer)) {
+      return buffer;
+    }
+    var tailPos = buffer.length - EXIT_CODE_BUF.length - 2;
+    if (tailPos < 0) {
+      return buffer;
+    }
+    for (var i = 0; i < EXIT_CODE_BUF.length; i++) {
+      if (buffer[tailPos + i] !== EXIT_CODE_BUF[i]) {
+        return buffer;
+      }
+    }
+    if (tailPos === 0) {
+      return null;
+    }
+    return buffer.slice(0, tailPos);
   }
 }
