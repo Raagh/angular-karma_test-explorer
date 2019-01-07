@@ -9,8 +9,7 @@ import {
   TestEvent,
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
-import { AngularRunner } from "./angular-runner";
-import { KarmaTestsRunner } from "./karma-tests-runner";
+import { TestExplorer } from "./angular-test-explorer";
 
 export class ExampleAdapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
@@ -18,7 +17,7 @@ export class ExampleAdapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
-  private testRunner: KarmaTestsRunner;
+  private readonly testExplorer = new TestExplorer();
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -43,16 +42,7 @@ export class ExampleAdapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    this.testRunner = KarmaTestsRunner.getInstance();
-    const angularRunner = new AngularRunner(
-      "/Users/pferraggi/Documents/GitHub/torneo-luefi.web",
-      "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/karma.conf.js",
-      ""
-    );
-
-    await angularRunner.start();
-
-    // await this.testRunner.runServer();
+    await this.testExplorer.LoadTests();
 
     // const loadedTests = await loadFakeTests();
     const loadedTests = undefined;

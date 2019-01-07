@@ -1,7 +1,3 @@
-import * as karmaConf from "./karma.conf";
-import { KarmaTestsRunner } from "./karma-tests-runner";
-import explorerKarmaConfig = require("./test-explorer-karma.conf");
-
 export class AngularRunner {
   private cliCommandLine: any;
 
@@ -18,39 +14,39 @@ export class AngularRunner {
     const command = `ng ${cliArgs.join(" ")}`;
     global.console.log(`Starting Angular tests: ${command}`);
 
-    explorerKarmaConfig.setGlobals({
-      karmaConfig: { basePath: this.angularProjectRootPath },
-    });
-
-    await this.runAngularCommand(command);
+    await this.runAngularCommand(command, cliArgs);
   }
 
-  private async runAngularCommand(command: string): Promise<void> {
-    const exec = require("await-exec");
+  private async runAngularCommand(command: string, cliArgs: any): Promise<void> {
+    this.runAngularThroughCommandLine(command);
 
+    // this.runAngularThroughAngularCli(cliArgs);
+  }
+
+  // private runAngularThroughAngularCli(cliArgs: any) {
+  //   let cli = require("@angular/cli");
+  //   if ("default" in cli) {
+  //     cli = cli.default;
+  //   }
+  //   cli({ args: cliArgs, inputStream: process.stdin, outputStream: process.stdout })
+  //     .then((returnCode: number) => {
+  //       if (returnCode > 0) {
+  //         global.console.log("error");
+  //         const runner = KarmaTestsRunner.getInstance();
+  //         runner.stopServer();
+  //       }
+  //     })
+  //     .catch((err: Error) => {
+  //       global.console.error("Unknown error: " + err.toString());
+  //       process.exit(127);
+  //     });
+  // }
+
+  private runAngularThroughCommandLine(command: string) {
+    const exec = require("child_process").exec;
     this.cliCommandLine = exec(command, {
       cwd: this.angularProjectRootPath,
-      windowsHide: true,
     });
-
-    // let cli = require("@angular/cli");
-
-    // if ("default" in cli) {
-    //   cli = cli.default;
-    // }
-
-    // cli({ args: cliArgs, inputStream: process.stdin, outputStream: process.stdout })
-    //   .then((returnCode: number) => {
-    //     if (returnCode > 0) {
-    //       global.console.log("error");
-    //       const runner = KarmaTestsRunner.GetInstance();
-    //       runner.StopServer();
-    //     }
-    //   })
-    //   .catch((err: Error) => {
-    //     global.console.error("Unknown error: " + err.toString());
-    //     process.exit(127);
-    //   });
   }
 
   private isValidKarmaConfig(): boolean {

@@ -6,7 +6,8 @@ import { AngularReporter } from "./angular-reporter";
 function setDefaultOptions(config: Config) {
   config.set({
     browsers: ["PhantomJS"],
-    frameworks: ["jasmine"],
+    frameworks: ["jasmine", "@angular-devkit/build-angular"],
+    plugins: [require("karma-jasmine"), require("karma-phantomjs-launcher"), require("@angular-devkit/build-angular/plugins/karma")],
   });
 }
 
