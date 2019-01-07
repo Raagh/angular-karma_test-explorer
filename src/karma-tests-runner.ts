@@ -13,19 +13,40 @@ export class KarmaTestsRunner {
   private constructor() {}
 
   public async runServer(): Promise<void> {
-    const Server = require('karma').Server
-    const karmaConfig = {port: 9876}
-    const server = new Server(karmaConfig, function(exitCode) {
-      global.console.log('Karma has exited with ' + exitCode)
-      process.exit(exitCode)
-    })
-
     karma.runner.run({ port: 9876 }, (exitCode: number) => {
       global.console.log("karma run done with ", exitCode);
     });
+  }
 
-    server.on('run_complete', (browsers:any, results:any) => {
-      global.console.log(results);
+  public runServerWithConfig() {
+    const http = require("http");
+
+    const options = {
+      hostname: "localhost",
+      path: "http://localhost:9876/" + "run",
+      port: 9876,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const request = http.request(options, (response: any) => {
+      response.on("data", (buffer: any) => {
+        global.console.log(buffer);
+      });
+    });
+
+    request.on("error", (e: any) => {
+      if (e.code === "ECONNREFUSED") {
+        global.console.log("There is no server listening on port %d", options.port);
+      } else {
+        throw e;
+      }
+    });
+
+    request.end(() => {
+      global.console.log("request end");
     });
   }
 

@@ -1,6 +1,4 @@
 export class AngularRunner {
-  private cliCommandLine: any;
-
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {}
 
   public async start(): Promise<void> {
@@ -44,7 +42,7 @@ export class AngularRunner {
 
   private runAngularThroughCommandLine(command: string) {
     const exec = require("child_process").exec;
-    this.cliCommandLine = exec(command, {
+    exec(command, {
       cwd: this.angularProjectRootPath,
     });
   }
