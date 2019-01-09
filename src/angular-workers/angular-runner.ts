@@ -1,8 +1,13 @@
+import { KarmaHelper } from "../karma-workers/karma-helper";
+
 export class AngularRunner {
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {}
+  private readonly karmaHelper: KarmaHelper;
+  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {
+    this.karmaHelper = KarmaHelper.getInstance();
+  }
 
   public async start(): Promise<void> {
-    if (!this.isValidKarmaConfig()) {
+    if (!this.karmaHelper.isValidKarmaConfig(this.baseKarmaConfigFilePath)) {
       global.console.log("The karma.conf.js used is not valid");
       return;
     }
@@ -20,12 +25,5 @@ export class AngularRunner {
     exec(command, {
       cwd: this.angularProjectRootPath,
     });
-  }
-
-  private isValidKarmaConfig(): boolean {
-    const cfg = require("karma").config;
-    const karmaConfig = cfg.parseConfig(this.baseKarmaConfigFilePath);
-
-    return karmaConfig != null || karmaConfig !== undefined;
   }
 }

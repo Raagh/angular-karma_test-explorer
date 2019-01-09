@@ -1,19 +1,18 @@
 import { AngularRunner } from "./angular-workers/angular-runner";
-import { KarmaCLI } from "./karma-workers/karma-cli";
+import { KarmaHelper } from "./karma-workers/karma-helper";
 import explorerKarmaConfig = require("./config/test-explorer-karma.conf");
 import { KarmaEventListener } from "./karma-workers/karma-event-listener";
 
 export class AngularTestExplorer {
-  private readonly karmaCLI: KarmaCLI;
+  private readonly karmaHelper: KarmaHelper;
   private readonly karmaEventListener: KarmaEventListener;
-  private readonly angularProjectRootPath: string = "/Users/pferraggi/Documents/GitHub/torneo-luefi.web";
   private readonly baseKarmaConfigPath: string = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/config/test-explorer-karma.conf.js";
 
-  public constructor() {
+  public constructor(private readonly angularProjectRootPath: string) {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
-    this.karmaCLI = KarmaCLI.getInstance();
+    this.karmaHelper = KarmaHelper.getInstance();
     this.karmaEventListener = new KarmaEventListener();
     this.karmaEventListener.startListening();
     const angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
@@ -21,7 +20,9 @@ export class AngularTestExplorer {
   }
 
   public async loadTests(): Promise<void> {
-    await this.karmaCLI.runServer();
+    if (await this.karmaHelper.isKarmaReady()) {
+      await this.karmaHelper.runServer();
+    }
   }
 
   public runTests(): void {

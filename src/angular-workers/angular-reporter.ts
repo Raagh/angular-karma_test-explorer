@@ -1,5 +1,6 @@
 import * as karma from "karma";
 import * as io from "socket.io-client";
+import { TestResult } from "../model/test-status.enum";
 
 function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, helper: any, formatError: any) {
   this.config = config;
@@ -12,12 +13,13 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
 
   this.onSpecComplete = (browser: any, spec: any) => {
     const name = spec.suite.reduce((name: any, suite: any) => name + suite + " ", "") + spec.description;
-    let status = "Failed";
+    let status: TestResult = TestResult.Failed;
     if (spec.skipped) {
-      status = "Skipped";
+      status = TestResult.Skipped;
     } else if (spec.success) {
-      status = "Success";
+      status = TestResult.Success;
     }
+
     const result: any = {
       failureMessages: spec.log,
       name,
