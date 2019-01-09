@@ -1,7 +1,7 @@
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
 
-import { AngularReporter } from "./angular-reporter";
+import AngularReporter = require("../angular-workers/angular-reporter");
 
 function setDefaultOptions(config: Config) {
   config.set({
@@ -74,7 +74,7 @@ function addPlugin(karmaConfig: ConfigOptions, karmaPlugin: any) {
 }
 
 function configureAngularReporter(config: Config) {
-  addPlugin(config, { [`reporter:${AngularReporter.name}`]: ["value", AngularReporter.instance] });
+  addPlugin(config, { [`reporter:${AngularReporter.name}`]: ["type", AngularReporter.instance] });
   if (!config.reporters) {
     config.reporters = [];
   }

@@ -1,30 +1,27 @@
-import { AngularRunner } from "./angular-runner";
-import { KarmaTestsRunner } from "./karma-tests-runner";
-import explorerKarmaConfig = require("./test-explorer-karma.conf");
-import { InterComunicator } from "./inter-comunicator";
+import { AngularRunner } from "./angular-workers/angular-runner";
+import { KarmaCLI } from "./karma-workers/karma-cli";
+import explorerKarmaConfig = require("./config/test-explorer-karma.conf");
+import { KarmaEventListener } from "./karma-workers/karma-event-listener";
 
-export class TestExplorer {
-  private readonly testRunner: KarmaTestsRunner;
-  private readonly comunicator: InterComunicator;
+export class AngularTestExplorer {
+  private readonly karmaCLI: KarmaCLI;
+  private readonly karmaEventListener: KarmaEventListener;
   private readonly angularProjectRootPath: string = "/Users/pferraggi/Documents/GitHub/torneo-luefi.web";
-  private readonly baseKarmaConfigPath: string = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/test-explorer-karma.conf.js";
+  private readonly baseKarmaConfigPath: string = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/config/test-explorer-karma.conf.js";
 
-  private constructor() {
+  public constructor() {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
-    this.testRunner = KarmaTestsRunner.getInstance();
-    this.comunicator = new InterComunicator();
+    this.karmaCLI = KarmaCLI.getInstance();
+    this.karmaEventListener = new KarmaEventListener();
+    this.karmaEventListener.startListening();
+    const angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
+    angularRunner.start();
   }
 
   public async loadTests(): Promise<void> {
-    const angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
-
-    this.comunicator.startListening();
-
-    await angularRunner.start();
-
-    await this.testRunner.runServer();
+    await this.karmaCLI.runServer();
   }
 
   public runTests(): void {

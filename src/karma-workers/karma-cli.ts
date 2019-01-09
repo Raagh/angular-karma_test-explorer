@@ -1,14 +1,14 @@
 import * as karma from "karma";
 
-export class KarmaTestsRunner {
+export class KarmaCLI {
   public static getInstance() {
     if (this.instance == null) {
-      this.instance = new KarmaTestsRunner();
+      this.instance = new KarmaCLI();
     }
     return this.instance;
   }
 
-  private static instance: KarmaTestsRunner;
+  private static instance: KarmaCLI;
 
   private constructor() {}
 

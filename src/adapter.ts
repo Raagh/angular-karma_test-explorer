@@ -9,7 +9,7 @@ import {
   TestEvent,
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
-import { TestExplorer } from "./angular-test-explorer";
+import { AngularTestExplorer } from "./angular-test-explorer";
 
 export class ExampleAdapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
@@ -17,7 +17,7 @@ export class ExampleAdapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
-  private readonly testExplorer = new TestExplorer();
+  private readonly testExplorer = new AngularTestExplorer();
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
