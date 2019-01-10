@@ -1,6 +1,7 @@
 import * as karma from "karma";
 import * as io from "socket.io-client";
 import { TestResult } from "../model/test-status.enum";
+import { RunStatus } from "../model/run-status.enum";
 
 function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, helper: any, formatError: any) {
   this.config = config;
@@ -42,13 +43,13 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
   };
 }
 
-function collectRunState(runResult: karma.TestResults): any {
+function collectRunState(runResult: karma.TestResults): RunStatus {
   if (runResult.disconnected) {
-    return "Timeout";
+    return RunStatus.Timeout;
   } else if (runResult.error) {
-    return "Error";
+    return RunStatus.Error;
   } else {
-    return "Complete";
+    return RunStatus.Complete;
   }
 }
 

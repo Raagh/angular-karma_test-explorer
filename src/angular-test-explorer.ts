@@ -2,6 +2,7 @@ import { AngularRunner } from "./angular-workers/angular-runner";
 import { KarmaHelper } from "./karma-workers/karma-helper";
 import explorerKarmaConfig = require("./config/test-explorer-karma.conf");
 import { KarmaEventListener } from "./karma-workers/karma-event-listener";
+import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class AngularTestExplorer {
   private readonly karmaHelper: KarmaHelper;
@@ -19,14 +20,16 @@ export class AngularTestExplorer {
     angularRunner.start();
   }
 
-  public async loadTests(): Promise<void> {
-    if (await this.karmaHelper.isKarmaReady()) {
+  public async loadTests(): Promise<TestSuiteInfo> {
+    if (!this.karmaEventListener.runCompleted) {
       await this.karmaHelper.runServer();
     }
+
+    return this.karmaEventListener.tests;
   }
 
-  public runTests(): void {
-    throw new Error("Not Implemented");
+  public async runTests(): Promise<void> {
+    await this.karmaHelper.runServer();
   }
 
   public debugTests(): void {

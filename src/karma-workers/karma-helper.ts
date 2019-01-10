@@ -28,33 +28,4 @@ export class KarmaHelper {
 
     return karmaConfig != null || karmaConfig !== undefined;
   }
-
-  public async isKarmaReady(): Promise<boolean> {
-    // let isServerReady = false;
-    // while (!isServerReady) {
-    //   const request = require("request-promise");
-
-    //   const options = {
-    //     method: "GET",
-    //     uri: "http://localhost:9876/",
-    //     json: true,
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   };
-
-    //   try {
-    //     const result = await request(options);
-    //     if (result != null) {
-    //       isServerReady = true;
-    //     }
-    //   } catch (e) {
-    //     global.console.log(e);
-    //   }
-    // }
-
-    // return isServerReady;
-
-    return true;
-  }
 }

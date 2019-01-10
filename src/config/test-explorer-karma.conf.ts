@@ -5,9 +5,9 @@ import AngularReporter = require("../angular-workers/angular-reporter");
 
 function setDefaultOptions(config: Config) {
   config.set({
-    browsers: ["PhantomJS"],
+    browsers: ["ChromeHeadless"],
     frameworks: ["jasmine", "@angular-devkit/build-angular"],
-    plugins: [require("karma-jasmine"), require("karma-phantomjs-launcher"), require("@angular-devkit/build-angular/plugins/karma")],
+    plugins: [require("karma-jasmine"), require("karma-chrome-launcher"), require("@angular-devkit/build-angular/plugins/karma")],
   });
 }
 
@@ -98,7 +98,7 @@ export = Object.assign(
   {
     /**
      * Provide global settings for next configuration
-     * This is the only way we can pass through any values between the `KarmaTestRunner` and the test-explorer-karma.conf file.
+     * This is the only way we can pass through any values between the `AngularTestExplorer` and the test-explorer-karma.conf file.
      * (not counting environment variables)
      */
     setGlobals(globals: { karmaConfig?: ConfigOptions; karmaConfigFile?: string }) {
