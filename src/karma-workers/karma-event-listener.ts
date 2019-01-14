@@ -2,13 +2,11 @@ import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class KarmaEventListener {
   public tests: TestSuiteInfo = {};
-  public runCompleted: boolean = false;
   private savedSpecs: any[] = [];
   public startListening(): void {
     const app = require("express")();
     const http = require("http").Server(app);
     const io = require("socket.io")(http);
-    this.runCompleted = false;
 
     io.on("connection", (socket: any) => {
       socket.on("spec_complete", (testResult: any) => {
@@ -18,7 +16,6 @@ export class KarmaEventListener {
 
       socket.on("run_complete", (runResult: any) => {
         global.console.log("run_complete " + runResult);
-        this.runCompleted = true;
         this.tests = this.createTestSuite(this.savedSpecs);
       });
 
@@ -41,7 +38,7 @@ export class KarmaEventListener {
       type: "suite",
       id: "root",
       label: "Angular", // the label of the root node should be the name of the testing framework
-      children: savedSpecs.map<TestSuiteInfo>((x: TestSuiteInfo) => {
+      children: savedSpecs.map<TestSuiteInfo>((x: any) => {
         return {
           type: "test",
           id: x.name,
