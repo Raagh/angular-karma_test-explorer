@@ -1,4 +1,6 @@
 import * as karma from "karma";
+import { KarmaEventListener } from "./karma-event-listener";
+import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class KarmaHelper {
   public static getInstance() {
@@ -9,8 +11,16 @@ export class KarmaHelper {
   }
 
   private static instance: KarmaHelper;
+  private readonly karmaEventListener: KarmaEventListener;
 
-  private constructor() {}
+  private constructor() {
+    this.karmaEventListener = new KarmaEventListener();
+    this.karmaEventListener.startListening();
+  }
+
+  public getTests(): TestSuiteInfo {
+    return this.karmaEventListener.tests;
+  }
 
   public async runServer(): Promise<void> {
     return new Promise<void>(resolve => {

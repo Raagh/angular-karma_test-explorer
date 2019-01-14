@@ -1,7 +1,7 @@
-import { TestSuiteInfo } from "vscode-test-adapter-api";
+import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 
 export class KarmaEventListener {
-  public tests: TestSuiteInfo = {};
+  public tests: TestSuiteInfo = {} as TestSuiteInfo;
   private savedSpecs: any[] = [];
   public startListening(): void {
     const app = require("express")();
@@ -21,6 +21,7 @@ export class KarmaEventListener {
 
       socket.on("browser_start", () => {
         global.console.log("browser_start");
+        this.savedSpecs = [];
       });
 
       socket.on("browser_error", (error: any) => {
@@ -38,13 +39,15 @@ export class KarmaEventListener {
       type: "suite",
       id: "root",
       label: "Angular", // the label of the root node should be the name of the testing framework
-      children: savedSpecs.map<TestSuiteInfo>((x: any) => {
-        return {
-          type: "test",
-          id: x.name,
-          label: x.name,
-        };
-      }),
+      children: savedSpecs.map<TestInfo>(
+        (testInfo: any): TestInfo => {
+          return {
+            type: "test",
+            id: testInfo.name,
+            label: testInfo.name,
+          };
+        }
+      ),
     };
   }
 }

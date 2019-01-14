@@ -1,8 +1,12 @@
 import { KarmaHelper } from "../karma-workers/karma-helper";
+import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {
+    explorerKarmaConfig.setGlobals({
+      karmaConfig: { basePath: this.angularProjectRootPath },
+    });
     this.karmaHelper = KarmaHelper.getInstance();
   }
 
