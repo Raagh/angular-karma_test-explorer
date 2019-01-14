@@ -44,8 +44,8 @@ export class KarmaEventListener {
       children: savedSpecs.map<TestSuiteInfo>((x: TestSuiteInfo) => {
         return {
           type: "test",
-          id: "test3",
-          label: "Test #3",
+          id: x.name,
+          label: x.name,
         };
       }),
     };

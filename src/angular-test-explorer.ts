@@ -21,10 +21,8 @@ export class AngularTestExplorer {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
-    if (!this.karmaEventListener.runCompleted) {
-      await this.karmaHelper.runServer();
-    }
-
+    await this.karmaHelper.runServer();
+    
     return this.karmaEventListener.tests;
   }
 

@@ -13,8 +13,11 @@ export class KarmaHelper {
   private constructor() {}
 
   public async runServer(): Promise<void> {
-    karma.runner.run({ port: 9876 }, (exitCode: number) => {
-      global.console.log("karma run done with ", exitCode);
+    return new Promise<void>(resolve => {
+      karma.runner.run({ port: 9876 }, (exitCode: number) => {
+        global.console.log("karma run done with ", exitCode);
+        resolve();
+      });
     });
   }
 
