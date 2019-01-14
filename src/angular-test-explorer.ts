@@ -14,6 +14,7 @@ export class AngularTestExplorer {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
+    await this.karmaHelper.startServer();
     await this.karmaHelper.runServer();
 
     return this.karmaHelper.getTests();

@@ -3,8 +3,9 @@ import * as io from "socket.io-client";
 import { TestResult } from "../model/test-status.enum";
 import { RunStatus } from "../model/run-status.enum";
 
-function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, helper: any, formatError: any) {
+function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
+  this.emitter = emitter;
 
   baseReporterDecorator(this);
 
@@ -41,6 +42,23 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
   this.onBrowserStart = (browser: any, info: any) => {
     this.socket.emit("browser_start");
   };
+
+  this.emitter.on("browsers_change", (capturedBrowsers: any) => {
+    if (!capturedBrowsers.forEach) {
+      // filter out events from Browser object
+      return;
+    }
+
+    let proceed = true;
+    capturedBrowsers.forEach((newBrowser: any) => {
+      if (!newBrowser.id || !newBrowser.name || newBrowser.id === newBrowser.name) {
+        proceed = false;
+      }
+    });
+    if (proceed) {
+      this.socket.emit("browser_connected");
+    }
+  });
 }
 
 function collectRunState(runResult: karma.TestResults): RunStatus {
@@ -53,7 +71,7 @@ function collectRunState(runResult: karma.TestResults): RunStatus {
   }
 }
 
-AngularReporter.$inject = ["baseReporterDecorator", "config", "logger", "helper", "formatError"];
+AngularReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
 
 module.exports = {
   instance: AngularReporter,

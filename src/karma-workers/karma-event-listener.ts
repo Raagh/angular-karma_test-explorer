@@ -3,34 +3,39 @@ import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 export class KarmaEventListener {
   public tests: TestSuiteInfo = {} as TestSuiteInfo;
   private savedSpecs: any[] = [];
-  public startListening(): void {
-    const app = require("express")();
-    const http = require("http").Server(app);
-    const io = require("socket.io")(http);
+  public listenTillKarmaReady(): Promise<void> {
+    return new Promise<void>(resolve => {
+      const app = require("express")();
+      const http = require("http").Server(app);
+      const io = require("socket.io")(http);
 
-    io.on("connection", (socket: any) => {
-      socket.on("spec_complete", (testResult: any) => {
-        global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.name);
-        this.savedSpecs.push(testResult);
+      io.on("connection", (socket: any) => {
+        socket.on("spec_complete", (testResult: any) => {
+          global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.name);
+          this.savedSpecs.push(testResult);
+        });
+
+        socket.on("run_complete", (runResult: any) => {
+          global.console.log("run_complete " + runResult);
+          this.tests = this.createTestSuite(this.savedSpecs);
+        });
+
+        socket.on("browser_start", () => {
+          this.savedSpecs = [];
+        });
+
+        socket.on("browser_error", (error: any) => {
+          global.console.log("browser_error " + error);
+        });
+
+        socket.on("browser_connected", () => {
+          resolve();
+        });
       });
 
-      socket.on("run_complete", (runResult: any) => {
-        global.console.log("run_complete " + runResult);
-        this.tests = this.createTestSuite(this.savedSpecs);
+      http.listen(1111, () => {
+        global.console.log("listening to AngularReporter events on port 1111");
       });
-
-      socket.on("browser_start", () => {
-        global.console.log("browser_start");
-        this.savedSpecs = [];
-      });
-
-      socket.on("browser_error", (error: any) => {
-        global.console.log("browser_error " + error);
-      });
-    });
-
-    http.listen(1111, () => {
-      global.console.log("listening on port 1111");
     });
   }
 
@@ -38,7 +43,7 @@ export class KarmaEventListener {
     return {
       type: "suite",
       id: "root",
-      label: "Angular", // the label of the root node should be the name of the testing framework
+      label: "Angular",
       children: savedSpecs.map<TestInfo>(
         (testInfo: any): TestInfo => {
           return {

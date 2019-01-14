@@ -15,7 +15,10 @@ export class KarmaHelper {
 
   private constructor() {
     this.karmaEventListener = new KarmaEventListener();
-    this.karmaEventListener.startListening();
+  }
+
+  public async startServer(): Promise<void> {
+    await this.karmaEventListener.listenTillKarmaReady();
   }
 
   public getTests(): TestSuiteInfo {
