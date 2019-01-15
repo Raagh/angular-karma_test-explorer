@@ -4,7 +4,7 @@ import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class AngularTestExplorer {
   private readonly karmaHelper: KarmaHelper;
-  private readonly baseKarmaConfigPath: string = "C:\\Users\\Patricio\\Documents\\GitHub\\angular-test-explorer\\out\\config\\test-explorer-karma.conf.js";
+  private readonly baseKarmaConfigPath: string = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/out/config/test-explorer-karma.conf.js";
 
   public constructor(private readonly angularProjectRootPath: string) {
     this.karmaHelper = KarmaHelper.getInstance();
