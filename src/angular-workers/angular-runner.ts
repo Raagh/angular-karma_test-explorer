@@ -3,6 +3,7 @@ import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
+  private readonly commandLine: any;
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
@@ -16,17 +17,43 @@ export class AngularRunner {
       return;
     }
 
-    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+    const localPath = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/src/karma-workers/fakeTest.spec.ts";
+    const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
 
-    await this.runNgTest(cliArgs);
+    this.createTestFileForSkippingEverything(localPath, remotePath);
+
+    this.runNgTest();
   }
 
-  private async runNgTest(cliArgs: any): Promise<void> {
+  public cleanUp(): void {
+    const localPath = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/src/karma-workers/fakeTest.spec.ts";
+    const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
+    this.removeTestFileForSkippingEverything(localPath, remotePath);
+
+    this.commandLine.kill();
+  }
+
+  private removeTestFileForSkippingEverything(localPath: string, remotePath: string) {
+    const fs = require("fs");
+    if (fs.existsSync(remotePath)) {
+      fs.unlinkSync(remotePath);
+    }
+  }
+
+  private createTestFileForSkippingEverything(localPath: string, remotePath: string) {
+    const fs = require("fs");
+    if (fs.existsSync(localPath) && !fs.existsSync(remotePath)) {
+      fs.copyFileSync(localPath, remotePath);
+    }
+  }
+
+  private runNgTest(): void {
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
     const command = `ng ${cliArgs.join(" ")}`;
     global.console.log(`Starting Angular tests: ${command}`);
 
     const exec = require("child_process").exec;
-    exec(command, {
+    this.commandLine = exec(command, {
       cwd: this.angularProjectRootPath,
     });
   }

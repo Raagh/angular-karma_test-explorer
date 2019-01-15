@@ -21,18 +21,12 @@ export class KarmaHelper {
     await this.karmaEventListener.listenTillKarmaReady();
   }
 
-  public getTests(): TestSuiteInfo {
-    return this.karmaEventListener.tests;
-  }
-
-  public async loadTests(angularRootPath: string): Promise<void>{
-    const fs = require('fs');
-    fs.copyFileSync('/fakeTest.spec.ts', angularRootPath + 'fakeTest.spec.ts', (err: any) => {
-      if (err) { throw err };
-      global.console.log('fake test file copied');
-    });
+  public async loadTests(): Promise<TestSuiteInfo> {
+    this.karmaEventListener.nextRunIsForLoading = true;
 
     await this.runServer();
+
+    return this.karmaEventListener.getTests();
   }
 
   public async runServer(): Promise<void> {

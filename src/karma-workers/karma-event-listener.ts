@@ -1,8 +1,9 @@
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
-
+import { TestResult } from "../model/test-status.enum";
 export class KarmaEventListener {
-  public tests: TestSuiteInfo = {} as TestSuiteInfo;
+  public nextRunIsForLoading: boolean = false;
   private savedSpecs: any[] = [];
+
   public listenTillKarmaReady(): Promise<void> {
     return new Promise<void>(resolve => {
       const app = require("express")();
@@ -12,12 +13,15 @@ export class KarmaEventListener {
       io.on("connection", (socket: any) => {
         socket.on("spec_complete", (testResult: any) => {
           global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.name);
-          this.savedSpecs.push(testResult);
+          if (this.nextRunIsForLoading && testResult.status === TestResult.Skipped) {
+            this.savedSpecs.push(testResult);
+          } else if (!this.nextRunIsForLoading) {
+            this.savedSpecs.push(testResult);
+          }
         });
 
         socket.on("run_complete", (runResult: any) => {
           global.console.log("run_complete " + runResult);
-          this.tests = this.createTestSuite(this.savedSpecs);
         });
 
         socket.on("browser_start", () => {
@@ -37,6 +41,10 @@ export class KarmaEventListener {
         global.console.log("listening to AngularReporter events on port 1111");
       });
     });
+  }
+
+  public getTests(): TestSuiteInfo {
+    return this.createTestSuite(this.savedSpecs);
   }
 
   private createTestSuite(savedSpecs: any[]): TestSuiteInfo {
