@@ -17,12 +17,22 @@ export class KarmaHelper {
     this.karmaEventListener = new KarmaEventListener();
   }
 
-  public async startServer(): Promise<void> {
+  public async waitTillServerReady(): Promise<void> {
     await this.karmaEventListener.listenTillKarmaReady();
   }
 
   public getTests(): TestSuiteInfo {
     return this.karmaEventListener.tests;
+  }
+
+  public async loadTests(angularRootPath: string): Promise<void>{
+    const fs = require('fs');
+    fs.copyFileSync('/fakeTest.spec.ts', angularRootPath + 'fakeTest.spec.ts', (err: any) => {
+      if (err) { throw err };
+      global.console.log('fake test file copied');
+    });
+
+    await this.runServer();
   }
 
   public async runServer(): Promise<void> {
