@@ -17,9 +17,9 @@ Now you should see the test suite in the side panel:
 
 ![The fake example test suite](img/fake-tests.png)
 
-## Basic implementation
+## Working implementation
 
-* we currently loading tests by running them one time. All tests are shown in a separate suite.
+* I am currently loading tests by running them one time. All tests are shown in a separate suite.
 * the implementation for running all tests is there but there is no call in `src/adapter.ts` as I am still trying
 to finish the loadTests implementation.
 
