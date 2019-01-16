@@ -1,9 +1,10 @@
 import { KarmaHelper } from "../karma-workers/karma-helper";
 import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
+import path = require('path');
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
-  private readonly commandLine: any;
+  private commandLine: any;
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
@@ -17,7 +18,7 @@ export class AngularRunner {
       return;
     }
 
-    const localPath = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/src/karma-workers/fakeTest.spec.ts";
+    const localPath = path.join(__dirname, '..', '..', 'src', 'karma-workers', "fakeTest.spec.ts");
     const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
 
     this.createTestFileForSkippingEverything(localPath, remotePath);
@@ -26,14 +27,13 @@ export class AngularRunner {
   }
 
   public cleanUp(): void {
-    const localPath = "/Users/pferraggi/Documents/GitHub/angular-test-explorer/src/karma-workers/fakeTest.spec.ts";
     const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
-    this.removeTestFileForSkippingEverything(localPath, remotePath);
+    this.removeTestFileForSkippingEverything(remotePath);
 
     this.commandLine.kill();
   }
 
-  private removeTestFileForSkippingEverything(localPath: string, remotePath: string) {
+  private removeTestFileForSkippingEverything(remotePath: string) {
     const fs = require("fs");
     if (fs.existsSync(remotePath)) {
       fs.unlinkSync(remotePath);
@@ -43,7 +43,9 @@ export class AngularRunner {
   private createTestFileForSkippingEverything(localPath: string, remotePath: string) {
     const fs = require("fs");
     if (fs.existsSync(localPath) && !fs.existsSync(remotePath)) {
-      fs.copyFileSync(localPath, remotePath);
+      fs.copyFileSync(localPath, remotePath, (err: any) => {
+        global.console.log("error "+ err);
+      });
     }
   }
 
@@ -54,7 +56,9 @@ export class AngularRunner {
 
     const exec = require("child_process").exec;
     this.commandLine = exec(command, {
-      cwd: this.angularProjectRootPath,
+      cwd: this.angularProjectRootPath
+    }, (error: any) => {
+      global.console.log(error);
     });
   }
 }
