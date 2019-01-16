@@ -1,12 +1,14 @@
+import * as vscode from "vscode";
 import { AngularRunner } from "./angular-workers/angular-runner";
 import { KarmaHelper } from "./karma-workers/karma-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import path = require('path');
+import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
+import path = require("path");
 
 export class AngularTestExplorer {
   private readonly karmaHelper: KarmaHelper;
   private readonly angularRunner: AngularRunner;
-  private readonly baseKarmaConfigPath: string = path.join(__dirname, '.', 'config', "test-explorer-karma.conf.js");
+  private readonly baseKarmaConfigPath: string = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
 
   public constructor(private readonly angularProjectRootPath: string) {
     this.karmaHelper = KarmaHelper.getInstance();
@@ -23,7 +25,7 @@ export class AngularTestExplorer {
     return result;
   }
 
-  public async runTests(): Promise<void> {
+  public async runTests(eventEmitter: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>): Promise<void> {
     await this.karmaHelper.runServer();
   }
 
