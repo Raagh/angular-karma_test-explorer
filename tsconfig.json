@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "allowJs": true
   },
-  "include": ["src/main.ts"]
+  "include": ["src/main.ts", "typings"]
 }

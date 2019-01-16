@@ -14,7 +14,6 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
   this.adapters = [];
 
   this.onSpecComplete = (browser: any, spec: any) => {
-    const name = spec.suite.reduce((name: any, suite: any) => name + suite + " ", "") + spec.description;
     let status: TestResult = TestResult.Failed;
     if (spec.skipped) {
       status = TestResult.Skipped;
@@ -24,7 +23,9 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
 
     const result: any = {
       failureMessages: spec.log,
-      name,
+      suite: spec.suite,
+      name: spec.name,
+      description: spec.description,
       status,
       timeSpentMs: spec.time,
     };

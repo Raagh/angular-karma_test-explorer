@@ -1,6 +1,6 @@
 import { KarmaHelper } from "../karma-workers/karma-helper";
 import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
-import path = require('path');
+import path = require("path");
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
@@ -12,13 +12,13 @@ export class AngularRunner {
     this.karmaHelper = KarmaHelper.getInstance();
   }
 
-  public async start(): Promise<void> {
+  public start(): void {
     if (!this.karmaHelper.isValidKarmaConfig(this.baseKarmaConfigFilePath)) {
       global.console.log("The karma.conf.js used is not valid");
       return;
     }
 
-    const localPath = path.join(__dirname, '..', '..', 'src', 'karma-workers', "fakeTest.spec.ts");
+    const localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
     const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
 
     this.createTestFileForSkippingEverything(localPath, remotePath);
@@ -44,7 +44,7 @@ export class AngularRunner {
     const fs = require("fs");
     if (fs.existsSync(localPath) && !fs.existsSync(remotePath)) {
       fs.copyFileSync(localPath, remotePath, (err: any) => {
-        global.console.log("error "+ err);
+        global.console.log("error " + err);
       });
     }
   }
@@ -56,9 +56,7 @@ export class AngularRunner {
 
     const exec = require("child_process").exec;
     this.commandLine = exec(command, {
-      cwd: this.angularProjectRootPath
-    }, (error: any) => {
-      global.console.log(error);
+      cwd: this.angularProjectRootPath,
     });
   }
 }

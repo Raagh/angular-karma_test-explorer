@@ -1,7 +1,7 @@
-import { Config, ConfigOptions } from "karma";
+import { Config, ConfigOptions, Reporter } from "karma";
 import * as path from "path";
 
-import AngularReporter = require("../angular-workers/angular-reporter");
+const AngularReporter: Reporter = require("../angular-workers/angular-reporter");
 
 function setDefaultOptions(config: Config) {
   config.set({

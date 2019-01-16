@@ -1,5 +1,7 @@
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 import { TestResult } from "../model/test-status.enum";
+import { Helper } from "../helper";
+
 export class KarmaEventListener {
   public nextRunIsForLoading: boolean = false;
   private savedSpecs: any[] = [];
@@ -48,16 +50,27 @@ export class KarmaEventListener {
   }
 
   private createTestSuite(savedSpecs: any[]): TestSuiteInfo {
+    const suites = Helper.groupBy(savedSpecs, "suite");
+
     return {
       type: "suite",
       id: "root",
       label: "Angular",
-      children: savedSpecs.map<TestInfo>(
-        (testInfo: any): TestInfo => {
+      children: Object.keys(suites).map<TestSuiteInfo>(
+        (key: any, index: any): TestSuiteInfo => {
           return {
-            type: "test",
-            id: testInfo.name,
-            label: testInfo.name,
+            type: "suite",
+            id: key,
+            label: key,
+            children: suites[key].map(
+              (x: any): TestInfo => {
+                return {
+                  type: "test",
+                  id: x.suite[0] + "" + x.description,
+                  label: x.description,
+                };
+              }
+            ),
           };
         }
       ),
