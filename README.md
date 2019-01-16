@@ -15,7 +15,7 @@ You should now see a second VS Code window, the Extension Development Host.
 Open a folder in this window and click the "Test" icon in the Activity bar.
 Now you should see the test suite in the side panel:
 
-![The fake example test suite] (img/img-tests.png | width=306)
+![The fake example test suite](img/img-tests.png)
 
 ## Working implementation
 
