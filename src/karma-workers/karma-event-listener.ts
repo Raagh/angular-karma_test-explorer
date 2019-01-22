@@ -6,7 +6,7 @@ export class KarmaEventListener {
   public nextRunIsForLoading: boolean = false;
   private savedSpecs: any[] = [];
 
-  public listenTillKarmaReady(): Promise<void> {
+  public listenTillKarmaReady(eventEmitter: any): Promise<void> {
     return new Promise<void>(resolve => {
       const app = require("express")();
       const http = require("http").Server(app);
@@ -14,11 +14,20 @@ export class KarmaEventListener {
 
       io.on("connection", (socket: any) => {
         socket.on("spec_complete", (testResult: any) => {
-          global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.name);
+          global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.suite + " " + testResult.description);
+          eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "running" });
           if (this.nextRunIsForLoading && testResult.status === TestResult.Skipped) {
             this.savedSpecs.push(testResult);
           } else if (!this.nextRunIsForLoading) {
             this.savedSpecs.push(testResult);
+
+            if (testResult.status === TestResult.Failed) {
+              eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "failed" });
+            } else if (testResult.status === TestResult.Success) {
+              eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "passed" });
+            } else if (testResult.status === TestResult.Skipped) {
+              eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "skipped" });
+            }
           }
         });
 
@@ -66,7 +75,7 @@ export class KarmaEventListener {
               (x: any): TestInfo => {
                 return {
                   type: "test",
-                  id: x.suite[0] + "" + x.description,
+                  id: x.suite[0] + " " + x.description,
                   label: x.description,
                 };
               }

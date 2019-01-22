@@ -30,7 +30,7 @@ export class AngularRunner {
     const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
     this.removeTestFileForSkippingEverything(remotePath);
 
-    this.commandLine.kill();
+    // this.commandLine.kill();
   }
 
   private removeTestFileForSkippingEverything(remotePath: string) {
@@ -50,7 +50,7 @@ export class AngularRunner {
   }
 
   private runNgTest(): void {
-    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}" --source-map`];
     const command = `ng ${cliArgs.join(" ")}`;
     global.console.log(`Starting Angular tests: ${command}`);
 

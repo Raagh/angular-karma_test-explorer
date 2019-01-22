@@ -24,7 +24,6 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
     const result: any = {
       failureMessages: spec.log,
       suite: spec.suite,
-      name: spec.name,
       description: spec.description,
       status,
       timeSpentMs: spec.time,

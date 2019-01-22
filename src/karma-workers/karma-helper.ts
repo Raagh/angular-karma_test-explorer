@@ -17,8 +17,8 @@ export class KarmaHelper {
     this.karmaEventListener = new KarmaEventListener();
   }
 
-  public async waitTillServerReady(): Promise<void> {
-    await this.karmaEventListener.listenTillKarmaReady();
+  public async waitTillServerReady(eventEmitter: any): Promise<void> {
+    await this.karmaEventListener.listenTillKarmaReady(eventEmitter);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {

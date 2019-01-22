@@ -35,7 +35,7 @@ export class ExampleAdapter implements TestAdapter {
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
-    this.testExplorer = new AngularTestExplorer(workspace.uri.path);
+    this.testExplorer = new AngularTestExplorer(workspace.uri.path, this.testStatesEmitter);
   }
 
   public async load(): Promise<void> {
@@ -54,7 +54,7 @@ export class ExampleAdapter implements TestAdapter {
     this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
     // in a "real" TestAdapter this would start a test run in a child process
-    await this.testExplorer.runTests(this.testStatesEmitter);
+    await this.testExplorer.runTests();
 
     this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
   }
