@@ -43,7 +43,7 @@ function setLifeCycleOptions(config: Config) {
     // No auto watch, stryker will inform us when we need to test
     autoWatch: false,
     // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
-    browserNoActivityTimeout: 1000000,
+    browserNoActivityTimeout: null,
     // Never detach, always run in this same process (is already a separate process)
     detached: false,
     // Don't stop after first run
@@ -68,6 +68,24 @@ function setBasePath(config: Config) {
   }
 }
 
+function disableSingleRun(config: Config) {
+  config.singleRun = false;
+  const prevSet = config.set;
+  // Workaround if karma server is instantiated with { singleRun: true }
+  // For example, @angular/cli is the case:
+  // https://github.com/angular/devkit/blob/v6.0.1/packages/angular_devkit/build_angular/src/karma/index.ts#L65
+  if (typeof prevSet === "function") {
+    config.set = (newConfig: ConfigOptions) => {
+      if (newConfig != null) {
+        if (newConfig.singleRun === true) {
+          newConfig.singleRun = false;
+        }
+        prevSet(newConfig);
+      }
+    };
+  }
+}
+
 function addPlugin(karmaConfig: ConfigOptions, karmaPlugin: any) {
   karmaConfig.plugins = karmaConfig.plugins || ["karma-*"];
   karmaConfig.plugins.push(karmaPlugin);
@@ -89,6 +107,7 @@ const globalSettings: {
 export = Object.assign(
   (config: Config) => {
     setDefaultOptions(config);
+    disableSingleRun(config);
     setUserKarmaConfigFile(config);
     setUserKarmaConfig(config);
     setBasePath(config);

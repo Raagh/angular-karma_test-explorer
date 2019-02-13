@@ -9,7 +9,7 @@ export class AngularRunner {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
-    this.karmaHelper = KarmaHelper.getInstance();
+    this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
   }
 
   public start(): void {
@@ -50,7 +50,7 @@ export class AngularRunner {
   }
 
   private runNgTest(): void {
-    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}" --source-map`];
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
     const command = `ng ${cliArgs.join(" ")}`;
     global.console.log(`Starting Angular tests: ${command}`);
 

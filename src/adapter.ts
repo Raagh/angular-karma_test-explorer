@@ -54,7 +54,7 @@ export class ExampleAdapter implements TestAdapter {
     this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
     // in a "real" TestAdapter this would start a test run in a child process
-    await this.testExplorer.runTests();
+    await this.testExplorer.runTests(tests);
 
     this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
   }

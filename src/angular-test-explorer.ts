@@ -12,15 +12,15 @@ export class AngularTestExplorer {
 
   public constructor(
     private readonly angularProjectRootPath: string,
-    private readonly eventEmiiter: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
+    private readonly eventEmitter: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
   ) {
-    this.karmaHelper = KarmaHelper.getInstance();
+    this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
     this.angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
     this.angularRunner.start();
-    await this.karmaHelper.waitTillServerReady(this.eventEmiiter);
+    await this.karmaHelper.waitTillServerReady(this.eventEmitter);
 
     const result = await this.karmaHelper.loadTests();
     this.angularRunner.cleanUp();
@@ -28,9 +28,10 @@ export class AngularTestExplorer {
     return result;
   }
 
-  public async runTests(): Promise<void> {
-    // this.angularRunner.start();
-    await this.karmaHelper.runServer();
+  public async runTests(tests: any): Promise<void> {
+    // await this.karmaHelper.runWithConsole(tests);
+    // await this.karmaHelper.runWithBrowserRequest(tests);
+    await this.karmaHelper.runWithModule();
   }
 
   public debugTests(): void {
