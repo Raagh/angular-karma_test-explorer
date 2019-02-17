@@ -51,7 +51,7 @@ export class AngularRunner {
 
   private runNgTest(): void {
     const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
-    const command = `ng ${cliArgs.join(" ")}`;
+    const command = `ng ${cliArgs.join(" ")} >/dev/null`;
     global.console.log(`Starting Angular tests: ${command}`);
 
     const exec = require("child_process").exec;
