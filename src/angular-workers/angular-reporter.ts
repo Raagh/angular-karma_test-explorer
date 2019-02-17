@@ -73,7 +73,5 @@ function collectRunState(runResult: karma.TestResults): RunStatus {
 
 AngularReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
 
-module.exports = {
-  instance: AngularReporter,
-  name: "AngularReporter",
-};
+export const instance = AngularReporter;
+export const name = "AngularReporter";
