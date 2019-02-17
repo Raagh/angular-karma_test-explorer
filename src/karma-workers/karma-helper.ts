@@ -40,7 +40,7 @@ export class KarmaHelper {
       refresh: true,
       urlRoot,
       hostname: "localhost:9876",
-      clientArgs: [],
+      clientArgs: <string[]>[],
     };
     const testName = "";
     // if testName is undefined, reset jasmine.getEnv().specFilter function

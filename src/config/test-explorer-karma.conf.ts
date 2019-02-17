@@ -1,7 +1,6 @@
-import { Config, ConfigOptions, Reporter } from "karma";
+import { Config, ConfigOptions } from "karma";
 import * as path from "path";
-
-const AngularReporter: Reporter = require("../angular-workers/angular-reporter");
+import * as AngularReporter from "../angular-workers/angular-reporter";
 
 function setDefaultOptions(config: Config) {
   config.set({
@@ -43,7 +42,7 @@ function setLifeCycleOptions(config: Config) {
     // No auto watch, stryker will inform us when we need to test
     autoWatch: false,
     // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
-    browserNoActivityTimeout: null,
+    browserNoActivityTimeout: undefined,
     // Never detach, always run in this same process (is already a separate process)
     detached: false,
     // Don't stop after first run
