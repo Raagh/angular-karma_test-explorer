@@ -7,8 +7,12 @@ export class KarmaHelper {
   private readonly angularProjectRootPath: string;
 
   public constructor(angularProkectRootPath: string) {
-    this.karmaEventListener = new KarmaEventListener();
+    this.karmaEventListener = KarmaEventListener.getInstance();
     this.angularProjectRootPath = angularProkectRootPath;
+  }
+
+  public isServerLoaded(): boolean {
+    return this.karmaEventListener.isServerLoaded;
   }
 
   public async waitTillServerReady(eventEmitter: any): Promise<void> {
@@ -16,8 +20,6 @@ export class KarmaHelper {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
-    this.karmaEventListener.nextRunIsForLoading = true;
-
     await this.runWithModule();
 
     return this.karmaEventListener.getTests();

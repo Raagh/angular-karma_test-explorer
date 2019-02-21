@@ -3,8 +3,18 @@ import { TestResult } from "../model/test-status.enum";
 import { Helper } from "../helper";
 
 export class KarmaEventListener {
-  public nextRunIsForLoading: boolean = false;
+  public static getInstance() {
+    if (this.instance == null) {
+      this.instance = new KarmaEventListener();
+    }
+    return this.instance;
+  }
+  private static instance: KarmaEventListener;
+  public isServerLoaded: boolean = false;
   private savedSpecs: any[] = [];
+  private fakeTestSuiteName: string = "LoadTests";
+
+  private constructor() {}
 
   public listenTillKarmaReady(eventEmitter: any): Promise<void> {
     return new Promise<void>(resolve => {
@@ -15,10 +25,9 @@ export class KarmaEventListener {
       io.on("connection", (socket: any) => {
         socket.on("spec_complete", (testResult: any) => {
           global.console.log("spec_complete - result:" + testResult.status + " - " + "testname:" + testResult.suite + " " + testResult.description);
-          eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "running" });
-          if (this.nextRunIsForLoading && testResult.status === TestResult.Skipped) {
-            this.savedSpecs.push(testResult);
-          } else if (!this.nextRunIsForLoading) {
+
+          if (testResult.suite[0] !== this.fakeTestSuiteName) {
+            eventEmitter.fire({ type: "test", test: testResult.suite + " " + testResult.description, state: "running" });
             this.savedSpecs.push(testResult);
 
             if (testResult.status === TestResult.Failed) {
@@ -45,6 +54,7 @@ export class KarmaEventListener {
 
         socket.on("browser_connected", () => {
           resolve();
+          this.isServerLoaded = true;
         });
       });
 

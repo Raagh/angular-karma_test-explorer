@@ -4,11 +4,16 @@ import path = require("path");
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
+  private readonly localPath: string;
+  private readonly remotePath: string;
+
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
     this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
+    this.localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
+    this.remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"), "src", "app", "fakeTest.spec.ts");
   }
 
   public start(): void {
@@ -17,32 +22,22 @@ export class AngularRunner {
       return;
     }
 
-    const localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
-    const remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"),"src", "app", "fakeTest.spec.ts");
-
-    this.createTestFileForSkippingEverything(localPath, remotePath);
-
     this.runNgTest();
   }
 
-  public cleanUp(): void {
-    const remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"),"src", "app", "fakeTest.spec.ts");
-    this.removeTestFileForSkippingEverything(remotePath);
-  }
-
-  private removeTestFileForSkippingEverything(remotePath: string) {
+  public setup(): void {
     const fs = require("fs");
-    if (fs.existsSync(remotePath)) {
-      fs.unlinkSync(remotePath);
+    if (fs.existsSync(this.localPath) && !fs.existsSync(this.remotePath)) {
+      fs.copyFileSync(this.localPath, this.remotePath, (err: any) => {
+        global.console.log("error " + err);
+      });
     }
   }
 
-  private createTestFileForSkippingEverything(localPath: string, remotePath: string) {
+  public cleanUp(): void {
     const fs = require("fs");
-    if (fs.existsSync(localPath) && !fs.existsSync(remotePath)) {
-      fs.copyFileSync(localPath, remotePath, (err: any) => {
-        global.console.log("error " + err);
-      });
+    if (fs.existsSync(this.remotePath)) {
+      fs.unlinkSync(this.remotePath);
     }
   }
 
