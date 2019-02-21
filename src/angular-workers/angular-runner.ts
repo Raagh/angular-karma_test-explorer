@@ -4,8 +4,7 @@ import path = require("path");
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
-  private commandLine: any;
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, private userKarmaConfigFilePath: string) {
+  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
@@ -19,7 +18,7 @@ export class AngularRunner {
     }
 
     const localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
-    const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
+    const remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"),"src", "app", "fakeTest.spec.ts");
 
     this.createTestFileForSkippingEverything(localPath, remotePath);
 
@@ -27,10 +26,8 @@ export class AngularRunner {
   }
 
   public cleanUp(): void {
-    const remotePath = this.angularProjectRootPath + "/src/app/fakeTest.spec.ts";
+    const remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"),"src", "app", "fakeTest.spec.ts");
     this.removeTestFileForSkippingEverything(remotePath);
-
-    // this.commandLine.kill();
   }
 
   private removeTestFileForSkippingEverything(remotePath: string) {
@@ -55,7 +52,7 @@ export class AngularRunner {
     global.console.log(`Starting Angular tests: ${command}`);
 
     const exec = require("child_process").exec;
-    this.commandLine = exec(command, {
+    exec(command, {
       cwd: this.angularProjectRootPath,
     });
   }

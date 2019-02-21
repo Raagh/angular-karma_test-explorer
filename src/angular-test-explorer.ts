@@ -15,7 +15,7 @@ export class AngularTestExplorer {
     private readonly eventEmitter: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
   ) {
     this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
-    this.angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath, "");
+    this.angularRunner = new AngularRunner(this.angularProjectRootPath, this.baseKarmaConfigPath);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {

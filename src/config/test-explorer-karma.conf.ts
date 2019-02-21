@@ -7,6 +7,14 @@ function setDefaultOptions(config: Config) {
     browsers: ["ChromeHeadless"],
     frameworks: ["jasmine", "@angular-devkit/build-angular"],
     plugins: [require("karma-jasmine"), require("karma-chrome-launcher"), require("@angular-devkit/build-angular/plugins/karma")],
+    // No auto watch, the UI will inform us when we need to test
+    autoWatch: false,
+    // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
+    browserNoActivityTimeout: undefined,
+    // Never detach, always run in this same process (is already a separate process)
+    detached: false,
+    // Don't stop after first run
+    singleRun: false
   });
 }
 
@@ -31,23 +39,6 @@ function setUserKarmaConfigFile(config: Config) {
       }
     }
   }
-}
-
-/**
- * Sets configuration that is needed to control the karma life cycle. Namely it shouldn't watch files and not quit after first test run.
- * @param config The config to use
- */
-function setLifeCycleOptions(config: Config) {
-  config.set({
-    // No auto watch, stryker will inform us when we need to test
-    autoWatch: false,
-    // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
-    browserNoActivityTimeout: undefined,
-    // Never detach, always run in this same process (is already a separate process)
-    detached: false,
-    // Don't stop after first run
-    singleRun: false,
-  });
 }
 
 function setUserKarmaConfig(config: Config) {
@@ -110,7 +101,6 @@ export = Object.assign(
     setUserKarmaConfigFile(config);
     setUserKarmaConfig(config);
     setBasePath(config);
-    setLifeCycleOptions(config);
     configureAngularReporter(config);
   },
   {
