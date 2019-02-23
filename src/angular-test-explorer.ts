@@ -20,7 +20,10 @@ export class AngularTestExplorer {
 
   public async loadTests(): Promise<TestSuiteInfo> {
     if (!this.karmaHelper.isServerLoaded()) {
-      this.angularRunner.start();
+      const isAngularStarted = this.angularRunner.start();
+      if (!isAngularStarted) {
+        return {} as TestSuiteInfo;
+      }
       await this.karmaHelper.waitTillServerReady(this.eventEmitter);
     }
 

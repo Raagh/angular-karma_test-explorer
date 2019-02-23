@@ -16,13 +16,14 @@ export class AngularRunner {
     this.remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"), "src", "app", "fakeTest.spec.ts");
   }
 
-  public start(): void {
+  public start(): boolean {
     if (!this.karmaHelper.isValidKarmaConfig(this.baseKarmaConfigFilePath)) {
       global.console.log("The karma.conf.js used is not valid");
-      return;
+      return false;
     }
 
     this.runNgTest();
+    return true;
   }
 
   public setup(): void {
