@@ -7,6 +7,7 @@ export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
   private readonly localPath: string;
   private readonly remotePath: string;
+  private angularCommandLine: any;
 
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
     explorerKarmaConfig.setGlobals({
@@ -15,6 +16,20 @@ export class AngularRunner {
     this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
     this.localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
     this.remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"), "src", "app", "fakeTest.spec.ts");
+  }
+
+  public async stopPreviousRun(): Promise<void> {
+    if (this.angularCommandLine != null) {
+      this.angularCommandLine.stdin.pause();
+      process.kill(-this.angularCommandLine.pid);
+    }
+
+    return new Promise<void>(resolve => {
+      this.angularCommandLine.on("exit", (code: any, signal: any) => {
+        global.console.log(`ng child process exited with code ${code} and signal ${signal}`);
+        resolve();
+      });
+    });
   }
 
   public start(): boolean {
@@ -44,15 +59,13 @@ export class AngularRunner {
   }
 
   private runNgTest(): void {
-
     const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
-    console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+    global.console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
-    const cp = spawn("ng", cliArgs, { cwd: this.angularProjectRootPath, shell: true });
+    this.angularCommandLine = spawn("ng", cliArgs, { cwd: this.angularProjectRootPath, shell: true, detached: true });
 
-//    cp.stdout.on('data', data => console.log(`stdout: ${data}`));
-//    cp.stderr.on('data', data => console.log(`stderr: ${data}`));
-    cp.on('error', err => console.log(`error from ng child process: ${err}`));
-    cp.on('exit', (code, signal) => console.log(`ng child process exited with code ${code} and signal ${signal}`));
+    //    cp.stdout.on('data', data => console.log(`stdout: ${data}`));
+    //    cp.stderr.on('data', data => console.log(`stderr: ${data}`));
+    this.angularCommandLine.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
   }
 }
