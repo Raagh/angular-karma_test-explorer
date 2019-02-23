@@ -1,6 +1,7 @@
 import { KarmaHelper } from "../karma-workers/karma-helper";
 import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
 import path = require("path");
+import { spawn } from "child_process";
 
 export class AngularRunner {
   private readonly karmaHelper: KarmaHelper;
@@ -42,13 +43,15 @@ export class AngularRunner {
   }
 
   private runNgTest(): void {
-    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
-    const command = `ng ${cliArgs.join(" ")} >/dev/null`;
-    global.console.log(`Starting Angular tests: ${command}`);
 
-    const exec = require("child_process").exec;
-    exec(command, {
-      cwd: this.angularProjectRootPath,
-    });
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+    console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+
+    const cp = spawn("ng", cliArgs, { cwd: this.angularProjectRootPath, shell: true });
+
+//    cp.stdout.on('data', data => console.log(`stdout: ${data}`));
+//    cp.stderr.on('data', data => console.log(`stderr: ${data}`));
+    cp.on('error', err => console.log(`error from ng child process: ${err}`));
+    cp.on('exit', (code, signal) => console.log(`ng child process exited with code ${code} and signal ${signal}`));
   }
 }
