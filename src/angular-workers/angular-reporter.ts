@@ -1,5 +1,4 @@
 import * as karma from "karma";
-import * as io from "socket.io-client";
 import { TestResult } from "../model/test-status.enum";
 import { RunStatus } from "../model/run-status.enum";
 
@@ -7,9 +6,13 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
   this.config = config;
   this.emitter = emitter;
 
-  baseReporterDecorator(this);
+  const emitEvent = process.send
+    ? (eventName: any, eventResults: any = null) => {
+        process.send!({ name: eventName, results: eventResults });
+      }
+    : () => {};
 
-  this.socket = io("http://localhost:1111/");
+  baseReporterDecorator(this);
 
   this.adapters = [];
 
@@ -28,19 +31,20 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
       status,
       timeSpentMs: spec.time,
     };
-    this.socket.emit("spec_complete", result);
+
+    emitEvent("spec_complete", result);
   };
 
   this.onRunComplete = (browserCollection: any, result: any) => {
-    this.socket.emit("run_complete", collectRunState(result));
+    emitEvent("run_complete", collectRunState(result));
   };
 
   this.onBrowserError = (browser: any, error: any) => {
-    this.socket.emit("browser_error", error);
+    emitEvent("browser_error", error);
   };
 
   this.onBrowserStart = (browser: any, info: any) => {
-    this.socket.emit("browser_start");
+    emitEvent("browser_start");
   };
 
   this.emitter.on("browsers_change", (capturedBrowsers: any) => {
@@ -56,7 +60,7 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
       }
     });
     if (proceed) {
-      this.socket.emit("browser_connected");
+      emitEvent("browser_connected");
     }
   });
 }

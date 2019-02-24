@@ -15,8 +15,8 @@ export class KarmaHelper {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async waitTillServerReady(eventEmitter: any): Promise<void> {
-    await this.karmaEventListener.listenTillKarmaReady(eventEmitter);
+  public async waitTillServerReady(eventEmitter: any, angularProcess: any): Promise<void> {
+    await this.karmaEventListener.listenTillKarmaReady(eventEmitter, angularProcess);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
@@ -42,7 +42,7 @@ export class KarmaHelper {
       refresh: true,
       urlRoot,
       hostname: "localhost:9876",
-      clientArgs: <string[]>[],
+      clientArgs: [] as string[],
     };
     const testName = "";
     // if testName is undefined, reset jasmine.getEnv().specFilter function

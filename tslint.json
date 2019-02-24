@@ -9,7 +9,8 @@
     "max-line-length": [true, { "limit": 150, "ignore-pattern": "^import |^export {(.*?)}" }],
     "no-shadowed-variable": false,
     "variable-name": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "no-empty": false
   },
   "rulesDirectory": []
 }

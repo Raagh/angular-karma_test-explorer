@@ -25,12 +25,12 @@ export class AngularTestExplorer {
       await this.angularRunner.stopPreviousRun();
     }
 
-    const isAngularStarted = this.angularRunner.start();
-    if (!isAngularStarted) {
+    const angularProcess = this.angularRunner.start();
+    if (!angularProcess) {
       return {} as TestSuiteInfo;
     }
 
-    await this.karmaHelper.waitTillServerReady(this.eventEmitter);
+    await this.karmaHelper.waitTillServerReady(this.eventEmitter, angularProcess);
 
     const result = await this.karmaHelper.loadTests();
     this.angularRunner.cleanUp();
