@@ -55,7 +55,10 @@ export class KarmaRunner {
   }
 
   public async runWithConsole(tests: any): Promise<void> {
-    const command = "karma run -- --grep=";
+    if (tests[0] === "root") {
+      tests = "";
+    }
+    const command = "karma run -- --grep=" + tests;
     const exec = require("child_process").exec;
     exec(command, {
       cwd: this.angularProjectRootPath + "/node_modules/karma/bin/",
