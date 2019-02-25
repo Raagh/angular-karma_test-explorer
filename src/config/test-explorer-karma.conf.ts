@@ -1,6 +1,6 @@
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
-import * as AngularReporter from "../angular-workers/angular-reporter";
+import * as AngularReporter from "../workers/angular/angular-reporter";
 
 function setDefaultOptions(config: Config) {
   config.set({
@@ -14,7 +14,7 @@ function setDefaultOptions(config: Config) {
     // Never detach, always run in this same process (is already a separate process)
     detached: false,
     // Don't stop after first run
-    singleRun: false
+    singleRun: false,
   });
 }
 

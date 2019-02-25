@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { AngularServer } from "./angular-workers/angular-server";
-import { KarmaRunner } from "./karma-workers/karma-runner";
+import { AngularServer } from "./workers/angular/angular-server";
+import { KarmaRunner } from "./workers/karma/karma-runner";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import path = require("path");

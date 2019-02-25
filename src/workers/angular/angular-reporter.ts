@@ -1,6 +1,6 @@
 import * as karma from "karma";
-import { TestResult } from "../model/test-status.enum";
-import { RunStatus } from "../model/run-status.enum";
+import { TestResult } from "../../model/test-status.enum";
+import { RunStatus } from "../../model/run-status.enum";
 
 function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;

@@ -1,5 +1,5 @@
-import { KarmaHelper } from "../karma-workers/karma-helper";
-import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
+import { KarmaHelper } from "../karma/karma-helper";
+import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
 import path = require("path");
 import { spawn, StdioOptions } from "child_process";
 
@@ -14,7 +14,7 @@ export class AngularServer {
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
     this.karmaHelper = new KarmaHelper();
-    this.localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
+    this.localPath = path.join(__dirname, "..", "..", "..", "src", "workers", "karma", "fakeTest.spec.ts");
     this.remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"), "src", "app", "fakeTest.spec.ts");
   }
 

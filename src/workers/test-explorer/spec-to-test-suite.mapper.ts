@@ -1,10 +1,10 @@
-import { Helper } from "../helper";
+import { TestExplorerHelper } from "./test-explorer-helper";
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 export class SpecToTestSuiteMapper {
   public constructor() {}
 
   public map(savedSpecs: any[]): TestSuiteInfo {
-    const suites = Helper.groupBy(savedSpecs, "suite");
+    const suites = TestExplorerHelper.groupBy(savedSpecs, "suite");
 
     return {
       type: "suite",
