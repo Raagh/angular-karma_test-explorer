@@ -3,7 +3,7 @@ import explorerKarmaConfig = require("../config/test-explorer-karma.conf");
 import path = require("path");
 import { spawn, StdioOptions } from "child_process";
 
-export class AngularRunner {
+export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
   private readonly localPath: string;
   private readonly remotePath: string;
@@ -13,7 +13,7 @@ export class AngularRunner {
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
-    this.karmaHelper = new KarmaHelper(this.angularProjectRootPath);
+    this.karmaHelper = new KarmaHelper();
     this.localPath = path.join(__dirname, "..", "..", "src", "karma-workers", "fakeTest.spec.ts");
     this.remotePath = path.join(this.angularProjectRootPath.replace("/c:/", "c:\\"), "src", "app", "fakeTest.spec.ts");
   }

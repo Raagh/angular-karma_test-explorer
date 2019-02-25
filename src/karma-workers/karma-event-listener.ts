@@ -1,6 +1,9 @@
-import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
+import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestResult } from "../model/test-status.enum";
-import { Helper } from "../helper";
+import { SpecToTestSuiteMapper } from "../test-explorer-workers/spec-to-test-suite.mapper";
+import { KarmaEvent } from "../model/karma-event";
+import { KarmaEventName } from "../model/karma-event-name.enum";
+import { TestState } from "../model/test-state.enum";
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -13,26 +16,29 @@ export class KarmaEventListener {
   public isServerLoaded: boolean = false;
   private savedSpecs: any[] = [];
   private fakeTestSuiteName: string = "LoadTests";
+  private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
 
-  private constructor() {}
+  private constructor() {
+    this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
+  }
 
   public listenTillKarmaReady(eventEmitter: any, angularProcess: any): Promise<void> {
     return new Promise<void>(resolve => {
-      angularProcess.on("message", (event: any) => {
+      angularProcess.on("message", (event: KarmaEvent) => {
         switch (event.name) {
-          case "browser_connected":
+          case KarmaEventName.BrowserConnected:
             this.onBrowserConnected(resolve);
             break;
-          case "run_complete":
+          case KarmaEventName.RunComplete:
             global.console.log("run_complete " + event.results);
             break;
-          case "spec_complete":
+          case KarmaEventName.SpecComplete:
             this.onSpecComplete(event, eventEmitter);
             break;
-          case "browser_start":
+          case KarmaEventName.BrowserStart:
             this.savedSpecs = [];
             break;
-          case "browser_error":
+          case KarmaEventName.BrowserError:
             global.console.log("browser_error " + event.results);
             break;
         }
@@ -40,8 +46,8 @@ export class KarmaEventListener {
     });
   }
 
-  public getTests(): TestSuiteInfo {
-    return this.createTestSuite(this.savedSpecs);
+  public getLoadedTests(): TestSuiteInfo {
+    return this.specToTestSuiteMapper.map(this.savedSpecs);
   }
 
   private onSpecComplete(event: any, eventEmitter: any) {
@@ -49,14 +55,14 @@ export class KarmaEventListener {
       "spec_complete - result:" + event.results.status + " - " + "testname:" + event.results.suite + " " + event.results.description
     );
     if (event.results.suite[0] !== this.fakeTestSuiteName) {
-      eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: "running" });
+      eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Running });
       this.savedSpecs.push(event.results);
       if (event.results.status === TestResult.Failed) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: "failed" });
+        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Failed });
       } else if (event.results.status === TestResult.Success) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: "passed" });
+        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Passed });
       } else if (event.results.status === TestResult.Skipped) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: "skipped" });
+        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Skipped });
       }
     }
   }
@@ -64,33 +70,5 @@ export class KarmaEventListener {
   private onBrowserConnected(resolve: (value?: void | PromiseLike<void> | undefined) => void) {
     resolve();
     this.isServerLoaded = true;
-  }
-
-  private createTestSuite(savedSpecs: any[]): TestSuiteInfo {
-    const suites = Helper.groupBy(savedSpecs, "suite");
-
-    return {
-      type: "suite",
-      id: "root",
-      label: "Angular",
-      children: Object.keys(suites).map<TestSuiteInfo>(
-        (key: any, index: any): TestSuiteInfo => {
-          return {
-            type: "suite",
-            id: key,
-            label: key,
-            children: suites[key].map(
-              (x: any): TestInfo => {
-                return {
-                  type: "test",
-                  id: x.suite[0] + " " + x.description,
-                  label: x.description,
-                };
-              }
-            ),
-          };
-        }
-      ),
-    };
   }
 }
