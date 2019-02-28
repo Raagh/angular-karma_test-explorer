@@ -15,7 +15,7 @@ export class KarmaEventListener {
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
   private savedSpecs: any[] = [];
-  private fakeTestSuiteName: string = "LoadTests";
+  private readonly fakeTestSuiteName: string = "LoadTests";
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
 
   private constructor() {

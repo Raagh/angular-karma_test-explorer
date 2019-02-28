@@ -1,10 +1,13 @@
 import { TestExplorerHelper } from "./test-explorer-helper";
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 export class SpecToTestSuiteMapper {
-  public constructor() {}
+  private readonly testExplorerHelper: TestExplorerHelper;
+  public constructor() {
+    this.testExplorerHelper = new TestExplorerHelper();
+  }
 
   public map(savedSpecs: any[]): TestSuiteInfo {
-    const suites = TestExplorerHelper.groupBy(savedSpecs, "suite");
+    const suites = this.testExplorerHelper.groupBy(savedSpecs, "suite");
 
     return {
       type: "suite",
