@@ -50,7 +50,7 @@ export class KarmaEventListener {
     return this.specToTestSuiteMapper.map(this.savedSpecs);
   }
 
-  private onSpecComplete(event: any, eventEmitter: any) {
+  private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
     global.console.log(
       "spec_complete - result:" + event.results.status + " - " + "testname:" + event.results.suite + " " + event.results.description
     );

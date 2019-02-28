@@ -1,6 +1,7 @@
 import * as karma from "karma";
 import { TestResult } from "../../model/test-status.enum";
 import { RunStatus } from "../../model/run-status.enum";
+import { SpecCompleteResponse } from "../../model/spec-complete-response";
 
 function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
@@ -24,13 +25,7 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
       status = TestResult.Success;
     }
 
-    const result: any = {
-      failureMessages: spec.log,
-      suite: spec.suite,
-      description: spec.description,
-      status,
-      timeSpentMs: spec.time,
-    };
+    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time);
 
     emitEvent("spec_complete", result);
   };
