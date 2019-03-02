@@ -63,6 +63,8 @@ export class KarmaRunner {
     exec(command, {
       cwd: this.angularProjectRootPath + "/node_modules/karma/bin/",
     });
+
+    this.karmaEventListener.lastRunnedTests = tests !== "" ? tests[0] : tests;
   }
 
   public stopServer(): void {

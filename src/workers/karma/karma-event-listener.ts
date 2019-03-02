@@ -14,6 +14,7 @@ export class KarmaEventListener {
   }
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
+  public lastRunnedTests: string = "";
   private savedSpecs: any[] = [];
   private readonly fakeTestSuiteName: string = "LoadTests";
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
@@ -51,18 +52,20 @@ export class KarmaEventListener {
   }
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
-    global.console.log(
-      "spec_complete - result:" + event.results.status + " - " + "testname:" + event.results.suite + " " + event.results.description
-    );
-    if (event.results.suite[0] !== this.fakeTestSuiteName) {
-      eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Running });
-      this.savedSpecs.push(event.results);
-      if (event.results.status === TestResult.Failed) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Failed });
-      } else if (event.results.status === TestResult.Success) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Passed });
-      } else if (event.results.status === TestResult.Skipped) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Skipped });
+    if (this.lastRunnedTests.includes(event.results.suite[0]) || this.lastRunnedTests === "") {
+      global.console.log(
+        "spec_complete - result:" + event.results.status + " - " + "testname:" + event.results.suite + " " + event.results.description
+      );
+      if (event.results.suite[0] !== this.fakeTestSuiteName) {
+        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Running });
+        this.savedSpecs.push(event.results);
+        if (event.results.status === TestResult.Failed) {
+          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Failed });
+        } else if (event.results.status === TestResult.Success) {
+          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Passed });
+        } else if (event.results.status === TestResult.Skipped) {
+          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Skipped });
+        }
       }
     }
   }
