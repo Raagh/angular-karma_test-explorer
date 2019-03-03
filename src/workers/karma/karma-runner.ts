@@ -58,13 +58,13 @@ export class KarmaRunner {
     if (tests[0] === "root") {
       tests = "";
     }
-    const command = "karma run -- --grep=" + tests;
+    const command = `karma run -- --grep="${tests}"`;
     const exec = require("child_process").exec;
     exec(command, {
       cwd: this.angularProjectRootPath + "/node_modules/karma/bin/",
     });
 
-    this.karmaEventListener.lastRunnedTests = tests !== "" ? tests[0] : tests;
+    this.karmaEventListener.lastRunTests = tests !== "" ? tests[0] : tests;
   }
 
   public stopServer(): void {

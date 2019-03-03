@@ -14,7 +14,7 @@ export class KarmaEventListener {
   }
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
-  public lastRunnedTests: string = "";
+  public lastRunTests: string = "";
   private savedSpecs: any[] = [];
   private readonly fakeTestSuiteName: string = "LoadTests";
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
@@ -52,19 +52,18 @@ export class KarmaEventListener {
   }
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
-    if (this.lastRunnedTests.includes(event.results.suite[0]) || this.lastRunnedTests === "") {
-      global.console.log(
-        "spec_complete - result:" + event.results.status + " - " + "testname:" + event.results.suite + " " + event.results.description
-      );
+    const testName = event.results.suite + " " + event.results.description;
+    global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+    if (this.lastRunTests.includes(event.results.suite[0]) || this.lastRunTests === "") {
       if (event.results.suite[0] !== this.fakeTestSuiteName) {
-        eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Running });
+        eventEmitter.fire({ type: "test", test: testName, state: TestState.Running });
         this.savedSpecs.push(event.results);
         if (event.results.status === TestResult.Failed) {
-          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Failed });
+          eventEmitter.fire({ type: "test", test: testName, state: TestState.Failed });
         } else if (event.results.status === TestResult.Success) {
-          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Passed });
+          eventEmitter.fire({ type: "test", test: testName, state: TestState.Passed });
         } else if (event.results.status === TestResult.Skipped) {
-          eventEmitter.fire({ type: "test", test: event.results.suite + " " + event.results.description, state: TestState.Skipped });
+          eventEmitter.fire({ type: "test", test: testName, state: TestState.Skipped });
         }
       }
     }
