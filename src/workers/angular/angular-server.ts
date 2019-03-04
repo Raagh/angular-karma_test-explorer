@@ -7,9 +7,11 @@ export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
   private readonly localPath: string;
   private readonly remotePath: string;
+  private readonly angularProjectRootPath:string;
   private angularProcess: any;
 
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
+  public constructor(angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
+    this.angularProjectRootPath = path.join(angularProjectRootPath.replace("/c:/", "c:\\"));
     explorerKarmaConfig.setGlobals({
       karmaConfig: { basePath: this.angularProjectRootPath },
     });
@@ -65,14 +67,13 @@ export class AngularServer {
     const options = {
       stdio: ["pipe", "pipe", "pipe", "ipc"] as StdioOptions,
       cwd: this.angularProjectRootPath,
-      shell: true,
-      detached: true,
+      shell: true
     };
 
     this.angularProcess = spawn("ng", cliArgs, options);
 
-    //    cp.stdout.on('data', data => console.log(`stdout: ${data}`));
-    //    cp.stderr.on('data', data => console.log(`stderr: ${data}`));
+    this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
+    this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
     this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
   }
 }
