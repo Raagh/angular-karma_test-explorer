@@ -1,7 +1,7 @@
 import { KarmaHelper } from "../karma/karma-helper";
 import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
 import path = require("path");
-import { spawn, StdioOptions } from "child_process";
+import { fork, StdioOptions } from "child_process";
 
 export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
@@ -61,16 +61,16 @@ export class AngularServer {
   }
 
   private runNgTest(): void {
-    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+    const cliArgs = ["test", `--karma-config=${require.resolve(this.baseKarmaConfigFilePath)}`];
     global.console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     const options = {
       stdio: ["pipe", "pipe", "pipe", "ipc"] as StdioOptions,
       cwd: this.angularProjectRootPath,
-      shell: true
+      execArgv: []
     };
 
-    this.angularProcess = spawn("ng", cliArgs, options);
+    this.angularProcess = fork("node_modules/@angular/cli/lib/init.js", cliArgs, options);
 
     this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
     this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
