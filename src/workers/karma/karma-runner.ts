@@ -2,6 +2,7 @@ import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { KarmaHelper } from "./karma-helper";
+import path = require("path");
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
@@ -18,8 +19,8 @@ export class KarmaRunner {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async waitTillKarmaIsRunning(eventEmitter: any, angularProcess: any): Promise<void> {
-    await this.karmaEventListener.listenTillKarmaReady(eventEmitter, angularProcess);
+  public async waitTillKarmaIsRunning(eventEmitter: any): Promise<void> {
+    await this.karmaEventListener.listenTillKarmaReady(eventEmitter);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
@@ -60,8 +61,9 @@ export class KarmaRunner {
     }
     const command = `karma run -- --grep="${tests}"`;
     const exec = require("child_process").exec;
+    const karmaCommandLinePath = path.join(this.angularProjectRootPath,"node_modules", "karma", "bin");
     exec(command, {
-      cwd: this.angularProjectRootPath + "/node_modules/karma/bin/",
+      cwd: karmaCommandLinePath
     });
 
     this.karmaEventListener.lastRunTests = tests !== "" ? tests[0] : tests;

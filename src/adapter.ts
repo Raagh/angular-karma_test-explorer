@@ -10,6 +10,7 @@ import {
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularTestExplorer } from "./angular-test-explorer";
+import path = require("path");
 
 export class ExampleAdapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
@@ -35,7 +36,7 @@ export class ExampleAdapter implements TestAdapter {
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
-    this.testExplorer = new AngularTestExplorer(workspace.uri.path, this.testStatesEmitter);
+    this.testExplorer = new AngularTestExplorer(path.join(workspace.uri.path.replace("/c:/", "c:\\")), this.testStatesEmitter);
   }
 
   public async load(): Promise<void> {

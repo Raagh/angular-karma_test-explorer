@@ -25,12 +25,12 @@ export class AngularTestExplorer {
       await this.angularServer.stopPreviousRun();
     }
 
-    const angularProcess = this.angularServer.start();
-    if (!angularProcess) {
+    const isAngularStarted = this.angularServer.start();
+    if (!isAngularStarted) {
       return {} as TestSuiteInfo;
     }
 
-    await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter, angularProcess);
+    await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
 
     const result = await this.karmaRunner.loadTests();
     this.angularServer.cleanUp();
@@ -40,7 +40,6 @@ export class AngularTestExplorer {
 
   public async runTests(tests: any): Promise<void> {
     await this.karmaRunner.runWithConsole(tests);
-    // await this.karmaRunner.runWithBrowserRequest(tests);
     // await this.karmaRunner.runWithModule();
   }
 
