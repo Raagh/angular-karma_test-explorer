@@ -39,8 +39,11 @@ export class AngularTestExplorer {
   }
 
   public async runTests(tests: any): Promise<void> {
-    await this.karmaRunner.runWithConsole(tests);
+    // await this.karmaRunner.runWithConsole(tests);
     // await this.karmaRunner.runWithModule();
+    this.angularServer.cleanUp();
+
+    await this.karmaRunner.runWithBrowserRequest(tests);
   }
 
   public debugTests(): void {

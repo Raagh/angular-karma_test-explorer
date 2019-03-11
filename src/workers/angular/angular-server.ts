@@ -1,3 +1,4 @@
+import { FileHelper } from './../test-explorer/file-helper';
 import { KarmaHelper } from "../karma/karma-helper";
 import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
 import path = require("path");
@@ -9,16 +10,18 @@ export class AngularServer {
   private readonly localPath: string;
   private readonly remotePath: string;
   private readonly angularProjectRootPath:string;
+  private readonly fileHelper: FileHelper;
   private angularProcess: any;
 
   public constructor(angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
     this.angularProjectRootPath = angularProjectRootPath;
     explorerKarmaConfig.setGlobals({
-      karmaConfig: { basePath: this.angularProjectRootPath },
+      karmaConfigFile: this.angularProjectRootPath
     });
     this.karmaHelper = new KarmaHelper();
     this.localPath = path.join(__dirname, "..", "..", "..", "src", "workers", "karma", "fakeTest.spec.ts");
     this.remotePath = path.join(this.angularProjectRootPath, "src", "app", "fakeTest.spec.ts");
+    this.fileHelper = new FileHelper();
   }
 
   public async stopPreviousRun(): Promise<void> {
@@ -46,23 +49,17 @@ export class AngularServer {
   }
 
   public setup(): void {
-    const fs = require("fs");
-    if (fs.existsSync(this.localPath) && !fs.existsSync(this.remotePath)) {
-      fs.copyFileSync(this.localPath, this.remotePath, (err: any) => {
-        global.console.log("error " + err);
-      });
-    }
+    this.fileHelper.copyFile(this.localPath, this.remotePath);
   }
 
   public cleanUp(): void {
-    const fs = require("fs");
-    if (fs.existsSync(this.remotePath)) {
-      fs.unlinkSync(this.remotePath);
-    }
+    this.fileHelper.deleteFile(this.remotePath);
+    this.fileHelper.copyFile(this.localPath, this.remotePath);
+    this.fileHelper.deleteFile(this.remotePath);
   }
 
   private runNgTest(): void {
-    const cliArgs = ["test", `--karma-config=${require.resolve(this.baseKarmaConfigFilePath)}`];
+    const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
     global.console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     const options = {
@@ -73,7 +70,7 @@ export class AngularServer {
     this.angularProcess = spawn("ng", cliArgs, options);
 
     // this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
-    // this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
+    this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
     // this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
   }
 }

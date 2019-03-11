@@ -1,18 +1,15 @@
 import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { KarmaHelper } from "./karma-helper";
 import path = require("path");
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
   private readonly angularProjectRootPath: string;
-  private readonly karmaHelper: KarmaHelper;
 
   public constructor(angularProjectRootPath: string) {
     this.karmaEventListener = KarmaEventListener.getInstance();
     this.angularProjectRootPath = angularProjectRootPath;
-    this.karmaHelper = new KarmaHelper();
   }
 
   public isKarmaRunning(): boolean {
@@ -38,30 +35,14 @@ export class KarmaRunner {
     });
   }
 
-  public async runWithBrowserRequest(tests: any): Promise<void> {
-    const serverPort = 9876;
-    const urlRoot = "/run";
-    const config = {
-      port: serverPort,
-      refresh: true,
-      urlRoot,
-      hostname: "localhost:9876",
-      clientArgs: [] as string[],
-    };
-    const testName = "";
-    // if testName is undefined, reset jasmine.getEnv().specFilter function
-    // otherwise, last specified specFilter will be used
-    config.clientArgs = ["--grep=" + (testName || "")];
-    await this.runWithConfig(config, tests);
-  }
-
   public async runWithConsole(tests: any): Promise<void> {
     if (tests[0] === "root") {
       tests = "";
     }
+    
     const command = `karma run -- --grep="${tests}"`;
     const exec = require("child_process").exec;
-    const karmaCommandLinePath = path.join(this.angularProjectRootPath,"node_modules", "karma", "bin");
+    const karmaCommandLinePath = path.join(this.angularProjectRootPath, "node_modules", "karma", "bin");
     exec(command, {
       cwd: karmaCommandLinePath
     });
@@ -71,6 +52,29 @@ export class KarmaRunner {
 
   public stopServer(): void {
     karma.stopper.stop();
+  }
+
+  public async runWithBrowserRequest(tests: any): Promise<void> {
+    // if testName is undefined, reset jasmine.getEnv().specFilter function
+    // otherwise, last specified specFilter will be used
+    if (tests[0] === "root" || tests[0] === undefined) {
+      tests = "";
+    }
+
+    const serverPort = 9876;
+    const urlRoot = "/run";
+    const config = {
+      port: serverPort,
+      refresh: true,
+      urlRoot,
+      hostname: "localhost",
+      clientArgs: [] as string[],
+    };
+
+    config.clientArgs = [`--grep=${tests}`];
+    await this.runWithConfig(config, tests);
+
+    this.karmaEventListener.lastRunTests = tests !== "" ? tests[0] : tests;
   }
 
   private async runWithConfig(config: any, tests: any): Promise<void> {
@@ -83,28 +87,31 @@ export class KarmaRunner {
         headers: {
           "Content-Type": "application/json",
         },
-        rejectUnauthorized: false,
       };
 
       const http = require("http");
 
       const request = http.request(options, (response: any) => {
-        response.on("data", (buffer: any) => {
-          const parsedResult = this.karmaHelper.parseExitCode(buffer, 1, false);
-          global.console.log(parsedResult.exitCode);
-          global.console.log(parsedResult.buffer.toString("utf8"));
+        response.on('data', (buffer: any) => {
+            resolve();
         });
-
-        response.on("end", () => resolve());
       });
-
-      request.on("error", (e: any) => {
-        if (e.code === "ECONNREFUSED") {
-          global.console.error("There is no server listening on port %d", options.port);
-        } else {
-          throw e;
+    
+      request.on('error', (e: any) => {
+        if (e.code === 'ECONNREFUSED') {
+          global.console.error('There is no server listening on port %d', options.port);
         }
       });
+
+      const updateKarmaRequest = JSON.stringify({
+        args: config.clientArgs,
+        removedFiles: config.removedFiles,
+        changedFiles: config.changedFiles,
+        addedFiles: config.addedFiles,
+        refresh: config.refresh
+      });
+    
+      request.end(updateKarmaRequest);
     });
   }
 }

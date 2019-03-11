@@ -52,7 +52,7 @@ export class KarmaEventListener {
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
     const testName = event.results.suite + " " + event.results.description;
     global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
-    if (this.lastRunTests.includes(event.results.suite[0]) || this.lastRunTests === "") {
+    if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       if (event.results.suite[0] !== this.fakeTestSuiteName) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Running });
         this.savedSpecs.push(event.results);

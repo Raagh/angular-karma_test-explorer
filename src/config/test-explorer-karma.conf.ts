@@ -98,8 +98,8 @@ export = Object.assign(
   (config: Config) => {
     setDefaultOptions(config);
     disableSingleRun(config);
-    setUserKarmaConfigFile(config);
-    setUserKarmaConfig(config);
+    // setUserKarmaConfigFile(config);
+    // setUserKarmaConfig(config);
     setBasePath(config);
     configureAngularReporter(config);
   },
