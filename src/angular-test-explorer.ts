@@ -25,8 +25,8 @@ export class AngularTestExplorer {
       await this.angularServer.stopPreviousRun();
     }
 
-    const isAngularStarted = this.angularServer.start();
-    if (!isAngularStarted) {
+    const hasAngularStarted = this.angularServer.start();
+    if (!hasAngularStarted) {
       return {} as TestSuiteInfo;
     }
 
@@ -39,11 +39,9 @@ export class AngularTestExplorer {
   }
 
   public async runTests(tests: any): Promise<void> {
-    // await this.karmaRunner.runWithConsole(tests);
-    // await this.karmaRunner.runWithModule();
     this.angularServer.cleanUp();
 
-    await this.karmaRunner.runWithBrowserRequest(tests);
+    await this.karmaRunner.runTests(tests);
   }
 
   public debugTests(): void {

@@ -21,40 +21,16 @@ export class KarmaRunner {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
-    await this.runWithModule();
+    await this.runForLoading();
 
     return this.karmaEventListener.getLoadedTests();
-  }
-
-  public async runWithModule(): Promise<void> {
-    return new Promise<void>(resolve => {
-      karma.runner.run({ port: 9876 }, (exitCode: number) => {
-        global.console.log("karma run done with ", exitCode);
-        resolve();
-      });
-    });
-  }
-
-  public async runWithConsole(tests: any): Promise<void> {
-    if (tests[0] === "root") {
-      tests = "";
-    }
-    
-    const command = `karma run -- --grep="${tests}"`;
-    const exec = require("child_process").exec;
-    const karmaCommandLinePath = path.join(this.angularProjectRootPath, "node_modules", "karma", "bin");
-    exec(command, {
-      cwd: karmaCommandLinePath
-    });
-
-    this.karmaEventListener.lastRunTests = tests !== "" ? tests[0] : tests;
   }
 
   public stopServer(): void {
     karma.stopper.stop();
   }
 
-  public async runWithBrowserRequest(tests: any): Promise<void> {
+  public async runTests(tests: any): Promise<void> {
     // if testName is undefined, reset jasmine.getEnv().specFilter function
     // otherwise, last specified specFilter will be used
     if (tests[0] === "root" || tests[0] === undefined) {
@@ -92,14 +68,14 @@ export class KarmaRunner {
       const http = require("http");
 
       const request = http.request(options, (response: any) => {
-        response.on('data', (buffer: any) => {
-            resolve();
+        response.on("data", (buffer: any) => {
+          resolve();
         });
       });
-    
-      request.on('error', (e: any) => {
-        if (e.code === 'ECONNREFUSED') {
-          global.console.error('There is no server listening on port %d', options.port);
+
+      request.on("error", (e: any) => {
+        if (e.code === "ECONNREFUSED") {
+          global.console.error("There is no server listening on port %d", options.port);
         }
       });
 
@@ -108,10 +84,19 @@ export class KarmaRunner {
         removedFiles: config.removedFiles,
         changedFiles: config.changedFiles,
         addedFiles: config.addedFiles,
-        refresh: config.refresh
+        refresh: config.refresh,
       });
-    
+
       request.end(updateKarmaRequest);
+    });
+  }
+
+  private runForLoading(): Promise<void> {
+    return new Promise<void>(resolve => {
+      karma.runner.run({ port: 9876 }, (exitCode: number) => {
+        global.console.log("karma run done with ", exitCode);
+        resolve();
+      });
     });
   }
 }
