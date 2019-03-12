@@ -19,7 +19,7 @@ export class AngularServer {
 
   public stopPreviousRun(): Promise<void> {
     if (this.angularProcess != null) {
-      process.kill(this.angularProcess.pid);
+      this.angularProcess.kill();
     }
 
     return new Promise<void>(resolve => {

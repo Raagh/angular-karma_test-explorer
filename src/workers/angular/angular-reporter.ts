@@ -9,9 +9,8 @@ function AngularReporter(this: any, baseReporterDecorator: any, config: any, log
   this.emitter = emitter;
   this.socket = io("http://localhost:1111/");
 
-  this.socket.on('disconnect', () => {
-    this.socket.open();
-  });
+  this.socket.heartbeatTimeout = 240000;
+  this.socket.heartbeatInterval = 2000;
 
   const emitEvent = (eventName: any, eventResults: any = null) => {
     this.socket.emit(eventName,{name: eventName, results: eventResults});
