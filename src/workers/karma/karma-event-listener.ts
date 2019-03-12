@@ -16,6 +16,7 @@ export class KarmaEventListener {
   public isServerLoaded: boolean = false;
   public lastRunTests: string = "";
   private savedSpecs: any[] = [];
+  private server: any;
   private readonly fakeTestSuiteName: string = "LoadTests";
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
 
@@ -25,25 +26,33 @@ export class KarmaEventListener {
 
   public listenTillKarmaReady(eventEmitter: any): Promise<void> {
     return new Promise<void>(resolve => {
-      const app = require('express')();
-      const server = require('http').createServer(app);
-      const io = require('socket.io')(server);
+      const app = require("express")();
+      this.server = require("http").createServer(app);
+      const io = require("socket.io")(this.server);
 
       io.on("connection", (socket: any) => {
-
-        socket.on(KarmaEventName.BrowserConnected, () => { this.onBrowserConnected(resolve) });
-        socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => { global.console.log("browser_error " + event.results); });
-        socket.on(KarmaEventName.BrowserStart, () => { this.savedSpecs = []; });
-        socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => { global.console.log("run_complete " + event.results); });
-        socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => { this.onSpecComplete(event, eventEmitter); });
-
-        socket.on('disconnect', () => {
-          global.console.log("AngularReporter closed connection");
+        socket.on(KarmaEventName.BrowserConnected, () => {
+          this.onBrowserConnected(resolve);
+        });
+        socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => {
+          global.console.log("browser_error " + event.results);
+        });
+        socket.on(KarmaEventName.BrowserStart, () => {
+          this.savedSpecs = [];
+        });
+        socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => {
+          global.console.log("run_complete " + event.results);
+        });
+        socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
+          this.onSpecComplete(event, eventEmitter);
         });
 
+        socket.on("disconnect", () => {
+          global.console.log("AngularReporter closed connection");
+        });
       });
-      
-      server.listen(1111, () => {
+
+      this.server.listen(1111, () => {
         global.console.log("Listening to AngularReporter events on port 1111");
       });
     });
@@ -51,6 +60,10 @@ export class KarmaEventListener {
 
   public getLoadedTests(): TestSuiteInfo {
     return this.specToTestSuiteMapper.map(this.savedSpecs);
+  }
+
+  public stopListeningToKarma() {
+    this.server.close();
   }
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {

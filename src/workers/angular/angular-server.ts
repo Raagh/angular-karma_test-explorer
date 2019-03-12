@@ -1,8 +1,8 @@
-
 import { KarmaHelper } from "../karma/karma-helper";
 import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
+import { KarmaEventListener } from "../karma/karma-event-listener";
 
 export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
@@ -19,12 +19,14 @@ export class AngularServer {
 
   public stopPreviousRun(): Promise<void> {
     if (this.angularProcess != null) {
-      this.angularProcess.kill();
+      process.kill(this.angularProcess.pid);
     }
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
-        global.console.log(`ng child process exited with signal ${signal}`);
+        global.console.log(`Angular exited with code ${code} and signal ${signal}`);
+        const karmaEventListener = KarmaEventListener.getInstance();
+        karmaEventListener.stopListeningToKarma();
         resolve();
       });
     });
