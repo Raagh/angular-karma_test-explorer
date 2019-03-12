@@ -17,21 +17,20 @@ export class AngularServer {
     this.karmaHelper = new KarmaHelper();
   }
 
-  public async stopPreviousRun(): Promise<void> {
+  public stopPreviousRun(): Promise<void> {
     if (this.angularProcess != null) {
-      this.angularProcess.stdin.pause();
-      process.kill(-this.angularProcess.pid);
+      this.angularProcess.kill();
     }
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
-        global.console.log(`ng child process exited with code ${code} and signal ${signal}`);
+        global.console.log(`ng child process exited with signal ${signal}`);
         resolve();
       });
     });
   }
 
-  public start(): any {
+  public start(): boolean {
     if (!this.karmaHelper.isValidKarmaConfig(this.baseKarmaConfigFilePath)) {
       global.console.log("The karma.conf.js used is not valid");
       return false;

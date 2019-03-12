@@ -25,9 +25,9 @@ export class KarmaEventListener {
 
   public listenTillKarmaReady(eventEmitter: any): Promise<void> {
     return new Promise<void>(resolve => {
-      const app = require("express")();
-      const http = require("http").Server(app);
-      const io = require("socket.io")(http);
+      const app = require('express')();
+      const server = require('http').createServer(app);
+      const io = require('socket.io')(server);
 
       io.on("connection", (socket: any) => {
 
@@ -37,9 +37,13 @@ export class KarmaEventListener {
         socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => { global.console.log("run_complete " + event.results); });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => { this.onSpecComplete(event, eventEmitter); });
 
+        socket.on('disconnect', () => {
+          global.console.log("AngularReporter closed connection");
+        });
+
       });
       
-      http.listen(1111, () => {
+      server.listen(1111, () => {
         global.console.log("Listening to AngularReporter events on port 1111");
       });
     });
