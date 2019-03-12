@@ -2,16 +2,16 @@ import * as karma from "karma";
 import { TestResult } from "../../model/test-status.enum";
 import { RunStatus } from "../../model/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
+import * as io from "socket.io-client";
 
 function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
   this.emitter = emitter;
+  this.socket = io("http://localhost:1111/");
 
-  const emitEvent = process.send
-    ? (eventName: any, eventResults: any = null) => {
-        process.send!({ name: eventName, results: eventResults });
-      }
-    : () => {};
+  const emitEvent = (eventName: any, eventResults: any = null) => {
+    this.socket.emit(eventName,{name: eventName, results: eventResults});
+  };
 
   baseReporterDecorator(this);
 

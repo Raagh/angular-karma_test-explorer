@@ -23,26 +23,24 @@ export class KarmaEventListener {
     this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
   }
 
-  public listenTillKarmaReady(eventEmitter: any, angularProcess: any): Promise<void> {
+  public listenTillKarmaReady(eventEmitter: any): Promise<void> {
     return new Promise<void>(resolve => {
-      angularProcess.on("message", (event: KarmaEvent) => {
-        switch (event.name) {
-          case KarmaEventName.BrowserConnected:
-            this.onBrowserConnected(resolve);
-            break;
-          case KarmaEventName.RunComplete:
-            global.console.log("run_complete " + event.results);
-            break;
-          case KarmaEventName.SpecComplete:
-            this.onSpecComplete(event, eventEmitter);
-            break;
-          case KarmaEventName.BrowserStart:
-            this.savedSpecs = [];
-            break;
-          case KarmaEventName.BrowserError:
-            global.console.log("browser_error " + event.results);
-            break;
-        }
+      const app = require("express")();
+      const http = require("http").Server(app);
+      const io = require("socket.io")(http);
+
+      io.on("connection", (socket: any) => {
+
+        socket.on(KarmaEventName.BrowserConnected, () => { this.onBrowserConnected(resolve) });
+        socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => { global.console.log("browser_error " + event.results); });
+        socket.on(KarmaEventName.BrowserStart, () => { this.savedSpecs = []; });
+        socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => { global.console.log("run_complete " + event.results); });
+        socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => { this.onSpecComplete(event, eventEmitter); });
+
+      });
+      
+      http.listen(1111, () => {
+        global.console.log("Listening to AngularReporter events on port 1111");
       });
     });
   }
@@ -54,7 +52,7 @@ export class KarmaEventListener {
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
     const testName = event.results.suite + " " + event.results.description;
     global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
-    if (this.lastRunTests.includes(event.results.suite[0]) || this.lastRunTests === "") {
+    if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       if (event.results.suite[0] !== this.fakeTestSuiteName) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Running });
         this.savedSpecs.push(event.results);
