@@ -1,15 +1,12 @@
 import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import path = require("path");
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
-  private readonly angularProjectRootPath: string;
 
-  public constructor(angularProjectRootPath: string) {
+  public constructor() {
     this.karmaEventListener = KarmaEventListener.getInstance();
-    this.angularProjectRootPath = angularProjectRootPath;
   }
 
   public isKarmaRunning(): boolean {
@@ -21,7 +18,11 @@ export class KarmaRunner {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
-    await this.runForLoading();
+    const fakeTestPatternForSkippingEverything = "$#%#";
+    const karmaRunParameters = this.createKarmaRunConfiguration(fakeTestPatternForSkippingEverything);
+    this.karmaEventListener.lastRunTests = "";
+
+    await this.runWithConfig(karmaRunParameters.config, karmaRunParameters.tests);
 
     return this.karmaEventListener.getLoadedTests();
   }
@@ -31,12 +32,18 @@ export class KarmaRunner {
   }
 
   public async runTests(tests: any): Promise<void> {
+    const karmaRunParameters = this.createKarmaRunConfiguration(tests);
+
+    this.karmaEventListener.lastRunTests = karmaRunParameters.tests;
+    await this.runWithConfig(karmaRunParameters.config, karmaRunParameters.tests);
+  }
+
+  private createKarmaRunConfiguration(tests: any) {
     // if testName is undefined, reset jasmine.getEnv().specFilter function
     // otherwise, last specified specFilter will be used
     if (tests[0] === "root" || tests[0] === undefined) {
       tests = "";
     }
-
     const serverPort = 9876;
     const urlRoot = "/run";
     const config = {
@@ -46,14 +53,11 @@ export class KarmaRunner {
       hostname: "localhost",
       clientArgs: [] as string[],
     };
-
     config.clientArgs = [`--grep=${tests}`];
-    await this.runWithConfig(config, tests);
-
-    this.karmaEventListener.lastRunTests = tests !== "" ? tests[0] : tests;
+    return { config, tests };
   }
 
-  private async runWithConfig(config: any, tests: any): Promise<void> {
+  private runWithConfig(config: any, tests: any): Promise<void> {
     return new Promise<void>(resolve => {
       const options = {
         hostname: config.hostname,
@@ -67,11 +71,7 @@ export class KarmaRunner {
 
       const http = require("http");
 
-      const request = http.request(options, (response: any) => {
-        response.on("data", (buffer: any) => {
-          resolve();
-        });
-      });
+      const request = http.request(options);
 
       request.on("error", (e: any) => {
         if (e.code === "ECONNREFUSED") {
@@ -79,24 +79,15 @@ export class KarmaRunner {
         }
       });
 
-      const updateKarmaRequest = JSON.stringify({
+      request.end(JSON.stringify({
         args: config.clientArgs,
         removedFiles: config.removedFiles,
         changedFiles: config.changedFiles,
         addedFiles: config.addedFiles,
         refresh: config.refresh,
-      });
+      }));
 
-      request.end(updateKarmaRequest);
-    });
-  }
-
-  private runForLoading(): Promise<void> {
-    return new Promise<void>(resolve => {
-      karma.runner.run({ port: 9876 }, (exitCode: number) => {
-        global.console.log("karma run done with ", exitCode);
-        resolve();
-      });
+      request.on("close",() =>{ resolve(); });
     });
   }
 }

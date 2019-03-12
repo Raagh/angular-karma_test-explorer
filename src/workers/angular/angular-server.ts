@@ -1,16 +1,12 @@
-import { FileHelper } from "./../test-explorer/file-helper";
+
 import { KarmaHelper } from "../karma/karma-helper";
 import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
-import path = require("path");
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 
 export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
-  private readonly localPath: string;
-  private readonly remotePath: string;
   private readonly angularProjectRootPath: string;
-  private readonly fileHelper: FileHelper;
   private angularProcess: any;
 
   public constructor(angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
@@ -19,9 +15,6 @@ export class AngularServer {
       karmaConfigFile: this.angularProjectRootPath,
     });
     this.karmaHelper = new KarmaHelper();
-    this.localPath = path.join(__dirname, "..", "..", "..", "src", "workers", "karma", "fakeTest.spec.ts");
-    this.remotePath = path.join(this.angularProjectRootPath, "src", "app", "fakeTest.spec.ts");
-    this.fileHelper = new FileHelper();
   }
 
   public async stopPreviousRun(): Promise<void> {
@@ -46,16 +39,6 @@ export class AngularServer {
 
     this.runNgTest();
     return true;
-  }
-
-  public setup(): void {
-    this.fileHelper.copyFile(this.localPath, this.remotePath);
-  }
-
-  public cleanUp(): void {
-    this.fileHelper.deleteFile(this.remotePath);
-    this.fileHelper.copyFile(this.localPath, this.remotePath);
-    this.fileHelper.deleteFile(this.remotePath);
   }
 
   private runNgTest(): void {
