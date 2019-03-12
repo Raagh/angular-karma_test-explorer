@@ -22,7 +22,7 @@ export class KarmaRunner {
     const karmaRunParameters = this.createKarmaRunConfiguration(fakeTestPatternForSkippingEverything);
     this.karmaEventListener.lastRunTests = "";
 
-    await this.runWithConfig(karmaRunParameters.config, karmaRunParameters.tests);
+    await this.runWithConfig(karmaRunParameters.config);
 
     return this.karmaEventListener.getLoadedTests();
   }
@@ -35,7 +35,7 @@ export class KarmaRunner {
     const karmaRunParameters = this.createKarmaRunConfiguration(tests);
 
     this.karmaEventListener.lastRunTests = karmaRunParameters.tests;
-    await this.runWithConfig(karmaRunParameters.config, karmaRunParameters.tests);
+    await this.runWithConfig(karmaRunParameters.config);
   }
 
   private createKarmaRunConfiguration(tests: any) {
@@ -57,7 +57,7 @@ export class KarmaRunner {
     return { config, tests };
   }
 
-  private runWithConfig(config: any, tests: any): Promise<void> {
+  private runWithConfig(config: any): Promise<void> {
     return new Promise<void>(resolve => {
       const options = {
         hostname: config.hostname,
