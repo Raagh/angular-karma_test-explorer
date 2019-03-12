@@ -19,8 +19,6 @@ export class AngularTestExplorer {
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
-    // this.angularServer.setup();
-
     if (this.karmaRunner.isKarmaRunning()) {
       await this.angularServer.stopPreviousRun();
     }
@@ -33,14 +31,11 @@ export class AngularTestExplorer {
     await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
 
     const result = await this.karmaRunner.loadTests();
-    // this.angularServer.cleanUp();
 
     return result;
   }
 
   public async runTests(tests: any): Promise<void> {
-    // this.angularServer.cleanUp();
-
     await this.karmaRunner.runTests(tests);
   }
 
