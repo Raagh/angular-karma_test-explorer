@@ -3,6 +3,7 @@ import explorerKarmaConfig = require("../../config/test-explorer-karma.conf");
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
+import * as path from "path";
 
 export class AngularServer {
   private readonly karmaHelper: KarmaHelper;
@@ -10,10 +11,12 @@ export class AngularServer {
   private angularProcess: any;
 
   public constructor(angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
+    const userKarmaConfigFile = path.join(angularProjectRootPath, "src", "karma.conf.js");
     this.angularProjectRootPath = angularProjectRootPath;
     explorerKarmaConfig.setGlobals({
-      karmaConfigFile: this.angularProjectRootPath,
+      karmaConfigFile: userKarmaConfigFile,
     });
+
     this.karmaHelper = new KarmaHelper();
   }
 
@@ -54,7 +57,7 @@ export class AngularServer {
     this.angularProcess = spawn("ng", cliArgs, options);
 
     // this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
-    // this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
-    // this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
+    this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
+    this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
   }
 }

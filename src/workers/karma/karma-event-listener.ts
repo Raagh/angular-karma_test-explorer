@@ -28,7 +28,7 @@ export class KarmaEventListener {
     return new Promise<void>(resolve => {
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, {'pingInterval': 2000, 'pingTimeout': 240000});
+      const io = require("socket.io")(this.server, {'pingInterval': 10, 'pingTimeout': 240000});
 
       io.on("connection", (socket: any) => {
         socket.on(KarmaEventName.BrowserConnected, () => {
@@ -47,9 +47,9 @@ export class KarmaEventListener {
           this.onSpecComplete(event, eventEmitter);
         });
 
-        // socket.on("disconnect", () => {
-        //   global.console.log("AngularReporter closed connection");
-        // });
+        socket.on("disconnect", (event:any) => {
+          global.console.log("AngularReporter closed connection with event: " + event);
+        });
       });
 
       this.server.listen(1111, () => {

@@ -15,28 +15,28 @@ You should now see a second VS Code window, the Extension Development Host.
 Open a folder in this window and click the "Test" icon in the Activity bar.
 Now you should see the test suite in the side panel:
 
-![The fake example test suite](img/img-tests.png)
+![The fake example test suite](img/img-tests.png =400x450)
 
 ## Working implementation
 
 - Load tests without running them, every test in their corresponding suite
-- the implementation for running all tests is there but there is no call in `src/adapter.ts` as I am still trying
-  to finish the loadTests implementation
+- Reload tests manually by the reload button in the UI.
+- Run all tests together, run set of tests, run single test.
+- Loads values from user karma.conf.js (some get removed to make the explorer work correctly)
 
 ## Completing the implementation
 
-- start implementating unit tests in a TDD fashion
-- loadTests implementation should work without running tests (by skipping them all)
-- implement the `debug()` method
-- implement the `cancel()` method (it should kill the child process that was started by `run()` or `debug()`)
-- watch the configuration for any changes that may affect the loading of test definitions and reload the test definitions if necessary
-- watch the workspace for any changes to the test files and reload the test definitions if necessary
-- watch the configuration for any changes that may affect the results of running the tests and emit an `autorun` event if necessary
-- watch the workspace for any changes to the source files and emit an `autorun` event if necessary
-- ensure that only one test run is active at a time
-- supporting standalone karma
+- Tons and Tons of integration tests
+- Supporting standalone karma
+- Implement the `debug()` method
+- Implement the `cancel()` method (it should kill the child process that was started by `run()` or `debug()`)
+- Watch the configuration for any changes that may affect the loading of test definitions and reload the test definitions if necessary
+- Watch the workspace for any changes to the test files and reload the test definitions if necessary
+- Watch the configuration for any changes that may affect the results of running the tests and emit an `autorun` event if necessary
+- Watch the workspace for any changes to the source files and emit an `autorun` event if necessary
+- Ensure that only one test run is active at a time
 
 ## Disclaimer
 
-This project is in early stages of development, the code may be changed at any moment. I am not considering
-supporting karma outside of Angular at this stage, it will be included in the future.
+This project is in early stages of development, the code may be changed at any moment.
+Karma outside of Angular will be included in the future.

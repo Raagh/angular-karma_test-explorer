@@ -1,3 +1,4 @@
+import { TestExplorerHelper } from './../workers/test-explorer/test-explorer-helper';
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
 import * as AngularReporter from "../workers/angular/angular-reporter";
@@ -5,8 +6,7 @@ import * as AngularReporter from "../workers/angular/angular-reporter";
 function setDefaultOptions(config: Config) {
   config.set({
     browsers: ["ChromeHeadless"],
-    frameworks: ["jasmine", "@angular-devkit/build-angular"],
-    plugins: [require("karma-jasmine"), require("karma-chrome-launcher"), require("@angular-devkit/build-angular/plugins/karma")],
+    frameworks: ["jasmine"],
     // No auto watch, the UI will inform us when we need to test
     autoWatch: false,
     // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
@@ -89,6 +89,26 @@ function configureAngularReporter(config: Config) {
   config.reporters.push(AngularReporter.name);
 }
 
+function removeWrongUserConfigValues(config: Config) {
+  const wrongReporters = ["dots", "kjhtml", "progress"];
+  const wrongPlugins = [{ "reporter:kjhtml": "" }, { "reporter:coverage-istanbul": "" }];
+  config.reporters = testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, wrongReporters);
+  config.plugins = testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.plugins, wrongPlugins);
+  config.coverageIstanbulReporter = {};
+  config.browsers = ["ChromeHeadless"];
+  config.autoWatch = false;
+  config.browserNoActivityTimeout = undefined;
+  config.detached = false;
+  config.restartOnFileChange = false;
+  config.client = {
+    clearContext: true 
+  };
+  config.basePath = "C:\\Users\\Patricio\\Documents\\GitHub";
+  config.files = [];
+}
+
+const testExplorerHelper = new TestExplorerHelper();
+
 const globalSettings: {
   karmaConfig?: ConfigOptions;
   karmaConfigFile?: string;
@@ -97,9 +117,10 @@ const globalSettings: {
 export = Object.assign(
   (config: Config) => {
     setDefaultOptions(config);
+    setUserKarmaConfigFile(config);
+    setUserKarmaConfig(config);
+    removeWrongUserConfigValues(config);
     disableSingleRun(config);
-    // setUserKarmaConfigFile(config);
-    // setUserKarmaConfig(config);
     setBasePath(config);
     configureAngularReporter(config);
   },
