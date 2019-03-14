@@ -90,7 +90,7 @@ function configureAngularReporter(config: Config) {
 }
 
 function removeWrongUserConfigValues(config: Config) {
-  const wrongReporters = ["dots", "kjhtml", "progress"];
+  const wrongReporters = ["dots", "kjhtml"];
   const wrongPlugins = [{ "reporter:kjhtml": "" }, { "reporter:coverage-istanbul": "" }];
   config.reporters = testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, wrongReporters);
   config.plugins = testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.plugins, wrongPlugins);
@@ -103,8 +103,9 @@ function removeWrongUserConfigValues(config: Config) {
   config.client = {
     clearContext: true 
   };
-  config.basePath = "C:\\Users\\Patricio\\Documents\\GitHub";
+  config.basePath = "c:\\Users\\Patricio\\Documents\\GitHub";
   config.files = [];
+  config.browserNoActivityTimeout = 30000;
 }
 
 const testExplorerHelper = new TestExplorerHelper();

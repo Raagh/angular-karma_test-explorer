@@ -5,6 +5,8 @@ export class KarmaHelper {
     const cfg = require("karma").config;
     const karmaConfig = cfg.parseConfig(karmaConfigFilePath);
 
+    global.console.log(karmaConfig);
+
     return karmaConfig != null || karmaConfig !== undefined;
   }
 
