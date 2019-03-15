@@ -1,4 +1,3 @@
-
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
 import * as AngularReporter from "../workers/angular/angular-reporter";
@@ -6,61 +5,31 @@ import { TestExplorerHelper } from "../workers/test-explorer/test-explorer-helpe
 
 export class KarmaConfigurator {
   private readonly testExplorerHelper: TestExplorerHelper;
-  constructor(private globalSettings: any) {
+  constructor() {
     this.testExplorerHelper = new TestExplorerHelper();
   }
 
   public setMandatoryOptions(config: Config) {
-    config.set({
-      browsers: ["ChromeHeadless"],
-      frameworks: ["jasmine"],
-      // No auto watch, the UI will inform us when we need to test
-      autoWatch: false,
-      // Override browserNoActivityTimeout. Default value 10000 might not enough to send perTest coverage results
-      browserNoActivityTimeout: undefined,
-      detached: false,
-      singleRun: false,
-    });
+    // remove 'logLevel' changing
+    // https://github.com/karma-runner/karma/issues/614 is ready
+    config.logLevel = config.LOG_INFO;
+    config.autoWatch = false;
+    config.autoWatchBatchDelay = 0;
+    config.browsers = ["ChromeHeadless"];
+    config.singleRun = false;
   }
 
-  public setUserKarmaConfigFile(config: Config) {
-    if (this.globalSettings.karmaConfigFile && typeof this.globalSettings.karmaConfigFile === "string") {
-      const configFileName = path.resolve(this.globalSettings.karmaConfigFile);
-      global.console.log('Importing config from "%s"', configFileName);
-      try {
-        let userConfig = require(configFileName);
-        // https://github.com/karma-runner/karma/blob/v1.7.0/lib/config.js#L364
-        if (typeof userConfig === "object" && typeof userConfig.default !== "undefined") {
-          userConfig = userConfig.default;
-        }
-        userConfig(config);
-        config.configFile = configFileName; // override config to ensure karma is as user-like as possible
-      } catch (error) {
-        if (error.code === "MODULE_NOT_FOUND") {
-          global.console.log(
-            `Unable to find karma config at "${
-              this.globalSettings.karmaConfigFile
-            }" (tried to load from ${configFileName}). Please check your stryker config.
-              You might need to make sure the file is included in the sandbox directory.`
-          );
-        } else {
-          global.console.log(`Could not read karma configuration from ${this.globalSettings.karmaConfigFile}.`, error);
-        }
-      }
-    }
+  public dontLoadOriginalConfigurationFileIntoBrowser(config: Config, originalConfigPath: string){
+    // https://github.com/karma-runner/karma-intellij/issues/9
+    config.exclude = config.exclude || [];
+    config.exclude.push(originalConfigPath);
   }
 
-  public setUserKarmaConfig(config: Config) {
-    if (this.globalSettings.karmaConfig) {
-      config.set(this.globalSettings.karmaConfig);
-    }
-  }
-
-  public setBasePath(config: Config) {
+  public setBasePath(config: Config, originalConfigPath:string) {
     if (!config.basePath) {
       // We need to set the base path, so karma won't use this file to base everything of
-      if (this.globalSettings.karmaConfigFile) {
-        config.basePath = path.resolve(path.dirname(this.globalSettings.karmaConfigFile));
+      if (originalConfigPath) {
+        config.basePath = path.resolve(path.dirname(originalConfigPath));
       } else {
         config.basePath = process.cwd();
       }
@@ -68,7 +37,6 @@ export class KarmaConfigurator {
   }
 
   public disableSingleRunPermanently(config: Config) {
-    config.singleRun = false;
     const prevSet = config.set;
     if (typeof prevSet === "function") {
       config.set = (newConfig: ConfigOptions) => {
@@ -82,11 +50,21 @@ export class KarmaConfigurator {
     }
   }
 
-  public removeWrongUserConfigValues(config: Config) {
-    const filteredReporters = this.testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, ["dots", "progress"]);
+  public cleanUpReporters(config: Config){
+    const filteredReporters = this.testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, ['dots', 'kjhtml']);
     config.reporters = filteredReporters;
   }
-
+  
+  public loadOriginalUserConfiguration(config: Config, originalConfigPath: string){
+    let originalConfigModule = require(originalConfigPath);
+    // https://github.com/karma-runner/karma/blob/v1.7.0/lib/config.js#L364
+    if (typeof originalConfigModule === 'object' && typeof originalConfigModule.default !== 'undefined') {
+      originalConfigModule = originalConfigModule.default;
+    }
+  
+    originalConfigModule(config);
+  }
+  
   public configureAngularReporter(config: Config) {
     this.addPlugin(config, { [`reporter:${AngularReporter.name}`]: ["type", AngularReporter.instance] });
     if (!config.reporters) {

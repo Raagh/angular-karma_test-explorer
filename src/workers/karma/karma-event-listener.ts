@@ -57,7 +57,7 @@ export class KarmaEventListener {
       });
     });
   }
-
+  
   public getLoadedTests(): TestSuiteInfo {
     return this.specToTestSuiteMapper.map(this.savedSpecs);
   }

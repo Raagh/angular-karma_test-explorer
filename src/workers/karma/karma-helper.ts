@@ -1,15 +1,6 @@
 export class KarmaHelper {
   public constructor() {}
 
-  public isValidKarmaConfig(karmaConfigFilePath: string): boolean {
-    const cfg = require("karma").config;
-    const karmaConfig = cfg.parseConfig(karmaConfigFilePath);
-
-    global.console.log(karmaConfig);
-
-    return karmaConfig != null || karmaConfig !== undefined;
-  }
-
   public parseExitCode(buffer: any, defaultExitCode: any, failOnEmptyTestSuite: any) {
     const EXIT_CODE = Buffer.from("\x1FEXIT");
     const tailPos = buffer.length - Buffer.byteLength(EXIT_CODE) - 2;
