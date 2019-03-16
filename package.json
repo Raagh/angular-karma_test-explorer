@@ -17,6 +17,9 @@
   "categories": [
     "Other"
   ],
+  "jest": {
+    "testEnvironment": "node"
+ },
   "keywords": [
     "test",
     "testing",

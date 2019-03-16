@@ -68,15 +68,16 @@ export class KarmaEventListener {
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
     const testName = event.results.suite + " " + event.results.description;
-    global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       if (event.results.suite[0] !== this.fakeTestSuiteName) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Running });
         this.savedSpecs.push(event.results);
         if (event.results.status === TestResult.Failed) {
           eventEmitter.fire({ type: "test", test: testName, state: TestState.Failed });
+          global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
         } else if (event.results.status === TestResult.Success) {
           eventEmitter.fire({ type: "test", test: testName, state: TestState.Passed });
+          global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
         } else if (event.results.status === TestResult.Skipped) {
           eventEmitter.fire({ type: "test", test: testName, state: TestState.Skipped });
         }
