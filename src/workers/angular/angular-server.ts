@@ -39,8 +39,8 @@ export class AngularServer {
 
     this.angularProcess = spawn("ng", cliArgs, options);
 
-    this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
+    // this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
     this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
-    this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
+    // this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
   }
 }

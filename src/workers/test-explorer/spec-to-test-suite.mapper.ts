@@ -1,36 +1,52 @@
-import { TestExplorerHelper } from "./test-explorer-helper";
+import { SpecResultGroupToSuites } from './spec-result-groupby';
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 export class SpecToTestSuiteMapper {
-  private readonly testExplorerHelper: TestExplorerHelper;
+  private readonly specResultGroupBy: SpecResultGroupToSuites;
   public constructor() {
-    this.testExplorerHelper = new TestExplorerHelper();
+    this.specResultGroupBy = new SpecResultGroupToSuites();
   }
 
   public map(savedSpecs: any[]): TestSuiteInfo {
-    const suites = this.testExplorerHelper.groupBy(savedSpecs, "suite");
+    const suites: any[] = this.specResultGroupBy.group(savedSpecs);
 
-    return {
+    const rootSuite = {
       type: "suite",
       id: "root",
       label: "Angular",
-      children: Object.keys(suites).map<TestSuiteInfo>(
-        (key: any, index: any): TestSuiteInfo => {
-          return {
-            type: "suite",
-            id: key,
-            label: key,
-            children: suites[key].map(
-              (x: any): TestInfo => {
-                return {
-                  type: "test",
-                  id: x.suite[0] + " " + x.description,
-                  label: x.description,
-                };
-              }
-            ),
-          };
-        }
-      ),
-    };
+      children: [],
+    } as TestSuiteInfo;
+
+    rootSuite.children = suites.map((suite) => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
+
+    return rootSuite;
+  }
+
+  private mapTestsAndSuites(suite: any, previousSuiteName?: string): TestInfo | TestSuiteInfo {
+    let suiteName = suite.name;
+
+    if(previousSuiteName) {
+      suiteName = previousSuiteName + " " + suite.name;
+    }
+
+    const initialSuite = { 
+      type: "suite",
+      id: suiteName,
+      label: suite.name,
+      children: []
+    } as TestSuiteInfo;
+
+    const mappedTests = suite.tests.map((test: string) => {
+      return {
+        type: "test",
+        id: suiteName + " " + test,
+        label: test,
+      } as TestInfo;
+    });
+
+    const mappedSuites = suite.suites.map((innerSuite: any) => this.mapTestsAndSuites(innerSuite, suiteName));
+
+    initialSuite.children = initialSuite.children.concat(mappedSuites.concat(mappedTests))
+      
+    return initialSuite;
   }
 }
