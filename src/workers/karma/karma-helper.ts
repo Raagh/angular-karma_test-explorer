@@ -1,5 +1,9 @@
+import { Logger } from './../test-explorer/logger';
 export class KarmaHelper {
-  public constructor() {}
+  private readonly logger: Logger;
+  public constructor() {
+    this.logger = new Logger();
+  }
 
   public parseExitCode(buffer: any, defaultExitCode: any, failOnEmptyTestSuite: any) {
     const EXIT_CODE = Buffer.from("\x1FEXIT");
@@ -15,7 +19,7 @@ export class KarmaHelper {
       const emptyInt = parseInt(tailStr.substr(-2, 1), 10);
       let exitCode = parseInt(tailStr.substr(-1), 10);
       if (failOnEmptyTestSuite === false && emptyInt === 0) {
-        global.console.log("Test suite was empty.");
+        this.logger.log("Test suite was empty.");
         exitCode = 0;
       }
       return { exitCode, buffer: buffer.slice(0, tailPos) };

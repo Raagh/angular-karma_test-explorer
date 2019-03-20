@@ -4,6 +4,7 @@ import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
+import { Logger } from '../test-explorer/logger';
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -18,9 +19,11 @@ export class KarmaEventListener {
   private savedSpecs: any[] = [];
   private server: any;
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
+  private readonly logger: Logger;
 
   private constructor() {
     this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
+    this.logger = new Logger();
   }
 
   public listenTillKarmaReady(eventEmitter: any): Promise<void> {
@@ -34,25 +37,25 @@ export class KarmaEventListener {
           this.onBrowserConnected(resolve);
         });
         socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => {
-          global.console.log("browser_error " + event.results);
+          this.logger.log("browser_error " + event.results);
         });
         socket.on(KarmaEventName.BrowserStart, () => {
           this.savedSpecs = [];
         });
         socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => {
-          global.console.log("run_complete " + event.results);
+          this.logger.log("run_complete " + event.results);
         });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
           this.onSpecComplete(event, eventEmitter);
         });
 
         socket.on("disconnect", (event:any) => {
-          global.console.log("AngularReporter closed connection with event: " + event);
+          this.logger.log("AngularReporter closed connection with event: " + event);
         });
       });
 
       this.server.listen(1111, () => {
-        global.console.log("Listening to AngularReporter events on port 1111");
+        this.logger.log("Listening to AngularReporter events on port 1111");
       });
     });
   }
@@ -76,10 +79,10 @@ export class KarmaEventListener {
       this.savedSpecs.push(event.results);
       if (event.results.status === TestResult.Failed) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Failed });
-        global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
       } else if (event.results.status === TestResult.Success) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Passed });
-        global.console.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
       } else if (event.results.status === TestResult.Skipped) {
         eventEmitter.fire({ type: "test", test: testName, state: TestState.Skipped });
       }

@@ -1,11 +1,14 @@
+import { Logger } from './../test-explorer/logger';
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
 
 export class AngularServer {
+  private readonly logger: Logger;
   private angularProcess: any;
 
   public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
+    this.logger = new Logger();
   }
 
   public stopPreviousRun(): Promise<void> {
@@ -15,7 +18,7 @@ export class AngularServer {
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
-        global.console.log(`Angular exited with code ${code} and signal ${signal}`);
+        this.logger.log(`Angular exited with code ${code} and signal ${signal}`);
         const karmaEventListener = KarmaEventListener.getInstance();
         karmaEventListener.stopListeningToKarma();
         resolve();
@@ -30,7 +33,7 @@ export class AngularServer {
 
   private runNgTest(): void {
     const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
-    global.console.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
     
     const options = {
       cwd: this.angularProjectRootPath,
@@ -39,8 +42,8 @@ export class AngularServer {
 
     this.angularProcess = spawn("ng", cliArgs, options);
 
-    // this.angularProcess.stdout.on('data', (data: any) => global.console.log(`stdout: ${data}`));
-    this.angularProcess.stderr.on('data', (data: any) => global.console.log(`stderr: ${data}`));
-    // this.angularProcess.on("error", (err: any) => global.console.log(`error from ng child process: ${err}`));
+    // this.angularProcess.stdout.on('data', (data: any) => this.logger.log(`stdout: ${data}`));
+    this.angularProcess.stderr.on('data', (data: any) => this.logger.log(`stderr: ${data}`));
+    // this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
   }
 }
