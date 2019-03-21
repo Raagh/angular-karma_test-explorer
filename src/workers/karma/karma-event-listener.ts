@@ -1,10 +1,11 @@
+import { TestResultToTestStateMapper } from './../test-explorer/test-result-to-test-state.mapper';
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { TestResult } from "../../model/test-status.enum";
 import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-suite.mapper";
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
 import { Logger } from '../test-explorer/logger';
+import { EventEmitter } from '../test-explorer/event-emitter';
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -26,7 +27,7 @@ export class KarmaEventListener {
     this.logger = new Logger();
   }
 
-  public listenTillKarmaReady(eventEmitter: any): Promise<void> {
+  public listenTillKarmaReady(eventEmitter: EventEmitter): Promise<void> {
     return new Promise<void>(resolve => {
       const app = require("express")();
       this.server = require("http").createServer(app);
@@ -68,24 +69,21 @@ export class KarmaEventListener {
     this.server.close();
   }
 
-  private onSpecComplete(event: KarmaEvent, eventEmitter: any) {
+  private onSpecComplete(event: KarmaEvent, eventEmitter: EventEmitter) {
     let testName = event.results.suite + " " + event.results.description;;
     if (event.results.suite.length > 1) {
       testName = event.results.suite.join(" ") + " " + event.results.description;
     }
 
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
-      eventEmitter.fire({ type: "test", test: testName, state: TestState.Running });
+      eventEmitter.emitTestStateEvent(testName, TestState.Running);
       this.savedSpecs.push(event.results);
-      if (event.results.status === TestResult.Failed) {
-        eventEmitter.fire({ type: "test", test: testName, state: TestState.Failed });
-        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
-      } else if (event.results.status === TestResult.Success) {
-        eventEmitter.fire({ type: "test", test: testName, state: TestState.Passed });
-        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
-      } else if (event.results.status === TestResult.Skipped) {
-        eventEmitter.fire({ type: "test", test: testName, state: TestState.Skipped });
-      }
+      const testResultMapper = new TestResultToTestStateMapper();
+      const testState = testResultMapper.Map(event.results.status);
+
+      eventEmitter.emitTestStateEvent(testName, testState);
+
+      this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
     }
   }
 

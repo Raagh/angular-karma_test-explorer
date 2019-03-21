@@ -12,7 +12,7 @@ import { Log } from "vscode-test-adapter-util";
 import { AngularTestExplorer } from "./angular-test-explorer";
 import path = require("path");
 
-export class ExampleAdapter implements TestAdapter {
+export class Adapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
 
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
@@ -31,7 +31,7 @@ export class ExampleAdapter implements TestAdapter {
   }
 
   constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log) {
-    this.log.info("Initializing example adapter");
+    this.log.info("Initializing adapter");
 
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
@@ -40,7 +40,7 @@ export class ExampleAdapter implements TestAdapter {
   }
 
   public async load(): Promise<void> {
-    this.log.info("Loading example tests");
+    this.log.info("Loading tests");
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
@@ -50,7 +50,7 @@ export class ExampleAdapter implements TestAdapter {
   }
 
   public async run(tests: string[]): Promise<void> {
-    this.log.info(`Running example tests ${JSON.stringify(tests)}`);
+    this.log.info(`Running tests ${JSON.stringify(tests)}`);
 
     this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 

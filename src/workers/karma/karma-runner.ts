@@ -1,6 +1,7 @@
 import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
+import { EventEmitter } from '../test-explorer/event-emitter';
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
@@ -13,7 +14,7 @@ export class KarmaRunner {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async waitTillKarmaIsRunning(eventEmitter: any): Promise<void> {
+  public async waitTillKarmaIsRunning(eventEmitter: EventEmitter): Promise<void> {
     await this.karmaEventListener.listenTillKarmaReady(eventEmitter);
   }
 

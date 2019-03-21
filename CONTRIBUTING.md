@@ -1,4 +1,4 @@
-# Angular Test Explorer for Visual Studio Code
+# Angular/Karma Test Explorer for Visual Studio Code
 
 This repository contains the implementation for `Angular/Karma Test Explorer` extension that works with the
 [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
@@ -15,7 +15,7 @@ You should now see a second VS Code window, the Extension Development Host.
 Open a angular or karma project in this window and click the "Test" icon in the Activity bar.
 Now you should see the test suite in the side panel (angular projects take longer to load do to angular build times):
 
-<img src="./img/img-tests.png" height="50%" width="50%">
+<img src="./img/img-tests.png" height="40%" width="40%">
 
 # Making Changes
 

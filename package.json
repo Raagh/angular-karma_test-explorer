@@ -1,6 +1,6 @@
 {
-  "name": "angular-test-explorer",
-  "displayName": "Angular Test Explorer",
+  "name": "angular-karma-test-explorer",
+  "displayName": "Angular/Karma Test Explorer",
   "description": "Run your Angular Tests in the Sidebar of Visual Studio Code",
   "icon": "img/icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
@@ -79,14 +79,14 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "Example Test Explorer configuration",
+      "title": "Angular/Karma Test Explorer configuration",
       "properties": {
-        "exampleExplorer.logpanel": {
+        "angularKarmaExplorer.logpanel": {
           "description": "write diagnotic logs to an output panel",
           "type": "boolean",
           "scope": "resource"
         },
-        "exampleExplorer.logfile": {
+        "angularKarmaExplorer.logfile": {
           "description": "write diagnostic logs to the given file",
           "type": "string",
           "scope": "resource"

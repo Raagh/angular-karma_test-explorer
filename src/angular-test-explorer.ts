@@ -1,3 +1,4 @@
+import { EventEmitter } from './workers/test-explorer/event-emitter';
 import * as vscode from "vscode";
 import { AngularServer } from "./workers/angular/angular-server";
 import { KarmaRunner } from "./workers/karma/karma-runner";
@@ -9,13 +10,15 @@ export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;
   private readonly angularServer: AngularServer;
   private readonly baseKarmaConfigPath: string = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
+  private readonly eventEmitter: EventEmitter;
 
   public constructor(
     private readonly angularProjectRootPath: string,
-    private readonly eventEmitter: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
+    eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
   ) {
     this.karmaRunner = new KarmaRunner();
     this.angularServer = new AngularServer(this.angularProjectRootPath, this.baseKarmaConfigPath);
+    this.eventEmitter = new EventEmitter(eventEmitterInterface);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
