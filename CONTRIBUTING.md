@@ -15,7 +15,7 @@ You should now see a second VS Code window, the Extension Development Host.
 Open a angular or karma project in this window and click the "Test" icon in the Activity bar.
 Now you should see the test suite in the side panel (angular projects take longer to load do to angular build times):
 
-<img src="./img/img-tests.png" height="25%" width="25%">
+<img src="./img/img-tests.png" height="50%" width="50%">
 
 # Making Changes
 
