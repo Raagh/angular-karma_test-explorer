@@ -31,6 +31,6 @@ This repository contains the implementation for `Angular/Karma Test Explorer` ex
 - Forwards the console output from Karma to a VS Code output channel.
 
 ## Disclaimer
-This project is in early stages of development, the code may be changed at any moment.
+This project is in early stages of development.
 If you find a bug or think that a feature is missing and is not in the backlog please report it.
 If you wanna help out please read the [Contribution guidelines for this project](CONTRIBUTING.md) file.
