@@ -19,7 +19,7 @@
   ],
   "jest": {
     "testEnvironment": "node"
- },
+  },
   "keywords": [
     "test",
     "testing",
