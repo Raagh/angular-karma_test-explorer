@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Raagh/angular-test-explorer"
+    "url": "https://github.com/Raagh/angular-karma_test-explorer"
   },
   "bugs": {
-    "url": "https://github.com/Raagh/angular-test-explorer/issues"
+    "url": "https://github.com/Raagh/angular-karma_test-explorer/issues"
   },
   "categories": [
     "Other"
