@@ -6,6 +6,7 @@
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
   "version": "1.0.0",
+  "preview": true,
   "license": "MIT",
   "repository": {
     "type": "git",
