@@ -1,3 +1,5 @@
+import { TestDecoration } from 'vscode-test-adapter-api';
+
 export class TestExplorerHelper {
   public constructor() {}
   public groupBy(xs: any, key: any) {
@@ -24,6 +26,17 @@ export class TestExplorerHelper {
       return elements.filter((element) => {
         return elementsToRemove !== element;
       });
+    }
+  }
+
+  public createDecorations(testName: string, failureMessages: string[]) : TestDecoration[] {
+    return failureMessages.map(x => this.createDecoration(x, ""));
+  }
+
+  private createDecoration(failure: string, testfile: string): TestDecoration {
+    return {
+      line: 19,
+      message: failure
     }
   }
 }

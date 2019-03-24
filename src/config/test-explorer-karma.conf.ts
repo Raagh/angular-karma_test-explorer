@@ -19,7 +19,7 @@ module.exports = (config: Config) =>  {
   karmaConfigurator.setMandatoryOptions(config);
   karmaConfigurator.cleanUpReporters(config);
   karmaConfigurator.dontLoadOriginalConfigurationFileIntoBrowser(config, originalConfigPath);
-  karmaConfigurator.configureAngularReporter(config);
+  karmaConfigurator.configureTestExplorerCustomReporter(config);
   karmaConfigurator.setBasePath(config, originalConfigPath);
   karmaConfigurator.disableSingleRunPermanently(config);
 };

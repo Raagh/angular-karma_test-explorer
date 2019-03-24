@@ -2,7 +2,7 @@
   "name": "angular-karma-test-explorer",
   "displayName": "Angular/Karma Test Explorer",
   "description": "Run your Angular Tests in the Sidebar of Visual Studio Code",
-  "icon": "img/icon.png",
+  "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
   "version": "0.0.3",

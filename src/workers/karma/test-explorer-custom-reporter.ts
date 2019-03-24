@@ -4,7 +4,7 @@ import { RunStatus } from "../../model/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import * as io from "socket.io-client";
 
-function AngularReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
+function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
   this.emitter = emitter;
   this.socket = io("http://localhost:1111/");
@@ -70,7 +70,7 @@ function collectRunState(runResult: karma.TestResults): RunStatus {
   }
 }
 
-AngularReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
+TestExplorerCustomReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
 
-export const instance = AngularReporter;
+export const instance = TestExplorerCustomReporter;
 export const name = "AngularReporter";

@@ -18,7 +18,6 @@ Now you should see the test suite in the side panel (angular projects take longe
 <img src="./img/img-tests.png" height="40%" width="40%">
 
 # Making Changes
-
 - pick an existing bug or feature from the repository (or create your own).
 - create a new branch with a descriptive name, I suggest a prefix like feature/my-new-feature or bugfix/this-damm-bug.
 - make the code changes.
@@ -26,13 +25,11 @@ Now you should see the test suite in the side panel (angular projects take longe
 - include a summary of the changes you made in the pull request.
 
 # Extra Guidelines
-
 - please include unit tests (I am using jest) for any new functionality you submit.
 - if it's a bugfix and tests exist for that module make sure the changes dont break them or that the bug is now covered by test cases.
 - make sure you have installed prettier and tslint and that all the code submitted is properly formatted.
 
-# Most important:  
-
+# Most important  
 Dont be shy, comment on the issue at hand so the community and I can give you a hand.
 If there is something you dont understand please ask, I am more than willing to answer any questions.
 

@@ -1,4 +1,3 @@
-import { TestResultToTestStateMapper } from './../test-explorer/test-result-to-test-state.mapper';
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-suite.mapper";
 import { KarmaEvent } from "../../model/karma-event";
@@ -78,12 +77,12 @@ export class KarmaEventListener {
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       eventEmitter.emitTestStateEvent(testName, TestState.Running);
       this.savedSpecs.push(event.results);
-      const testResultMapper = new TestResultToTestStateMapper();
-      const testState = testResultMapper.Map(event.results.status);
 
-      eventEmitter.emitTestStateEvent(testName, testState);
+      eventEmitter.emitTestResultEvent(testName, event);
 
-      this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+      if (this.lastRunTests !== "") {
+        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+      }
     }
   }
 

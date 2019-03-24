@@ -1,6 +1,6 @@
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
-import * as AngularReporter from "../workers/angular/angular-reporter";
+import * as TestExplorerCustomReporter from "../workers/karma/test-explorer-custom-reporter";
 import { TestExplorerHelper } from "../workers/test-explorer/test-explorer-helper";
 
 export class KarmaConfigurator {
@@ -65,12 +65,12 @@ export class KarmaConfigurator {
     originalConfigModule(config);
   }
   
-  public configureAngularReporter(config: Config) {
-    this.addPlugin(config, { [`reporter:${AngularReporter.name}`]: ["type", AngularReporter.instance] });
+  public configureTestExplorerCustomReporter(config: Config) {
+    this.addPlugin(config, { [`reporter:${TestExplorerCustomReporter.name}`]: ["type", TestExplorerCustomReporter.instance] });
     if (!config.reporters) {
       config.reporters = [];
     }
-    config.reporters.push(AngularReporter.name);
+    config.reporters.push(TestExplorerCustomReporter.name);
   }
 
   private addPlugin(karmaConfig: ConfigOptions, karmaPlugin: any) {

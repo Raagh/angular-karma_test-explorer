@@ -1,6 +1,6 @@
 import { EventEmitter } from './workers/test-explorer/event-emitter';
 import * as vscode from "vscode";
-import { AngularServer } from "./workers/angular/angular-server";
+import { AngularServer } from "./workers/servers/angular-server";
 import { KarmaRunner } from "./workers/karma/karma-runner";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
