@@ -3,7 +3,7 @@
 This repository contains the implementation for `Angular/Karma Test Explorer` extension that works with the
 [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
-![Example run tests](img/img-running-tests-readme.png =40%x40%)
+![Example run tests](img/img-running-tests-readme.png)
 
 ## Features
 - See all angular tests in the side bar without running them.
