@@ -1,5 +1,5 @@
 {
-  "name": "angular-karma_test-explorer",
+  "name": "angular-karma-test-explorer",
   "displayName": "Angular/Karma Test Explorer",
   "description": "Run your Angular Tests in the Sidebar of Visual Studio Code",
   "icon": "img/test-explorer_icon.png",
