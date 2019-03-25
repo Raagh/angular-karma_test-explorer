@@ -41,6 +41,7 @@ export class AngularServer {
 
   private runNgTest(): void {
     const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+    const angularCliPath = path.join(".", "node_modules", "@angular", "cli", "bin", "ng");
     this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     const options = {
@@ -48,10 +49,10 @@ export class AngularServer {
       shell: true,
     } as SpawnOptions;
 
-    this.angularProcess = spawn("ng", cliArgs, options);
+    this.angularProcess = spawn(angularCliPath, cliArgs, options);
 
     // this.angularProcess.stdout.on('data', (data: any) => this.logger.log(`stdout: ${data}`));
-    this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
+    // this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
     // this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
   }
 }
