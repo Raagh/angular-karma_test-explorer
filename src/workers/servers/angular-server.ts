@@ -1,7 +1,8 @@
-import { Logger } from './../test-explorer/logger';
+import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
+import path = require("path");
 
 export class AngularServer {
   private readonly logger: Logger;
@@ -27,6 +28,13 @@ export class AngularServer {
   }
 
   public start(): boolean {
+    const fs = require("fs");
+    const isAngularProject = fs.existsSync(path.join(this.angularProjectRootPath, "angular.json"));
+
+    if (!isAngularProject) {
+      return false;
+    }
+
     this.runNgTest();
     return true;
   }
@@ -34,16 +42,16 @@ export class AngularServer {
   private runNgTest(): void {
     const cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
     this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
-    
+
     const options = {
       cwd: this.angularProjectRootPath,
-      shell: true
+      shell: true,
     } as SpawnOptions;
 
     this.angularProcess = spawn("ng", cliArgs, options);
 
     // this.angularProcess.stdout.on('data', (data: any) => this.logger.log(`stdout: ${data}`));
-    this.angularProcess.stderr.on('data', (data: any) => this.logger.log(`stderr: ${data}`));
+    this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
     // this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
   }
 }
