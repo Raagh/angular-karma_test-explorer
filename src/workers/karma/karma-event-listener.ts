@@ -54,7 +54,7 @@ export class KarmaEventListener {
         });
       });
 
-      this.server.listen(1111, () => {
+      this.server.listen(9999, () => {
         this.logger.log("Listening to AngularReporter events on port 1111");
       });
     });
