@@ -27,16 +27,29 @@ export class AngularServer {
   }
 
   public start(): boolean {
-    const cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
-
-    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
-
+    const fs = require("fs");
+    const path = require("path");
+    const resolveGlobal = require("resolve-global");
+    const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
+    const isAngularInstalledyLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
     const options = {
       cwd: this.angularProjectRootPath,
       shell: true,
     } as SpawnOptions;
 
-    this.angularProcess = spawn("npx", cliArgs, options);
+    let cliArgs: string[] = [];
+
+    if (isAngularInstalledGlobally) {
+      cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+      this.angularProcess = spawn("ng", cliArgs, options);
+    } else if (isAngularInstalledyLocally) {
+      cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+      this.angularProcess = spawn("npx", cliArgs, options);
+    } else {
+      throw Error("@angular/cli is not installed");
+    }
+
+    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     // this.angularProcess.stdout.on('data', (data: any) => this.logger.log(`stdout: ${data}`));
     // this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
