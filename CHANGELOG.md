@@ -1,6 +1,6 @@
 ### Version 1.0.3
 
-- Enabled extra logging during preview face.
+- Enabled extra logging during preview phase.
 
 ### Version 1.0.2
 
