@@ -26,12 +26,12 @@ export class AngularServer {
     });
   }
 
-  public start(): boolean {
+  public start(): void {
     const fs = require("fs");
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledyLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const isAngularInstalledLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
     const options = {
       cwd: this.angularProjectRootPath,
       shell: true,
@@ -42,7 +42,7 @@ export class AngularServer {
     if (isAngularInstalledGlobally) {
       cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
       this.angularProcess = spawn("ng", cliArgs, options);
-    } else if (isAngularInstalledyLocally) {
+    } else if (isAngularInstalledLocally) {
       cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
       this.angularProcess = spawn("npx", cliArgs, options);
     } else {
@@ -54,7 +54,5 @@ export class AngularServer {
     // this.angularProcess.stdout.on('data', (data: any) => this.logger.log(`stdout: ${data}`));
     // this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
     // this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
-
-    return true;
   }
 }

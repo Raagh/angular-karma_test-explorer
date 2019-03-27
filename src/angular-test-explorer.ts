@@ -33,10 +33,7 @@ export class AngularTestExplorer {
       await this.angularServer.stopPreviousRun();
     }
 
-    const hasAngularStarted = this.angularServer.start();
-    if (!hasAngularStarted) {
-      throw new Error("Angular failed to start, make sure you run npm install in the project and reload the tests");
-    }
+    this.angularServer.start();
 
     await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
 
