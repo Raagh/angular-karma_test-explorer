@@ -1,3 +1,7 @@
+### Version 1.0.3
+
+- Enabled extra logging during preview face.
+
 ### Version 1.0.2
 
 - Fixed updated npm modules causing crash on MacOS/Linux.
