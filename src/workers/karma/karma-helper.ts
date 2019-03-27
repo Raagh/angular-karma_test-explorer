@@ -1,4 +1,6 @@
-import { Logger } from './../test-explorer/logger';
+import { Logger } from "./../test-explorer/logger";
+import path = require("path");
+
 export class KarmaHelper {
   private readonly logger: Logger;
   public constructor() {
@@ -26,5 +28,10 @@ export class KarmaHelper {
     }
 
     return { exitCode: defaultExitCode, buffer };
+  }
+
+  public isKarmaBasedProject(projectRootPath: string) {
+    const fs = require("fs");
+    return fs.existsSync(path.join(projectRootPath, "angular.json"));
   }
 }

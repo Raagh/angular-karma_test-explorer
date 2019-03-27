@@ -3,8 +3,8 @@ import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
-import { Logger } from '../test-explorer/logger';
-import { EventEmitter } from '../test-explorer/event-emitter';
+import { Logger } from "../test-explorer/logger";
+import { EventEmitter } from "../test-explorer/event-emitter";
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -30,7 +30,8 @@ export class KarmaEventListener {
     return new Promise<void>(resolve => {
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, {'pingInterval': 10, 'pingTimeout': 240000});
+      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000 });
+      const port = 9999;
 
       io.on("connection", (socket: any) => {
         socket.on(KarmaEventName.BrowserConnected, () => {
@@ -49,17 +50,17 @@ export class KarmaEventListener {
           this.onSpecComplete(event, eventEmitter);
         });
 
-        socket.on("disconnect", (event:any) => {
+        socket.on("disconnect", (event: any) => {
           this.logger.log("AngularReporter closed connection with event: " + event);
         });
       });
 
-      this.server.listen(1111, () => {
-        this.logger.log("Listening to AngularReporter events on port 1111");
+      this.server.listen(port, () => {
+        this.logger.log("Listening to AngularReporter events on port " + port);
       });
     });
   }
-  
+
   public getLoadedTests(): TestSuiteInfo {
     return this.specToTestSuiteMapper.map(this.savedSpecs);
   }
@@ -69,7 +70,7 @@ export class KarmaEventListener {
   }
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: EventEmitter) {
-    let testName = event.results.suite + " " + event.results.description;;
+    let testName = event.results.suite + " " + event.results.description;
     if (event.results.suite.length > 1) {
       testName = event.results.suite.join(" ") + " " + event.results.description;
     }
