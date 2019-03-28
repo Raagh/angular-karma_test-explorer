@@ -1,6 +1,6 @@
 # Angular/Karma Test Explorer for Visual Studio Code
 
-This repository contains the implementation for `Angular/Karma Test Explorer` extension that works with the
+The `Angular/Karma Test Explorer` extension that works with the
 [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
 ![Example run tests](img/img-running-tests-readme.png)
@@ -34,3 +34,7 @@ This repository contains the implementation for `Angular/Karma Test Explorer` ex
 This project is in early stages of development.
 If you find a bug or think that a feature is missing and is not in the backlog please report it.
 If you wanna help out please read the [Contribution guidelines for this project](CONTRIBUTING.md) file.
+
+### VERSION/UPDATE PROBLEM ###
+If you were using 1.0.3 version I made some mistakes in the publishing process and I had to republish the extension.
+If you re on this version and not getting updates please uninstall the extension and install it again to the latest preview release version (0.X.X)
