@@ -44,7 +44,7 @@ export class Adapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    const loadedTests = await this.testExplorer.loadTests();
+    const loadedTests = await this.testExplorer.loadTestsByProject();
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }

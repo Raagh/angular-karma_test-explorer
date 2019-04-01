@@ -6,19 +6,10 @@ export class SpecToTestSuiteMapper {
     this.specResultGroupBy = new SpecResultGroupToSuites();
   }
 
-  public map(savedSpecs: any[]): TestSuiteInfo {
+  public map(savedSpecs: any[]): TestSuiteInfo[] {
     const suites: any[] = this.specResultGroupBy.group(savedSpecs);
 
-    const rootSuite = {
-      type: "suite",
-      id: "root",
-      label: "Angular",
-      children: [],
-    } as TestSuiteInfo;
-
-    rootSuite.children = suites.map((suite) => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
-
-    return rootSuite;
+    return suites.map((suite) => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
   }
 
   private mapTestsAndSuites(suite: any, previousSuiteName?: string): TestInfo | TestSuiteInfo {

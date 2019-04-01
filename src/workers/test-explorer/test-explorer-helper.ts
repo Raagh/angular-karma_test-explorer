@@ -1,5 +1,17 @@
+import { TestSuiteInfo } from 'vscode-test-adapter-api';
+
 export class TestExplorerHelper {
   public constructor() {}
+
+  public createTestSuiteInfoRootElement(typeOfProject: string) {
+    return {
+      type: "suite",
+      id: "root",
+      label: typeOfProject,
+      children: [],
+    } as TestSuiteInfo;
+  }
+  
   public groupBy(xs: any, key: any) {
     return xs.reduce((rv: any, x: any) => {
       (rv[x[key]] = rv[x[key]] || []).push(x);

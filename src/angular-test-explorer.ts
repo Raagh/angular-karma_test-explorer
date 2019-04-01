@@ -6,6 +6,7 @@ import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import path = require("path");
+import { TestExplorerHelper } from './workers/test-explorer/test-explorer-helper';
 
 export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;
@@ -13,6 +14,7 @@ export class AngularTestExplorer {
   private readonly baseKarmaConfigPath: string = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
   private readonly eventEmitter: EventEmitter;
   private readonly karmaHelper: KarmaHelper;
+  private readonly testExplorerHelper : TestExplorerHelper;
 
   public constructor(
     private readonly angularProjectRootPath: string,
@@ -22,24 +24,21 @@ export class AngularTestExplorer {
     this.karmaRunner = new KarmaRunner();
     this.angularServer = new AngularServer(this.angularProjectRootPath, this.baseKarmaConfigPath);
     this.eventEmitter = new EventEmitter(eventEmitterInterface);
+    this.testExplorerHelper = new TestExplorerHelper();
   }
 
-  public async loadTests(): Promise<TestSuiteInfo> {
+  public async loadTestsByProject(): Promise<TestSuiteInfo> {
     if (!this.karmaHelper.isKarmaBasedProject(this.angularProjectRootPath)) {
       return {} as TestSuiteInfo;
     }
 
-    if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stopPreviousRun();
-    }
+    const totalTests: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("Angular");
 
-    this.angularServer.start();
+    const testsFromSingleProject = await this.loadTestsFromSingleProject();
 
-    await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
+    totalTests.children = testsFromSingleProject;
 
-    const result = await this.karmaRunner.loadTests();
-
-    return result;
+    return totalTests;
   }
 
   public async runTests(tests: any): Promise<void> {
@@ -48,5 +47,15 @@ export class AngularTestExplorer {
 
   public debugTests(): void {
     throw new Error("Not Implemented");
+  }
+
+  private async loadTestsFromSingleProject(): Promise<TestSuiteInfo[]> {
+    if (this.karmaRunner.isKarmaRunning()) {
+      await this.angularServer.stopPreviousRun();
+    }
+
+    this.angularServer.start();
+    await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
+    return await this.karmaRunner.loadTests();
   }
 }

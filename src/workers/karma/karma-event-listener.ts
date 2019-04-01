@@ -61,7 +61,7 @@ export class KarmaEventListener {
     });
   }
 
-  public getLoadedTests(): TestSuiteInfo {
+  public getLoadedTests(): TestSuiteInfo[] {
     return this.specToTestSuiteMapper.map(this.savedSpecs);
   }
 

@@ -35,8 +35,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "rebuild": "npm run clean && npm run build",
-    "package": "vsce package",
-    "publish": "vsce publish",
+    "package": "npx vsce package",
+    "publish": "npx vsce publish",
     "test": "jest"
   },
   "dependencies": {

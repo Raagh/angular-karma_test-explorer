@@ -18,7 +18,7 @@ export class KarmaRunner {
     await this.karmaEventListener.listenTillKarmaReady(eventEmitter);
   }
 
-  public async loadTests(): Promise<TestSuiteInfo> {
+  public async loadTests(): Promise<TestSuiteInfo[]> {
     const fakeTestPatternForSkippingEverything = "$#%#";
     const karmaRunParameters = this.createKarmaRunConfiguration(fakeTestPatternForSkippingEverything);
     this.karmaEventListener.lastRunTests = "";
