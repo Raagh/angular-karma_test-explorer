@@ -1,3 +1,8 @@
+### Version 0.1.4
+
+- Test Explorer now supports multiple drive letters on windows.
+- Unit testing improved.
+
 ### Version 0.1.3
 
 - Enabled extra logging during preview phase.

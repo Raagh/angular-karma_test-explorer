@@ -1,6 +1,7 @@
 import { TestExplorerHelper } from "../../../src/workers/test-explorer/test-explorer-helper";
 
-test("TestExplorerHelper GroupBy should return grouped values by the used key", () => {
+test("groupBy should return grouped values by the used key", () => {
+  // Arrange
   const helper = new TestExplorerHelper();
   const mappedValues = [{ property: "value" }, { property: "value" }];
   const expectedResult = { value: [{ property: "value" }, { property: "value" }] };
@@ -22,9 +23,9 @@ test("TestExplorerHelper removeElementsFromArrayWithoutModifyingIt should return
 
 test("TestExplorerHelper removeElementsFromArrayWithoutModifyingIt should return an array without the pass values if they re objects", () => {
   const helper = new TestExplorerHelper();
-  const completeSetOfValues = [ { kjhtml: "43" } , { progress:"2" } , { dot:"3"} ];
-  const removeValues = [{ kjhtml: "43" } , { dot:"3"} ];
-  const expectedResults = [{ progress:"2" }];
+  const completeSetOfValues = [{ kjhtml: "43" }, { progress: "2" }, { dot: "3" }];
+  const removeValues = [{ kjhtml: "43" }, { dot: "3" }];
+  const expectedResults = [{ progress: "2" }];
 
   const result = helper.removeElementsFromArrayWithoutModifyingIt(completeSetOfValues, removeValues);
 

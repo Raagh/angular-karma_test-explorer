@@ -30,7 +30,7 @@ export class KarmaEventListener {
     return new Promise<void>(resolve => {
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000 });
+      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
       const port = 9999;
 
       io.on("connection", (socket: any) => {
