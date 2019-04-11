@@ -1,3 +1,4 @@
+import { AngularProject } from './model/angular-project';
 import { EventEmitter } from "./workers/test-explorer/event-emitter";
 import * as vscode from "vscode";
 import { AngularServer } from "./workers/servers/angular-server";
@@ -14,14 +15,13 @@ export class AngularTestExplorer {
   private readonly karmaHelper: KarmaHelper;
   private readonly testExplorerHelper : TestExplorerHelper;
   private angularServer: AngularServer;
-  private baseKarmaConfigPath: string = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
-
   public constructor(
     private readonly workspaceRootPath: string,
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
   ) {
     this.karmaHelper = new KarmaHelper();
     this.karmaRunner = new KarmaRunner();
+    this.angularServer = new AngularServer();
     this.eventEmitter = new EventEmitter(eventEmitterInterface);
     this.testExplorerHelper = new TestExplorerHelper();
   }
@@ -31,11 +31,11 @@ export class AngularTestExplorer {
       return {} as TestSuiteInfo;
     }
 
-    const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("Angular");
+    const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
 
-    const angularProjects = this.testExplorerHelper.getAllAngularProjects(this.workspaceRootPath, this.baseKarmaConfigPath);
+    const angularProjects = this.testExplorerHelper.getAllAngularProjects(this.workspaceRootPath);
 
-    testSuiteInfo.children = angularProjects.reduce(async (project: any) => await this.loadTestsFromSingleProject(project));
+    testSuiteInfo.children = await this.loadTestsFromEveryProjectToIndependentSuites(angularProjects);
 
     return testSuiteInfo;
   }
@@ -48,13 +48,29 @@ export class AngularTestExplorer {
     throw new Error("Not Implemented");
   }
 
-  private async loadTestsFromSingleProject(project: any): Promise<TestSuiteInfo[]> {
+  private loadTestsFromEveryProjectToIndependentSuites(angularProjects: AngularProject[], ) : Promise<TestSuiteInfo[]> {
+    return new Promise<TestSuiteInfo[]>((resolve) => {
+      const children: TestSuiteInfo[] = [];
+      angularProjects.forEach(async (project: AngularProject, index:number) => {
+        const projectRoot = this.testExplorerHelper.createTestSuiteInfoRootElement(project.name, project.name);
+        projectRoot.children = await this.loadTestsFromSingleProject(project);
+        children.push(projectRoot);
+
+        if (index === angularProjects.length -1) {
+          resolve(children);
+        }
+      });
+    });
+  }
+
+  private async loadTestsFromSingleProject(project: AngularProject): Promise<TestSuiteInfo[]> {
     if (this.karmaRunner.isKarmaRunning()) {
       await this.angularServer.stopPreviousRun(); 
     }
 
-    this.angularServer = new AngularServer(project.rootPath, project.karmaConfPath);
-    this.angularServer.start();
+    const baseKarmaConfigPath = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
+
+    this.angularServer.start(project.rootPath, baseKarmaConfigPath, project.karmaConfPath);
     await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
     return await this.karmaRunner.loadTests();
   }

@@ -83,13 +83,8 @@
       "type": "object",
       "title": "Angular/Karma Test Explorer configuration",
       "properties": {
-        "angularKarmaExplorer.logpanel": {
-          "description": "write diagnotic logs to an output panel",
-          "type": "boolean",
-          "scope": "resource"
-        },
-        "angularKarmaExplorer.logfile": {
-          "description": "write diagnostic logs to the given file",
+        "angularKarmaTestExplorer.defaultAngularProjectName": {
+          "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
           "type": "string",
           "scope": "resource"
         }

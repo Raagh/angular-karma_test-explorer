@@ -1,19 +1,19 @@
-import { TestSuiteInfo } from 'vscode-test-adapter-api';
+import { AngularProject } from "./../../model/angular-project";
+import { TestSuiteInfo } from "vscode-test-adapter-api";
 import path = require("path");
-
 
 export class TestExplorerHelper {
   public constructor() {}
 
-  public createTestSuiteInfoRootElement(typeOfProject: string) {
+  public createTestSuiteInfoRootElement(id:string, label: string) {
     return {
       type: "suite",
-      id: "root",
-      label: typeOfProject,
+      id,
+      label,
       children: [],
     } as TestSuiteInfo;
   }
-  
+
   public groupBy(xs: any, key: any) {
     return xs.reduce((rv: any, x: any) => {
       (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -42,10 +42,26 @@ export class TestExplorerHelper {
     }
   }
 
-  public getAllAngularProjects(workspaceRootPath: string, baseKarmaConfigPath: string ): any {
+  public getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
     const fs = require("fs");
-    const angularJsonObject = JSON.parse(fs.readFileSync(path.join(workspaceRootPath, 'angular.json'),'utf8'));
-    
-    return angularJsonObject;
+    const angularJsonObject = JSON.parse(fs.readFileSync(path.join(workspaceRootPath, "angular.json"), "utf8"));
+
+    const projects: AngularProject[] = [];
+    Object.keys(angularJsonObject.projects).map((projectName: any) => {
+      const projectConfig = angularJsonObject.projects[projectName];
+      if (projectConfig.architect.test === undefined) { return; }
+
+      const projectPath = path.join(workspaceRootPath, projectConfig.root);
+      const karmaConfigPath = path.join(projectPath, projectConfig.architect.test.options.karmaConfig);
+      const project = new AngularProject(
+        projectName,
+        projectPath,
+        karmaConfigPath
+      );
+
+      projects.push(project);
+    });
+
+    return projects;
   }
 }

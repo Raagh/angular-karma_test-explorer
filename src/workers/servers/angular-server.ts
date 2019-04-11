@@ -8,7 +8,7 @@ export class AngularServer {
   private readonly logger: Logger;
   private angularProcess: any;
 
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
+  public constructor() {
     this.logger = new Logger();
   }
 
@@ -27,14 +27,17 @@ export class AngularServer {
     });
   }
 
-  public start(): void {
-    const baseKarmaConfigFilePath = require.resolve(this.baseKarmaConfigFilePath);
+  public start(angularProjectRootPath: string, _baseKarmaConfigFilePath: string, userKarmaConfPath:string ): void {
+    const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
+    const testExplorerEnvironment = Object.create( process.env );
+    testExplorerEnvironment.userKarmaConfigPath = userKarmaConfPath;
     const options = {
-      cwd: this.angularProjectRootPath,
+      cwd: angularProjectRootPath,
       shell: true,
+      env: testExplorerEnvironment
     } as SpawnOptions;
 
-    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(baseKarmaConfigFilePath);
+    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(angularProjectRootPath, baseKarmaConfigFilePath);
 
     this.angularProcess = spawn(cliCommand, cliArgs, options);
 
@@ -45,12 +48,12 @@ export class AngularServer {
     this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
   }
 
-  private createAngularCommandAndArguments(baseKarmaConfigFilePath: string) {
+  private createAngularCommandAndArguments(angularProjectRootPath: string, baseKarmaConfigFilePath: string) {
     const fs = require("fs");
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const isAngularInstalledLocally = fs.existsSync(path.join(angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
     const commonArgs = ["test", `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";
