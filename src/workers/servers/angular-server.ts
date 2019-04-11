@@ -40,10 +40,10 @@ export class AngularServer {
     let cliArgs: string[] = [];
 
     if (isAngularInstalledGlobally) {
-      cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+      cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`, "--progress=false"];
       this.angularProcess = spawn("ng", cliArgs, options);
     } else if (isAngularInstalledLocally) {
-      cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`];
+      cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`, "--progress=false"];
       this.angularProcess = spawn("npx", cliArgs, options);
     } else {
       throw Error("@angular/cli is not installed");
