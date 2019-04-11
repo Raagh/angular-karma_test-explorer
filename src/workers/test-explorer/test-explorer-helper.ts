@@ -1,4 +1,6 @@
 import { TestSuiteInfo } from 'vscode-test-adapter-api';
+import path = require("path");
+
 
 export class TestExplorerHelper {
   public constructor() {}
@@ -38,5 +40,12 @@ export class TestExplorerHelper {
         return elementsToRemove !== element;
       });
     }
+  }
+
+  public getAllAngularProjects(workspaceRootPath: string, baseKarmaConfigPath: string ): any {
+    const fs = require("fs");
+    const angularJsonObject = JSON.parse(fs.readFileSync(path.join(workspaceRootPath, 'angular.json'),'utf8'));
+    
+    return angularJsonObject;
   }
 }
