@@ -27,32 +27,44 @@ export class AngularServer {
   }
 
   public start(): void {
-    const fs = require("fs");
-    const path = require("path");
-    const resolveGlobal = require("resolve-global");
-    const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const baseKarmaConfigFilePath = require.resolve(this.baseKarmaConfigFilePath);
     const options = {
       cwd: this.angularProjectRootPath,
       shell: true,
     } as SpawnOptions;
 
+    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(baseKarmaConfigFilePath);
+
+    this.angularProcess = spawn(cliCommand, cliArgs, options);
+
+    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+
+    // this.angularProcess.stdout.on("data", (data: any) => this.logger.log(`stdout: ${data}`));
+    this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
+    this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
+  }
+
+  private createAngularCommandAndArguments(baseKarmaConfigFilePath: string) {
+    const fs = require("fs");
+    const path = require("path");
+    const resolveGlobal = require("resolve-global");
+    const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
+    const isAngularInstalledLocally = fs.existsSync(path.join(this.angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+
+    const commonArgs = ["test", `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
+    let cliCommand: string = "";
     let cliArgs: string[] = [];
 
     if (isAngularInstalledGlobally) {
-      cliArgs = ["test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`, "--progress=false"];
-      this.angularProcess = spawn("ng", cliArgs, options);
+      cliArgs = commonArgs;
+      cliCommand = "ng";
     } else if (isAngularInstalledLocally) {
-      cliArgs = ["ng", "test", `--karma-config="${require.resolve(this.baseKarmaConfigFilePath)}"`, "--progress=false"];
-      this.angularProcess = spawn("npx", cliArgs, options);
+      cliArgs = ["ng", ...commonArgs];
+      cliCommand = "npx";
     } else {
       throw Error("@angular/cli is not installed");
     }
 
-    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
-
-    this.angularProcess.stdout.on("data", (data: any) => this.logger.log(`stdout: ${data}`));
-    this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
-    this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
+    return { cliCommand, cliArgs };
   }
 }
