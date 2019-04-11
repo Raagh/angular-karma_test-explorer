@@ -5,6 +5,7 @@ import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
 import { Logger } from "../test-explorer/logger";
 import { EventEmitter } from "../test-explorer/event-emitter";
+import { commands } from 'vscode';
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -30,7 +31,7 @@ export class KarmaEventListener {
     return new Promise<void>(resolve => {
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000 });
+      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
       const port = 9999;
 
       io.on("connection", (socket: any) => {
@@ -52,6 +53,9 @@ export class KarmaEventListener {
 
         socket.on("disconnect", (event: any) => {
           this.logger.log("AngularReporter closed connection with event: " + event);
+          // workaround: if the connection is closed by chrome, we just reload the test enviroment
+          // TODO: fix chrome closing all socket connections.
+          commands.executeCommand("test-explorer.reload");
         });
       });
 
