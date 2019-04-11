@@ -2,6 +2,7 @@ import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
+import { window } from 'vscode';
 
 export class AngularServer {
   private readonly logger: Logger;
@@ -62,7 +63,9 @@ export class AngularServer {
       cliArgs = ["ng", ...commonArgs];
       cliCommand = "npx";
     } else {
-      throw Error("@angular/cli is not installed");
+      const error = "@angular/cli is not installed, install it and restart vscode";
+      window.showErrorMessage(error);
+      throw Error(error);
     }
 
     return { cliCommand, cliArgs };
