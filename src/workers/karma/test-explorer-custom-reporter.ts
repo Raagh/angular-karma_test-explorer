@@ -10,7 +10,7 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
   this.socket = io("http://localhost:9999/", { forceNew: true });
 
   const emitEvent = (eventName: any, eventResults: any = null) => {
-    this.socket.emit(eventName,{name: eventName, results: eventResults});
+    this.socket.emit(eventName, { name: eventName, results: eventResults });
   };
 
   baseReporterDecorator(this);

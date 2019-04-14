@@ -1,4 +1,4 @@
-import { KarmaConfigurator } from './karma-configurator';
+import { KarmaConfigurator } from "./karma-configurator";
 import { Config } from "karma";
 import * as path from "path";
 
@@ -7,13 +7,13 @@ const karmaConfigurator = new KarmaConfigurator();
 
 const setupCorrectKarmaConfFilePath = () => {
   try {
-     require.resolve(originalConfigPath);
+    require.resolve(originalConfigPath);
   } catch (error) {
-     originalConfigPath = path.join(process.cwd(), "karma.conf.js");
+    originalConfigPath = path.join(process.cwd(), "karma.conf.js");
   }
 };
 
-module.exports = (config: Config) =>  {
+module.exports = (config: Config) => {
   setupCorrectKarmaConfFilePath();
   karmaConfigurator.loadOriginalUserConfiguration(config, originalConfigPath);
   karmaConfigurator.setMandatoryOptions(config);
@@ -23,5 +23,3 @@ module.exports = (config: Config) =>  {
   karmaConfigurator.setBasePath(config, originalConfigPath);
   karmaConfigurator.disableSingleRunPermanently(config);
 };
-
-

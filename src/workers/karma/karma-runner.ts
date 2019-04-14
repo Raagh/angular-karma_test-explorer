@@ -1,7 +1,7 @@
 import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { EventEmitter } from '../test-explorer/event-emitter';
+import { EventEmitter } from "../test-explorer/event-emitter";
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
@@ -80,15 +80,19 @@ export class KarmaRunner {
         }
       });
 
-      request.end(JSON.stringify({
-        args: config.clientArgs,
-        removedFiles: config.removedFiles,
-        changedFiles: config.changedFiles,
-        addedFiles: config.addedFiles,
-        refresh: config.refresh,
-      }));
+      request.end(
+        JSON.stringify({
+          args: config.clientArgs,
+          removedFiles: config.removedFiles,
+          changedFiles: config.changedFiles,
+          addedFiles: config.addedFiles,
+          refresh: config.refresh,
+        })
+      );
 
-      request.on("close",() =>{ resolve(); });
+      request.on("close", () => {
+        resolve();
+      });
     });
   }
 }
