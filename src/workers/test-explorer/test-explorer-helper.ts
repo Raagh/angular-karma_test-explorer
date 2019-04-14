@@ -52,7 +52,7 @@ export class TestExplorerHelper {
       if (projectConfig.architect.test === undefined) { return; }
 
       const projectPath = path.join(workspaceRootPath, projectConfig.root);
-      const karmaConfigPath = path.join(projectPath, projectConfig.architect.test.options.karmaConfig);
+      const karmaConfigPath = path.join(workspaceRootPath, projectConfig.architect.test.options.karmaConfig);
       const project = new AngularProject(
         projectName,
         projectPath,
