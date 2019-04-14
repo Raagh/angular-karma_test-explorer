@@ -4,6 +4,7 @@ import { Config } from "karma";
 
 // let originalConfigPath = path.join(process.cwd(), "src", "karma.conf.js");
 const karmaConfigurator = new KarmaConfigurator();
+global.console.log(process.env.userKarmaConfigPath);
 const originalConfigPath = process.env.userKarmaConfigPath as string;
 
 // const setupCorrectKarmaConfFilePath = () => {

@@ -48,19 +48,16 @@ export class AngularTestExplorer {
     throw new Error("Not Implemented");
   }
 
-  private loadTestsFromEveryProjectToIndependentSuites(angularProjects: AngularProject[], ) : Promise<TestSuiteInfo[]> {
-    return new Promise<TestSuiteInfo[]>((resolve) => {
-      const children: TestSuiteInfo[] = [];
-      angularProjects.forEach(async (project: AngularProject, index:number) => {
-        const projectRoot = this.testExplorerHelper.createTestSuiteInfoRootElement(project.name, project.name);
-        projectRoot.children = await this.loadTestsFromSingleProject(project);
-        children.push(projectRoot);
+  private async loadTestsFromEveryProjectToIndependentSuites(angularProjects: AngularProject[], ) : Promise<TestSuiteInfo[]> {
+    const children: TestSuiteInfo[] = [];
 
-        if (index === angularProjects.length -1) {
-          resolve(children);
-        }
-      });
-    });
+    for (const project of angularProjects) {
+      const projectRoot = this.testExplorerHelper.createTestSuiteInfoRootElement(project.name, project.name);
+      projectRoot.children = await this.loadTestsFromSingleProject(project);
+      children.push(projectRoot);
+    }
+
+    return children;
   }
 
   private async loadTestsFromSingleProject(project: AngularProject): Promise<TestSuiteInfo[]> {
@@ -70,7 +67,7 @@ export class AngularTestExplorer {
 
     const baseKarmaConfigPath = path.join(__dirname, ".", "config", "test-explorer-karma.conf.js");
 
-    this.angularServer.start(project.rootPath, baseKarmaConfigPath, project.karmaConfPath);
+    this.angularServer.start(project, baseKarmaConfigPath);
     await this.karmaRunner.waitTillKarmaIsRunning(this.eventEmitter);
     return await this.karmaRunner.loadTests();
   }

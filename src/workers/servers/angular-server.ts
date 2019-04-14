@@ -3,6 +3,7 @@ import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
 import { window } from "vscode";
+import { AngularProject } from '../../model/angular-project';
 
 export class AngularServer {
   private readonly logger: Logger;
@@ -27,17 +28,17 @@ export class AngularServer {
     });
   }
 
-  public start(angularProjectRootPath: string, _baseKarmaConfigFilePath: string, userKarmaConfPath:string ): void {
+  public start(project: AngularProject, _baseKarmaConfigFilePath: string): void {
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const testExplorerEnvironment = Object.create( process.env );
-    testExplorerEnvironment.userKarmaConfigPath = userKarmaConfPath;
+    testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
     const options = {
-      cwd: angularProjectRootPath,
+      cwd: project.rootPath,
       shell: true,
       env: testExplorerEnvironment
     } as SpawnOptions;
 
-    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(angularProjectRootPath, baseKarmaConfigFilePath);
+    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
 
     this.angularProcess = spawn(cliCommand, cliArgs, options);
 
@@ -48,14 +49,14 @@ export class AngularServer {
     this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
   }
 
-  private createAngularCommandAndArguments(angularProjectRootPath: string, baseKarmaConfigFilePath: string) {
+  private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {
     const fs = require("fs");
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = fs.existsSync(path.join(angularProjectRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const isAngularInstalledLocally = fs.existsSync(path.join(project.rootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
-    const commonArgs = ["test", `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
+    const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";
     let cliArgs: string[] = [];
 
@@ -68,7 +69,7 @@ export class AngularServer {
     } else {
       const error = "@angular/cli is not installed, install it and restart vscode";
       window.showErrorMessage(error);
-      throw Error(error);
+      throw new Error(error);
     }
 
     return { cliCommand, cliArgs };
