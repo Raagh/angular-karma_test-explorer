@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "preview": true,
   "license": "MIT",
   "repository": {
@@ -78,7 +78,7 @@
   "activationEvents": [
     "*"
   ],
-  "contributes": {
+
     "configuration": {
       "type": "object",
       "title": "Angular/Karma Test Explorer configuration",
@@ -89,6 +89,6 @@
           "scope": "resource"
         }
       }
-    }
+
   }
 }

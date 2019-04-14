@@ -1,5 +1,5 @@
 import path = require("path");
-import { window } from 'vscode';
+import { window } from "vscode";
 
 export class KarmaHelper {
   public constructor() {}

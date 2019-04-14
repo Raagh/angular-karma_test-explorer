@@ -19,13 +19,13 @@ export class KarmaConfigurator {
     config.singleRun = false;
   }
 
-  public dontLoadOriginalConfigurationFileIntoBrowser(config: Config, originalConfigPath: string){
+  public dontLoadOriginalConfigurationFileIntoBrowser(config: Config, originalConfigPath: string) {
     // https://github.com/karma-runner/karma-intellij/issues/9
     config.exclude = config.exclude || [];
     config.exclude.push(originalConfigPath);
   }
 
-  public setBasePath(config: Config, originalConfigPath:string) {
+  public setBasePath(config: Config, originalConfigPath: string) {
     if (!config.basePath) {
       // We need to set the base path, so karma won't use this file to base everything of
       if (originalConfigPath) {
@@ -50,21 +50,21 @@ export class KarmaConfigurator {
     }
   }
 
-  public cleanUpReporters(config: Config){
-    const filteredReporters = this.testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, ['dots', 'kjhtml']);
+  public cleanUpReporters(config: Config) {
+    const filteredReporters = this.testExplorerHelper.removeElementsFromArrayWithoutModifyingIt(config.reporters, ["dots", "kjhtml"]);
     config.reporters = filteredReporters;
   }
-  
-  public loadOriginalUserConfiguration(config: Config, originalConfigPath: string){
+
+  public loadOriginalUserConfiguration(config: Config, originalConfigPath: string) {
     let originalConfigModule = require(originalConfigPath);
     // https://github.com/karma-runner/karma/blob/v1.7.0/lib/config.js#L364
-    if (typeof originalConfigModule === 'object' && typeof originalConfigModule.default !== 'undefined') {
+    if (typeof originalConfigModule === "object" && typeof originalConfigModule.default !== "undefined") {
       originalConfigModule = originalConfigModule.default;
     }
-  
+
     originalConfigModule(config);
   }
-  
+
   public configureTestExplorerCustomReporter(config: Config) {
     this.addPlugin(config, { [`reporter:${TestExplorerCustomReporter.name}`]: ["type", TestExplorerCustomReporter.instance] });
     if (!config.reporters) {

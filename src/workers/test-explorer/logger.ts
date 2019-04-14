@@ -1,7 +1,7 @@
 export class Logger {
-    constructor() {}
+  constructor() {}
 
-    public log(message: string) {
-        global.console.log(message);
-    }
+  public log(message: string) {
+    global.console.log(message);
+  }
 }

@@ -2,7 +2,7 @@ import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
-import { window } from 'vscode';
+import { window } from "vscode";
 
 export class AngularServer {
   private readonly logger: Logger;
@@ -14,14 +14,14 @@ export class AngularServer {
 
   public stopPreviousRun(): Promise<void> {
     if (this.angularProcess != null) {
+      const karmaEventListener = KarmaEventListener.getInstance();
+      karmaEventListener.stopListeningToKarma();
       this.angularProcess.kill();
     }
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
         this.logger.log(`Angular exited with code ${code} and signal ${signal}`);
-        const karmaEventListener = KarmaEventListener.getInstance();
-        karmaEventListener.stopListeningToKarma();
         resolve();
       });
     });

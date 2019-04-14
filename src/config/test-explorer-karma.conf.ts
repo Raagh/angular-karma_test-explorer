@@ -1,4 +1,4 @@
-import { KarmaConfigurator } from './karma-configurator';
+import { KarmaConfigurator } from "./karma-configurator";
 import { Config } from "karma";
 // import * as path from "path";
 
@@ -24,5 +24,3 @@ module.exports = (config: Config) =>  {
   karmaConfigurator.setBasePath(config, originalConfigPath);
   karmaConfigurator.disableSingleRunPermanently(config);
 };
-
-
