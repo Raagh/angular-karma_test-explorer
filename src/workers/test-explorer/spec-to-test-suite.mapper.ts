@@ -1,4 +1,4 @@
-import { SpecResultGroupToSuites } from './spec-result-groupby';
+import { SpecResultGroupToSuites } from "./spec-result-groupby";
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 export class SpecToTestSuiteMapper {
   private readonly specResultGroupBy: SpecResultGroupToSuites;
@@ -16,7 +16,7 @@ export class SpecToTestSuiteMapper {
       children: [],
     } as TestSuiteInfo;
 
-    rootSuite.children = suites.map((suite) => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
+    rootSuite.children = suites.map(suite => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
 
     return rootSuite;
   }
@@ -24,15 +24,15 @@ export class SpecToTestSuiteMapper {
   private mapTestsAndSuites(suite: any, previousSuiteName?: string): TestInfo | TestSuiteInfo {
     let suiteName = suite.name;
 
-    if(previousSuiteName) {
+    if (previousSuiteName) {
       suiteName = previousSuiteName + " " + suite.name;
     }
 
-    const initialSuite = { 
+    const initialSuite = {
       type: "suite",
       id: suiteName,
       label: suite.name,
-      children: []
+      children: [],
     } as TestSuiteInfo;
 
     const mappedTests = suite.tests.map((test: string) => {
@@ -45,8 +45,8 @@ export class SpecToTestSuiteMapper {
 
     const mappedSuites = suite.suites.map((innerSuite: any) => this.mapTestsAndSuites(innerSuite, suiteName));
 
-    initialSuite.children = initialSuite.children.concat(mappedSuites.concat(mappedTests))
-      
+    initialSuite.children = initialSuite.children.concat(mappedSuites.concat(mappedTests));
+
     return initialSuite;
   }
 }

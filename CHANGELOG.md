@@ -1,3 +1,7 @@
+### Version 0.1.6
+
+- Fixed a bug that was causing reload tests not working, cleaner exit of karma.
+
 ### Version 0.1.5
 
 - Workaround for socket.io closing connection, for now we reload the testing enviroment.

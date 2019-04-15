@@ -5,7 +5,7 @@ import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
 import { Logger } from "../test-explorer/logger";
 import { EventEmitter } from "../test-explorer/event-emitter";
-import { commands } from 'vscode';
+import { commands } from "vscode";
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -19,6 +19,7 @@ export class KarmaEventListener {
   public lastRunTests: string = "";
   private savedSpecs: any[] = [];
   private server: any;
+  private karmaBeingReloaded: boolean = false;
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
   private readonly logger: Logger;
 
@@ -29,6 +30,7 @@ export class KarmaEventListener {
 
   public listenTillKarmaReady(eventEmitter: EventEmitter): Promise<void> {
     return new Promise<void>(resolve => {
+      this.karmaBeingReloaded = false;
       const app = require("express")();
       this.server = require("http").createServer(app);
       const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
@@ -53,9 +55,12 @@ export class KarmaEventListener {
 
         socket.on("disconnect", (event: any) => {
           this.logger.log("AngularReporter closed connection with event: " + event);
+
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
-          commands.executeCommand("test-explorer.reload");
+          if (event === "transport close" && !this.karmaBeingReloaded) {
+            commands.executeCommand("test-explorer.reload");
+          }
         });
       });
 
@@ -70,6 +75,7 @@ export class KarmaEventListener {
   }
 
   public stopListeningToKarma() {
+    this.karmaBeingReloaded = true;
     this.server.close();
   }
 
