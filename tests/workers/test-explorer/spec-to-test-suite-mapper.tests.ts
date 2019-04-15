@@ -14,11 +14,7 @@ const groupByResults = [
   { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: ["test6"], suites: [] }] },
 ] as any;
 
-const expectedResult = {
-  id: "root",
-  label: "Angular",
-  type: "suite",
-  children: [
+const expectedResult = [
     {
       id: "suite1",
       label: "suite1",
@@ -91,8 +87,7 @@ const expectedResult = {
         },
       ],
     },
-  ],
-} as TestSuiteInfo;
+  ] as TestSuiteInfo[];
 
 test("with correct grouped specs should return correctly mapped TestSuiteInfo", () => {
   // Arrange
@@ -119,5 +114,5 @@ test("with no grouped specs should return TestSuiteInfo with no children", () =>
   const result = mapper.map(savedSpecs);
 
   // Assert
-  expect(result.children).toHaveLength(0);
+  expect(result).toHaveLength(0);
 });
