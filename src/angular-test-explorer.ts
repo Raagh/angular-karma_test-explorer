@@ -40,11 +40,11 @@ export class AngularTestExplorer {
     return testSuiteInfo;
   }
 
-  public async runTests(tests: any): Promise<void> {
+  public async runTests(tests: string[]): Promise<void> {
     await this.karmaRunner.runTests(tests);
   }
 
-  public debugTests(): void {
+  public debugTests(tests: string[]): void {
     throw new Error("Not Implemented");
   }
 

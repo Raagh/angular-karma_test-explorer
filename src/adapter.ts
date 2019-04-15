@@ -63,7 +63,7 @@ export class Adapter implements TestAdapter {
   public async debug(tests: string[]): Promise<void> {
     // in a "real" TestAdapter this would start a test run in a child process and attach the debugger to it
     this.log.warn("debug() not implemented yet");
-    throw new Error("Method not implemented.");
+    this.testExplorer.debugTests(tests);
   }
 
   public cancel(): void {
