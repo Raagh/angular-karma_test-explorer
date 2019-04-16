@@ -1,9 +1,8 @@
 import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
-import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
-import { window } from "vscode";
 import { AngularProject } from '../../model/angular-project';
+import { window } from "vscode";
 
 export class AngularServer {
   private readonly logger: Logger;
@@ -29,6 +28,7 @@ export class AngularServer {
   }
 
   public start(project: AngularProject, _baseKarmaConfigFilePath: string): void {
+    const spawn = require("cross-spawn");
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const testExplorerEnvironment = Object.create( process.env );
     testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;

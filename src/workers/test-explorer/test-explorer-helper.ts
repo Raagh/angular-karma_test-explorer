@@ -1,6 +1,5 @@
 import { AngularProject } from "./../../model/angular-project";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import path = require("path");
 
 export class TestExplorerHelper {
   public constructor() {}
@@ -44,6 +43,7 @@ export class TestExplorerHelper {
 
   public getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
     const fs = require("fs");
+    const path = require("path");
     const angularJsonObject = JSON.parse(fs.readFileSync(path.join(workspaceRootPath, "angular.json"), "utf8"));
 
     const projects: AngularProject[] = [];

@@ -1,13 +1,11 @@
 import { AngularProject } from './model/angular-project';
 import { EventEmitter } from "./workers/test-explorer/event-emitter";
-import * as vscode from "vscode";
 import { AngularServer } from "./workers/servers/angular-server";
 import { KarmaRunner } from "./workers/karma/karma-runner";
-import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { KarmaHelper } from "./workers/karma/karma-helper";
-import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
-import path = require("path");
+import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent, TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestExplorerHelper } from './workers/test-explorer/test-explorer-helper';
+import * as vscode from "vscode";
 
 export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;
@@ -26,7 +24,7 @@ export class AngularTestExplorer {
     this.testExplorerHelper = new TestExplorerHelper();
   }
 
-  public async loadTestsByProject(): Promise<TestSuiteInfo> {
+  public async loadTests(): Promise<TestSuiteInfo> {
     if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {
       return {} as TestSuiteInfo;
     }
@@ -61,6 +59,7 @@ export class AngularTestExplorer {
   }
 
   private async loadTestsFromSingleProject(project: AngularProject): Promise<TestSuiteInfo[]> {
+    const path = require("path");
     if (this.karmaRunner.isKarmaRunning()) {
       await this.angularServer.stopPreviousRun(); 
     }
