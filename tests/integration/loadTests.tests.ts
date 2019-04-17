@@ -1,3 +1,4 @@
+jest.mock("./../../src/workers/test-explorer/logger");
 import { AngularTestExplorer } from "../../src/angular-test-explorer";
 import { ExecOptions, execSync } from "child_process";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent, TestSuiteInfo } from "vscode-test-adapter-api";
@@ -24,5 +25,5 @@ test("should successfully load tests from a test project", async () => {
   const loadedTests = loadedTestProject.children[0] as TestSuiteInfo;
 
   // Assert
-  expect(loadedTests.children).toBeGreaterThanOrEqual(1);
+  expect(loadedTests.children.length).toEqual(1);
 }, 50000);
