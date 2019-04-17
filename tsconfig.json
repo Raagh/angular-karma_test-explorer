@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "lib": ["es2016"],
+    "target": "es6",
+    "lib": ["es6"],
     "module": "commonjs",
     "outDir": "out",
     "importHelpers": true,
@@ -13,5 +13,6 @@
     "skipLibCheck": true,
     "allowJs": true
   },
-  "include": ["src/main.ts", "typings/*", "src/config/*"]
+  "include": ["src/main.ts", "typings/*", "src/config/*"],
+  "exclude": ["tests/integration/test-project/*"]
 }

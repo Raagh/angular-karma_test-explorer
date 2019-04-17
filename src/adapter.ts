@@ -36,7 +36,10 @@ export class Adapter implements TestAdapter {
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
-    this.testExplorer = new AngularTestExplorer(path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")), this.testStatesEmitter);
+    this.testExplorer = new AngularTestExplorer(
+      path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
+      path.join(__dirname, ".", "config", "test-explorer-karma.conf.js"),
+      this.testStatesEmitter);
   }
 
   public async load(): Promise<void> {

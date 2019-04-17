@@ -9,6 +9,7 @@
 # dependencies
 /node_modules
 /deployment/node_modules
+/tests/integration/test-project/
 
 # IDEs and editors
 /.idea

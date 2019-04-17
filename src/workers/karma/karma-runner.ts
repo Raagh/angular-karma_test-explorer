@@ -1,4 +1,3 @@
-import * as karma from "karma";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { EventEmitter } from "../test-explorer/event-emitter";
@@ -26,10 +25,6 @@ export class KarmaRunner {
     await this.runWithConfig(karmaRunParameters.config);
 
     return this.karmaEventListener.getLoadedTests();
-  }
-
-  public stopServer(): void {
-    karma.stopper.stop();
   }
 
   public async runTests(tests: any): Promise<void> {

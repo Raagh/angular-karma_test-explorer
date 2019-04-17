@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "preview": true,
   "license": "MIT",
   "repository": {
@@ -78,17 +78,21 @@
   "activationEvents": [
     "*"
   ],
-
-    "configuration": {
-      "type": "object",
-      "title": "Angular/Karma Test Explorer configuration",
-      "properties": {
-        "angularKarmaTestExplorer.defaultAngularProjectName": {
-          "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
-          "type": "string",
-          "scope": "resource"
-        }
+  "configuration": {
+    "type": "object",
+    "title": "Angular/Karma Test Explorer configuration",
+    "properties": {
+      "angularKarmaTestExplorer.defaultAngularProjectName": {
+        "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
+        "type": "string",
+        "scope": "resource"
+      },
+      "angularKarmaTestExplorer.defaultSocketConnectionPort": {
+        "description": "this is the port that will be used to connect Karma with the test explorer",
+        "type": "number",
+        "scope": "resource"
       }
-
+    },
+    "contributes": ["hbenl", "julianschwuchow"]
   }
 }
