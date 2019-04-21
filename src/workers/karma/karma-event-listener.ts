@@ -6,6 +6,7 @@ import { TestState } from "../../model/test-state.enum";
 import { Logger } from "../test-explorer/logger";
 import { EventEmitter } from "../test-explorer/event-emitter";
 import { commands } from "vscode";
+import { TestResult } from "../../model/test-status.enum";
 
 export class KarmaEventListener {
   public static getInstance() {
@@ -17,15 +18,15 @@ export class KarmaEventListener {
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
   public lastRunTests: string = "";
+  public testStatus: TestResult | any;
+  public runCompleteEvent: KarmaEvent | any;
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
-  private readonly logger: Logger;
 
   private constructor() {
     this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
-    this.logger = new Logger();
   }
 
   public listenTillKarmaReady(eventEmitter: EventEmitter): Promise<void> {
@@ -41,20 +42,20 @@ export class KarmaEventListener {
           this.onBrowserConnected(resolve);
         });
         socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => {
-          this.logger.log("browser_error " + event.results);
+          Logger.info("browser_error " + event.results);
         });
         socket.on(KarmaEventName.BrowserStart, () => {
           this.savedSpecs = [];
         });
         socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => {
-          this.logger.log("run_complete " + event.results);
+          this.runCompleteEvent = event;
         });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
           this.onSpecComplete(event, eventEmitter);
         });
 
         socket.on("disconnect", (event: any) => {
-          this.logger.log("AngularReporter closed connection with event: " + event);
+          Logger.info("AngularReporter closed connection with event: " + event);
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
@@ -65,7 +66,7 @@ export class KarmaEventListener {
       });
 
       this.server.listen(port, () => {
-        this.logger.log("Listening to AngularReporter events on port " + port);
+        Logger.info("Listening to AngularReporter events on port " + port);
       });
     });
   }
@@ -80,19 +81,28 @@ export class KarmaEventListener {
   }
 
   private onSpecComplete(event: KarmaEvent, eventEmitter: EventEmitter) {
-    let testName = event.results.suite + " " + event.results.description;
-    if (event.results.suite.length > 1) {
-      testName = event.results.suite.join(" ") + " " + event.results.description;
+    const { results } = event;
+    const { suite, description, status } = results;
+
+    let testName = suite + " " + description;
+    if (suite.length > 1) {
+      testName = suite.join(" ") + " " + description;
     }
 
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       eventEmitter.emitTestStateEvent(testName, TestState.Running);
-      this.savedSpecs.push(event.results);
+      this.savedSpecs.push(results);
 
       eventEmitter.emitTestResultEvent(testName, event);
 
       if (this.lastRunTests !== "") {
-        this.logger.log("spec_complete - result:" + event.results.status + " - " + "testname:" + testName);
+        if (status === "Success") {
+          this.testStatus = TestResult.Success;
+        } else if (status === "Failed") {
+          this.testStatus = TestResult.Failed;
+        } else if (status === "Skipped") {
+          this.testStatus = TestResult.Skipped;
+        }
       }
     }
   }

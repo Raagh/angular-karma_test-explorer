@@ -5,6 +5,7 @@ import { KarmaRunner } from "./workers/karma/karma-runner";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
+import { Logger } from "./workers/test-explorer/logger";
 import path = require("path");
 
 export class AngularTestExplorer {
@@ -18,6 +19,7 @@ export class AngularTestExplorer {
     private readonly angularProjectRootPath: string,
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
   ) {
+    Logger.setOutput();
     this.karmaHelper = new KarmaHelper();
     this.karmaRunner = new KarmaRunner();
     this.angularServer = new AngularServer(this.angularProjectRootPath, this.baseKarmaConfigPath);
