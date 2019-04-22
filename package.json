@@ -93,6 +93,9 @@
         "scope": "resource"
       }
     },
-    "contributes": ["hbenl", "julianschwuchow"]
+    "contributes": [
+      "hbenl",
+      "julianschwuchow"
+    ]
   }
 }

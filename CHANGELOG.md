@@ -1,3 +1,9 @@
+### Version 0.2.0
+
+- Added support for multi-apps in a single repository (this should include hybrid apps and component libraries).
+- Added configuration properties in vscode (socketDefaultPort and defaultProjectName).
+- Improved integration testing.
+
 ### Version 0.1.6
 
 - Fixed a bug that was causing reload tests not working, cleaner exit of karma.
