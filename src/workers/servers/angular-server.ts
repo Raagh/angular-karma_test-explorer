@@ -40,9 +40,9 @@ export class AngularServer {
     Logger.info(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     this.angularProcess.stdout.on("data", (data: any) => {
-      const { isServerLoaded, lastRunTests } = this.karmaEventListener;
+      const { isTestRunning } = this.karmaEventListener;
       const regex = new RegExp(/\(.*?)\m/, "g");
-      if (isServerLoaded && lastRunTests !== "") {
+      if (isTestRunning) {
         Logger.karmaLogs(`${data.toString().replace(regex, "")}`);
       }
     });

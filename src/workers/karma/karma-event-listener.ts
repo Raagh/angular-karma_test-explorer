@@ -17,6 +17,7 @@ export class KarmaEventListener {
   }
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
+  public isTestRunning: boolean = false;
   public lastRunTests: string = "";
   public testStatus: TestResult | any;
   public runCompleteEvent: KarmaEvent | any;

@@ -36,17 +36,16 @@ export class KarmaRunner {
   public async runTests(tests: string[]): Promise<void> {
     this.log(tests);
 
-    Logger.karmaLogsDivider();
-
     const karmaRunParameters = this.createKarmaRunConfiguration(tests);
 
+    this.karmaEventListener.isTestRunning = true;
     this.karmaEventListener.lastRunTests = karmaRunParameters.tests;
     await this.runWithConfig(karmaRunParameters.config);
   }
 
   private log(tests: string[]): void {
     const [suit, ...description] = tests[0].split(" ");
-    Logger.info(`Running [ suite: ${suit}${description.length > 0 ? ", test: " + description.join(" ") : ""} ]`);
+    Logger.info(`Running [ suite: ${suit}${description.length > 0 ? ", test: " + description.join(" ") : ""} ]`, { addDividerForKarmaLogs: true });
   }
 
   private createKarmaRunConfiguration(tests: any) {
