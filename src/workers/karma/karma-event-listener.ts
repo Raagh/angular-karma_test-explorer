@@ -99,13 +99,7 @@ export class KarmaEventListener {
       eventEmitter.emitTestResultEvent(testName, event);
 
       if (this.lastRunTests !== "") {
-        if (status === "Success") {
-          this.testStatus = TestResult.Success;
-        } else if (status === "Failed") {
-          this.testStatus = TestResult.Failed;
-        } else if (status === "Skipped") {
-          this.testStatus = TestResult.Skipped;
-        }
+        this.testStatus = status;
       }
     }
   }

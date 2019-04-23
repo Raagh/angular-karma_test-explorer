@@ -1,3 +1,8 @@
+
+### Version 0.1.7
+
+- Added independent output channel for logging. Thanks Sam David aka @future-pirate-king .
+
 ### Version 0.1.6
 
 - Fixed a bug that was causing reload tests not working, cleaner exit of karma.

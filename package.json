@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "preview": true,
   "license": "MIT",
   "repository": {
@@ -35,7 +35,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prettify": "npx prettier --write 'src/**/*.ts'",
-    "rebuild": "npm run clean && npm run prettify && npm run build",
+    "rebuild": "npm run clean && npm run build",
     "package": "vsce package",
     "publish": "vsce publish",
     "test": "jest"
