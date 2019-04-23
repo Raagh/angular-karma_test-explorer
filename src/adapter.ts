@@ -30,7 +30,7 @@ export class Adapter implements TestAdapter {
     return this.autorunEmitter.event;
   }
 
-  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log) {
+  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
     this.log.info("Initializing adapter");
 
     this.disposables.push(this.testsEmitter);
@@ -39,7 +39,8 @@ export class Adapter implements TestAdapter {
     this.testExplorer = new AngularTestExplorer(
       path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
       path.join(__dirname, ".", "config", "test-explorer-karma.conf.js"),
-      this.testStatesEmitter);
+      this.testStatesEmitter,
+      channel);
   }
 
   public async load(): Promise<void> {

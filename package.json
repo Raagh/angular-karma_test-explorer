@@ -38,7 +38,7 @@
     "package": "npx vsce package",
     "publish": "npx vsce publish",
     "unit-test": "jest -c jest.config.js",
-    "integration-test": "jest --detectOpenHandles -c jest.integration.config.js" 
+    "integration-test": "jest --detectOpenHandles -c jest.integration.config.js"
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",
@@ -79,24 +79,38 @@
   "activationEvents": [
     "*"
   ],
-  "configuration": {
-    "type": "object",
-    "title": "Angular/Karma Test Explorer configuration",
-    "properties": {
-      "angularKarmaTestExplorer.defaultAngularProjectName": {
-        "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
-        "type": "string",
-        "scope": "resource"
-      },
-      "angularKarmaTestExplorer.defaultSocketConnectionPort": {
-        "description": "this is the port that will be used to connect Karma with the test explorer",
-        "type": "number",
-        "scope": "resource"
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Angular/Karma Test Explorer configuration",
+      "properties": {
+        "angularKarmaTestExplorer.defaultAngularProjectName": {
+          "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
+          "type": "string",
+          "scope": "resource"
+        },
+        "angularKarmaTestExplorer.defaultSocketConnectionPort": {
+          "description": "this is the port that will be used to connect Karma with the test explorer",
+          "type": "number",
+          "scope": "resource"
+        }
       }
     },
-    "contributes": [
-      "hbenl",
-      "julianschwuchow"
+    "languages": [
+      {
+        "id": "angular-test",
+        "mimetypes": [
+          "text/x-code-output",
+          "x-code-output"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "angular-test",
+        "scopeName": "angular-test.output",
+        "path": "./syntaxes/angular-test-log.tmLanguage"
+      }
     ]
   }
 }
