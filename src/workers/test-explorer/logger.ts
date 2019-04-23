@@ -2,7 +2,7 @@ import { OutputChannel } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 import { LogLevel } from "../../model/log-level.enum";
 
-export const OUTPUT_CHANNEL = "Angular/Karma Test Logs";
+export const OUTPUT_CHANNEL = "Test Explorer Logs";
 
 interface Ilog {
   message: string;
