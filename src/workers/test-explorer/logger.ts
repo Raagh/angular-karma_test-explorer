@@ -18,18 +18,18 @@ export class Logger {
   }
 
   public debug(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg));
+    global.console.log(this.formatMsg(msg, LogLevel.DEBUG));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg));
+      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.DEBUG));
     }
   }
 
   public info(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg));
+    global.console.log(this.formatMsg(msg, LogLevel.INFO));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg));
+      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
     }
 
     if (params.length > 0) {
@@ -40,18 +40,18 @@ export class Logger {
   }
 
   public warn(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg));
+    global.console.log(this.formatMsg(msg, LogLevel.WARN));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg));
+      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.WARN));
     }
   }
 
   public error(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg));
+    global.console.log(this.formatMsg(msg, LogLevel.ERROR));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg));
+      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.ERROR));
     }
   }
 
@@ -78,11 +78,11 @@ export class Logger {
     }
   }
 
-  private formatMsg(msg: string): string {
+  private formatMsg(msg: string, loglevel: LogLevel): string {
     const { message, date, level }: Ilog = {
       message: msg,
       date: new Date(),
-      level: LogLevel.INFO,
+      level: loglevel,
     };
 
     return `[${date.toLocaleTimeString()}] ${level.toUpperCase()}: ${message}`;
