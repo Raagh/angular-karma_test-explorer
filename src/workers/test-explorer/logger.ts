@@ -1,14 +1,8 @@
-import { OutputChannel, window } from "vscode";
+import { OutputChannel } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
+import { LogLevel } from "../../model/log-level.enum";
 
-export const OUTPUT_CHANNEL = "Angular Test Explorer";
-
-export enum LogLevel {
-  ERROR = "error",
-  WARN = "warn",
-  INFO = "info",
-  DEBUG = "debug",
-}
+export const OUTPUT_CHANNEL = "Angular/Karma Test Logs";
 
 interface Ilog {
   message: string;
@@ -17,75 +11,51 @@ interface Ilog {
 }
 
 export class Logger {
-  private static outputChannel: OutputChannel | undefined;
+  private outputChannel: OutputChannel | undefined;
 
-  public static setOutput() {
-    this.outputChannel = this.outputChannel || window.createOutputChannel(OUTPUT_CHANNEL);
+  constructor(outputChannel: OutputChannel) {
+    this.outputChannel = outputChannel;
   }
 
-  public static debug(msg: string, ...params: any[]) {
-    const log: Ilog = {
-      message: msg,
-      date: new Date(),
-      level: LogLevel.DEBUG,
-    };
-
-    global.console.log(this.formatMsg(log));
+  public debug(msg: string, ...params: any[]) {
+    global.console.log(this.formatMsg(msg));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(log));
+      this.outputChannel.appendLine(this.formatMsg(msg));
     }
   }
 
-  public static info(msg: string, ...params: any[]) {
-    const log: Ilog = {
-      message: msg,
-      date: new Date(),
-      level: LogLevel.INFO,
-    };
-
-    global.console.log(this.formatMsg(log));
+  public info(msg: string, ...params: any[]) {
+    global.console.log(this.formatMsg(msg));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(log));
+      this.outputChannel.appendLine(this.formatMsg(msg));
+    }
+
+    if (params.length > 0) {
+      if (params[0]!.addDividerForKarmaLogs) {
+        this.divideKarmaLogsContent();
+      }
     }
   }
 
-  public static warn(msg: string, ...params: any[]) {
-    const log: Ilog = {
-      message: msg,
-      date: new Date(),
-      level: LogLevel.WARN,
-    };
-
-    global.console.log(this.formatMsg(log));
+  public warn(msg: string, ...params: any[]) {
+    global.console.log(this.formatMsg(msg));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(log));
+      this.outputChannel.appendLine(this.formatMsg(msg));
     }
   }
 
-  public static error(msg: string, ...params: any[]) {
-    const log: Ilog = {
-      message: msg,
-      date: new Date(),
-      level: LogLevel.ERROR,
-    };
-
-    global.console.log(this.formatMsg(log));
+  public error(msg: string, ...params: any[]) {
+    global.console.log(this.formatMsg(msg));
 
     if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(log));
+      this.outputChannel.appendLine(this.formatMsg(msg));
     }
   }
 
-  public static karmaLogsDivider() {
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine("******************************* Karma Logs *******************************");
-    }
-  }
-
-  public static karmaLogs(msg: string) {
+  public karmaLogs(msg: string) {
     global.console.log(msg);
 
     if (this.outputChannel !== undefined) {
@@ -93,7 +63,7 @@ export class Logger {
     }
   }
 
-  public static status(status: TestResult) {
+  public status(status: TestResult) {
     let msg;
     if (status === TestResult.Success) {
       msg = `[SUCCESS] ✅ Passed`;
@@ -108,8 +78,19 @@ export class Logger {
     }
   }
 
-  private static formatMsg(log: Ilog): string {
-    const msg = `[${log.date.toLocaleTimeString()}] ${log.level.toUpperCase()}: ${log.message}`;
-    return msg;
+  private formatMsg(msg: string): string {
+    const { message, date, level }: Ilog = {
+      message: msg,
+      date: new Date(),
+      level: LogLevel.INFO,
+    };
+
+    return `[${date.toLocaleTimeString()}] ${level.toUpperCase()}: ${message}`;
+  }
+
+  private divideKarmaLogsContent() {
+    if (this.outputChannel !== undefined) {
+      this.outputChannel.appendLine("******************************* Karma Logs *******************************");
+    }
   }
 }

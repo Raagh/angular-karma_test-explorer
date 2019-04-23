@@ -3,12 +3,15 @@ import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { EventEmitter } from "../test-explorer/event-emitter";
 import { Logger } from "../test-explorer/logger";
+import { OutputChannel } from "vscode";
 
 export class KarmaRunner {
   private readonly karmaEventListener: KarmaEventListener;
+  private readonly logger: Logger;
 
-  public constructor() {
-    this.karmaEventListener = KarmaEventListener.getInstance();
+  public constructor(channel: OutputChannel) {
+    this.logger = new Logger(channel);
+    this.karmaEventListener = KarmaEventListener.getInstance(channel);
   }
 
   public isKarmaRunning(): boolean {
@@ -45,7 +48,9 @@ export class KarmaRunner {
 
   private log(tests: string[]): void {
     const [suit, ...description] = tests[0].split(" ");
-    Logger.info(`Running [ suite: ${suit}${description.length > 0 ? ", test: " + description.join(" ") : ""} ]`, { addDividerForKarmaLogs: true });
+    this.logger.info(`Running [ suite: ${suit}${description.length > 0 ? ", test: " + description.join(" ") : ""} ]`, {
+      addDividerForKarmaLogs: true,
+    });
   }
 
   private createKarmaRunConfiguration(tests: any) {

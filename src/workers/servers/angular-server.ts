@@ -2,14 +2,16 @@ import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
-import { window } from "vscode";
+import { window, OutputChannel } from "vscode";
 
 export class AngularServer {
   private angularProcess: any;
+  private readonly logger: Logger;
   private karmaEventListener: KarmaEventListener;
 
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
-    this.karmaEventListener = KarmaEventListener.getInstance();
+  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, channel: OutputChannel) {
+    this.logger = new Logger(channel);
+    this.karmaEventListener = KarmaEventListener.getInstance(channel);
   }
 
   public stopPreviousRun(): Promise<void> {
@@ -20,7 +22,7 @@ export class AngularServer {
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
-        Logger.info(`Angular exited with code ${code} and signal ${signal}`);
+        this.logger.info(`Angular exited with code ${code} and signal ${signal}`);
         resolve();
       });
     });
@@ -37,19 +39,19 @@ export class AngularServer {
 
     this.angularProcess = spawn(cliCommand, cliArgs, options);
 
-    Logger.info(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+    this.logger.info(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
     this.angularProcess.stdout.on("data", (data: any) => {
       const { isTestRunning } = this.karmaEventListener;
       const regex = new RegExp(/\(.*?)\m/, "g");
       if (isTestRunning) {
-        Logger.karmaLogs(`${data.toString().replace(regex, "")}`);
+        this.logger.karmaLogs(`${data.toString().replace(regex, "")}`);
       }
     });
 
-    this.angularProcess.stderr.on("data", (data: any) => Logger.error(`stderr: ${data}`));
+    this.angularProcess.stderr.on("data", (data: any) => this.logger.error(`stderr: ${data}`));
 
-    this.angularProcess.on("error", (err: any) => Logger.error(`error from ng child process: ${err}`));
+    this.angularProcess.on("error", (err: any) => this.logger.error(`error from ng child process: ${err}`));
   }
 
   private createAngularCommandAndArguments(baseKarmaConfigFilePath: string) {

@@ -5,13 +5,13 @@ import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
 import { Logger } from "../test-explorer/logger";
 import { EventEmitter } from "../test-explorer/event-emitter";
-import { commands } from "vscode";
+import { commands, OutputChannel } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 
 export class KarmaEventListener {
-  public static getInstance() {
+  public static getInstance(channel: OutputChannel) {
     if (this.instance == null) {
-      this.instance = new KarmaEventListener();
+      this.instance = new KarmaEventListener(channel);
     }
     return this.instance;
   }
@@ -25,8 +25,10 @@ export class KarmaEventListener {
   private server: any;
   private karmaBeingReloaded: boolean = false;
   private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
+  private readonly logger: Logger;
 
-  private constructor() {
+  private constructor(channel: OutputChannel) {
+    this.logger = new Logger(channel);
     this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
   }
 
@@ -43,7 +45,7 @@ export class KarmaEventListener {
           this.onBrowserConnected(resolve);
         });
         socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => {
-          Logger.info("browser_error " + event.results);
+          this.logger.info("browser_error " + event.results);
         });
         socket.on(KarmaEventName.BrowserStart, () => {
           this.savedSpecs = [];
@@ -56,7 +58,7 @@ export class KarmaEventListener {
         });
 
         socket.on("disconnect", (event: any) => {
-          Logger.info("AngularReporter closed connection with event: " + event);
+          this.logger.info("AngularReporter closed connection with event: " + event);
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
@@ -67,7 +69,7 @@ export class KarmaEventListener {
       });
 
       this.server.listen(port, () => {
-        Logger.info("Listening to AngularReporter events on port " + port);
+        this.logger.info("Listening to AngularReporter events on port " + port);
       });
     });
   }

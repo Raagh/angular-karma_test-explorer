@@ -10,13 +10,10 @@ import {
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularTestExplorer } from "./angular-test-explorer";
-import { Logger } from "./workers/test-explorer/logger";
-import { KarmaEventListener } from "./workers/karma/karma-event-listener";
 import path = require("path");
 
 export class Adapter implements TestAdapter {
   private disposables: Array<{ dispose(): void }> = [];
-  private karmaEventListener: KarmaEventListener;
 
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
@@ -33,26 +30,23 @@ export class Adapter implements TestAdapter {
     return this.autorunEmitter.event;
   }
 
-  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log) {
+  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
     this.log.info("Initializing adapter");
 
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
-    this.testExplorer = new AngularTestExplorer(path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")), this.testStatesEmitter);
-    this.karmaEventListener = KarmaEventListener.getInstance();
+    this.testExplorer = new AngularTestExplorer(path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")), this.testStatesEmitter, channel);
   }
 
   public async load(): Promise<void> {
     this.log.info("Loading tests");
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
-    Logger.info("Test Loading started...");
 
     const loadedTests = await this.testExplorer.loadTests();
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
-    Logger.info("Test Loading completed!");
   }
 
   public async run(tests: string[]): Promise<void> {
@@ -64,11 +58,6 @@ export class Adapter implements TestAdapter {
     await this.testExplorer.runTests(tests);
 
     this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
-    const { testStatus, runCompleteEvent } = this.karmaEventListener;
-
-    Logger.status(testStatus);
-
-    Logger.info("Run completed with status: " + runCompleteEvent.results);
   }
 
   public async debug(tests: string[]): Promise<void> {
