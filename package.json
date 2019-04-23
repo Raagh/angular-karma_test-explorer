@@ -37,7 +37,8 @@
     "rebuild": "npm run clean && npm run build",
     "package": "npx vsce package",
     "publish": "npx vsce publish",
-    "test": "jest"
+    "unit-test": "jest -c jest.config.js",
+    "integration-test": "jest --detectOpenHandles -c jest.integration.config.js" 
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",

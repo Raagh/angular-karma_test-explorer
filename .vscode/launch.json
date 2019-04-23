@@ -2,6 +2,7 @@
   "version": "0.2.0",
   "configurations": [
 
+
     
     {
       "type": "extensionHost",
@@ -18,9 +19,24 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Jest All",
+      "name": "Debug Unit Tests",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": ["--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Integration Tests",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand",
+        "--config",
+        "jest.integration.config.js"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,

@@ -22,8 +22,24 @@ test("should successfully load tests from a test project", async () => {
 
   // Act
   const loadedTestProject = await testExplorer.loadTests();
-  const loadedTests = loadedTestProject.children[0] as TestSuiteInfo;
 
   // Assert
-  expect(loadedTests.children.length).toEqual(1);
-}, 50000);
+  const projectLevelSuite = loadedTestProject.children[0] as TestSuiteInfo;
+  const appComponentLevelSuite = projectLevelSuite.children[0] as TestSuiteInfo
+  expect(appComponentLevelSuite.children.length).toBeGreaterThan(1);
+}, 740000);
+
+test("should re load tests from an already loaded test project", async () => {
+  // Arrange
+  const eventEmitter = { fire() {} } as vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>;
+  const testExplorer = new AngularTestExplorer(testProjectPath, baseKarmaConfigPath, eventEmitter);
+
+  // Act
+  await testExplorer.loadTests();
+  const loadedTestProject = await testExplorer.loadTests();
+
+  // Assert 
+  const projectLevelSuite = loadedTestProject.children[0] as TestSuiteInfo;
+  const appComponentLevelSuite = projectLevelSuite.children[0] as TestSuiteInfo
+  expect(appComponentLevelSuite.children.length).toBeGreaterThan(1);
+}, 740000);
