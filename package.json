@@ -95,6 +95,22 @@
           "scope": "resource"
         }
       }
-    }
+    },
+    "languages": [
+      {
+        "id": "angular-test",
+        "mimetypes": [
+          "text/x-code-output",
+          "x-code-output"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "angular-test",
+        "scopeName": "angular-test.output",
+        "path": "./syntaxes/angular-test-log.tmLanguage"
+      }
+    ]
   }
 }

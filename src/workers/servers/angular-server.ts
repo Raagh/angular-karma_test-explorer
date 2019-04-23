@@ -2,26 +2,27 @@ import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import spawn = require("cross-spawn");
 import { KarmaEventListener } from "../karma/karma-event-listener";
-import { window } from "vscode";
+import { window, OutputChannel } from "vscode";
 
 export class AngularServer {
-  private readonly logger: Logger;
   private angularProcess: any;
+  private readonly logger: Logger;
+  private karmaEventListener: KarmaEventListener;
 
-  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string) {
-    this.logger = new Logger();
+  public constructor(private angularProjectRootPath: string, private baseKarmaConfigFilePath: string, channel: OutputChannel) {
+    this.logger = new Logger(channel);
+    this.karmaEventListener = KarmaEventListener.getInstance(channel);
   }
 
   public stopPreviousRun(): Promise<void> {
     if (this.angularProcess != null) {
-      const karmaEventListener = KarmaEventListener.getInstance();
-      karmaEventListener.stopListeningToKarma();
+      this.karmaEventListener.stopListeningToKarma();
       this.angularProcess.kill();
     }
 
     return new Promise<void>(resolve => {
       this.angularProcess.on("exit", (code: any, signal: any) => {
-        this.logger.log(`Angular exited with code ${code} and signal ${signal}`);
+        this.logger.info(`Angular exited with code ${code} and signal ${signal}`);
         resolve();
       });
     });
@@ -38,11 +39,19 @@ export class AngularServer {
 
     this.angularProcess = spawn(cliCommand, cliArgs, options);
 
-    this.logger.log(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+    this.logger.info(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
 
-    // this.angularProcess.stdout.on("data", (data: any) => this.logger.log(`stdout: ${data}`));
-    this.angularProcess.stderr.on("data", (data: any) => this.logger.log(`stderr: ${data}`));
-    this.angularProcess.on("error", (err: any) => this.logger.log(`error from ng child process: ${err}`));
+    this.angularProcess.stdout.on("data", (data: any) => {
+      const { isTestRunning } = this.karmaEventListener;
+      const regex = new RegExp(/\(.*?)\m/, "g");
+      if (isTestRunning) {
+        this.logger.karmaLogs(`${data.toString().replace(regex, "")}`);
+      }
+    });
+
+    this.angularProcess.stderr.on("data", (data: any) => this.logger.error(`stderr: ${data}`));
+
+    this.angularProcess.on("error", (err: any) => this.logger.error(`error from ng child process: ${err}`));
   }
 
   private createAngularCommandAndArguments(baseKarmaConfigFilePath: string) {
