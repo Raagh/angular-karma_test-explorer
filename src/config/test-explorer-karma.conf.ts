@@ -15,7 +15,7 @@ const originalConfigPath = process.env.userKarmaConfigPath as string;
 //   }
 // };
 
-module.exports = (config: Config) =>  {
+module.exports = (config: Config) => {
   // setupCorrectKarmaConfFilePath();
   karmaConfigurator.loadOriginalUserConfiguration(config, originalConfigPath);
   karmaConfigurator.setMandatoryOptions(config);

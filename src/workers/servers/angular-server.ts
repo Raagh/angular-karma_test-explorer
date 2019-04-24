@@ -1,17 +1,13 @@
 import { Logger } from "./../test-explorer/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../karma/karma-event-listener";
-import { AngularProject } from '../../model/angular-project';
-import { window, OutputChannel } from "vscode";
+import { AngularProject } from "../../model/angular-project";
+import { window } from "vscode";
 
 export class AngularServer {
   private angularProcess: any;
-  private readonly logger: Logger;
-  private karmaEventListener: KarmaEventListener;
 
-  public constructor(channel: OutputChannel) {
-    this.logger = new Logger(channel);
-    this.karmaEventListener = KarmaEventListener.getInstance(channel);
+  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {
   }
 
   public stopPreviousRun(): Promise<void> {
@@ -31,12 +27,12 @@ export class AngularServer {
   public start(project: AngularProject, _baseKarmaConfigFilePath: string): void {
     const spawn = require("cross-spawn");
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
-    const testExplorerEnvironment = Object.create( process.env );
+    const testExplorerEnvironment = Object.create(process.env);
     testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
     const options = {
       cwd: project.rootPath,
       shell: true,
-      env: testExplorerEnvironment
+      env: testExplorerEnvironment,
     } as SpawnOptions;
 
     const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);

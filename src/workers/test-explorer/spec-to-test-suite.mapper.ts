@@ -9,7 +9,7 @@ export class SpecToTestSuiteMapper {
   public map(savedSpecs: any[]): TestSuiteInfo[] {
     const suites: any[] = this.specResultGroupBy.group(savedSpecs);
 
-    return suites.map((suite) => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
+    return suites.map(suite => this.mapTestsAndSuites(suite)) as TestSuiteInfo[];
   }
 
   private mapTestsAndSuites(suite: any, previousSuiteName?: string): TestInfo | TestSuiteInfo {

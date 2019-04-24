@@ -20,25 +20,25 @@ export class Logger {
   public debug(msg: string, ...params: any[]) {
     if (this.isDebuggingMode) {
       global.console.log(this.formatMsg(msg, LogLevel.DEBUG));
-    }
 
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.DEBUG));
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.DEBUG));
+      }
     }
   }
 
   public info(msg: string, ...params: any[]) {
     if (this.isDebuggingMode) {
       global.console.log(this.formatMsg(msg, LogLevel.INFO));
-    }
 
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
-    }
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
+      }
 
-    if (params.length > 0) {
-      if (params[0]!.addDividerForKarmaLogs) {
-        this.divideKarmaLogsContent();
+      if (params.length > 0) {
+        if (params[0]!.addDividerForKarmaLogs) {
+          this.divideKarmaLogsContent();
+        }
       }
     }
   }
@@ -46,45 +46,45 @@ export class Logger {
   public warn(msg: string, ...params: any[]) {
     if (this.isDebuggingMode) {
       global.console.log(this.formatMsg(msg, LogLevel.WARN));
-    }
-
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.WARN));
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.WARN));
+      }
     }
   }
 
   public error(msg: string, ...params: any[]) {
     if (this.isDebuggingMode) {
-      global.console.log(this.formatMsg(msg, LogLevel.ERROR));    
-    }
-
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.ERROR));
+      global.console.log(this.formatMsg(msg, LogLevel.ERROR));
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.ERROR));
+      }
     }
   }
 
   public karmaLogs(msg: string) {
     if (this.isDebuggingMode) {
       global.console.log(msg);
-    }
 
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(msg);
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(msg);
+      }
     }
   }
 
   public status(status: TestResult) {
-    let msg;
-    if (status === TestResult.Success) {
-      msg = `[SUCCESS] ✅ Passed`;
-    } else if (status === TestResult.Failed) {
-      msg = `[FAILURE] ❌ failed`;
-    } else {
-      msg = `[SKIPPED] Test Skipped`;
-    }
+    if (this.isDebuggingMode) {
+      let msg;
+      if (status === TestResult.Success) {
+        msg = `[SUCCESS] ✅ Passed`;
+      } else if (status === TestResult.Failed) {
+        msg = `[FAILURE] ❌ failed`;
+      } else {
+        msg = `[SKIPPED] Test Skipped`;
+      }
 
-    if (this.outputChannel !== undefined) {
-      this.outputChannel.appendLine(msg);
+      if (this.outputChannel !== undefined) {
+        this.outputChannel.appendLine(msg);
+      }
     }
   }
 

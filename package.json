@@ -85,7 +85,7 @@
       "title": "Angular/Karma Test Explorer configuration",
       "properties": {
         "angularKarmaTestExplorer.defaultAngularProjectName": {
-          "description": "set the default angular project to be tested, if this is is null all projects in the root folder will be loaded",
+          "description": "set the default angular project to be tested, if this is is null default project in angular.json will be loaded",
           "type": "string",
           "scope": "resource"
         },
@@ -93,6 +93,12 @@
           "description": "this is the port that will be used to connect Karma with the test explorer",
           "type": "number",
           "scope": "resource"
+        },
+        "angularKarmaTestExplorer.debugMode": {
+          "description": "this will enable debug mode, which will create a new output channel with detailed logs",
+          "type": "boolean",
+          "scope": "resource",
+          "default": true
         }
       }
     },

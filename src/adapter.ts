@@ -18,6 +18,7 @@ export class Adapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
+  private readonly config: vscode.WorkspaceConfiguration;
   private readonly testExplorer: AngularTestExplorer;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
@@ -32,6 +33,22 @@ export class Adapter implements TestAdapter {
 
   constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
     this.log.info("Initializing adapter");
+    this.config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
+
+    this.disposables.push(
+      vscode.workspace.onDidChangeConfiguration(async configChange => {
+        this.log.info("Configuration changed");
+
+        if (
+          configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri)
+        ) {
+          this.log.info("Sending reload event");
+
+          this.load();
+        }
+      })
+    );
 
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
@@ -40,7 +57,9 @@ export class Adapter implements TestAdapter {
       path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
       path.join(__dirname, ".", "config", "test-explorer-karma.conf.js"),
       this.testStatesEmitter,
-      channel);
+      channel,
+      this.config.get("debugMode") as boolean
+    );
   }
 
   public async load(): Promise<void> {
@@ -48,7 +67,10 @@ export class Adapter implements TestAdapter {
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    const loadedTests = await this.testExplorer.loadTests();
+    const loadedTests = await this.testExplorer.loadTests(
+      this.config.get("defaultAngularProjectName") as string,
+      this.config.get("defaultSocketConnectionPort") as number
+    );
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }

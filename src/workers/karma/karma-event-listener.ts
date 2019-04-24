@@ -9,14 +9,7 @@ import { commands, OutputChannel } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 
 export class KarmaEventListener {
-  public static getInstance(channel: OutputChannel) {
-    if (this.instance == null) {
-      this.instance = new KarmaEventListener(channel);
-    }
-    return this.instance;
-  }
-  
-  private static instance: KarmaEventListener;
+
   public isServerLoaded: boolean = false;
   public isTestRunning: boolean = false;
   public lastRunTests: string = "";
@@ -25,19 +18,17 @@ export class KarmaEventListener {
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
-  private readonly logger: Logger;
 
-  private constructor(channel: OutputChannel) {
-    this.logger = new Logger(channel);
+  public constructor(channel: OutputChannel, private readonly logger: Logger) {
   }
 
-  public listenTillKarmaReady(eventEmitter: EventEmitter): Promise<void> {
+  public listenTillKarmaReady(eventEmitter: EventEmitter, defaultSocketPort: number | undefined): Promise<void> {
     return new Promise<void>(resolve => {
       this.karmaBeingReloaded = false;
       const app = require("express")();
       this.server = require("http").createServer(app);
       const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
-      const port = 9999;
+      const port = defaultSocketPort !== 0 ? defaultSocketPort : 9999;
 
       io.on("connection", (socket: any) => {
         socket.on(KarmaEventName.BrowserConnected, () => {

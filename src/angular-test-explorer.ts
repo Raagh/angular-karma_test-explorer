@@ -1,10 +1,13 @@
-import { KarmaTestsLoader } from './workers/karma/karma-tests-loader';
+import { KarmaTestsLoader } from "./workers/karma/karma-tests-loader";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent, TestSuiteInfo } from "vscode-test-adapter-api";
 import { KarmaRunner } from "./workers/karma/karma-runner";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { KarmaEventListener } from "./workers/karma/karma-event-listener";
 import { Logger } from "./workers/test-explorer/logger";
 import * as vscode from "vscode";
+import { AngularServer } from "./workers/servers/angular-server";
+import { EventEmitter } from "./workers/test-explorer/event-emitter";
+import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
 
 export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;
@@ -15,25 +18,37 @@ export class AngularTestExplorer {
 
   public constructor(
     private readonly workspaceRootPath: string,
-    baseKarmaConfigPath:string,
+    baseKarmaConfigPath: string,
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
-    channel: vscode.OutputChannel
+    channel: vscode.OutputChannel,
+    isDebugMode: boolean
   ) {
-    this.logger = new Logger(channel);
+    // poor's man dependency injection
+    this.logger = new Logger(channel, isDebugMode);
+    this.karmaEventListener = new KarmaEventListener(channel, this.logger);
     this.karmaHelper = new KarmaHelper();
-    this.karmaRunner = new KarmaRunner(channel);
-    this.karmaEventListener = KarmaEventListener.getInstance(channel);
-    this.karmaTestsLoader = new KarmaTestsLoader(baseKarmaConfigPath, this.workspaceRootPath, channel, eventEmitterInterface);
+    this.karmaRunner = new KarmaRunner(this.karmaEventListener, this.logger);
+    const eventEmitter = new EventEmitter(eventEmitterInterface);
+    const angularServer = new AngularServer(this.karmaEventListener, this.logger);
+    const testExplorerHelper = new TestExplorerHelper();
+    this.karmaTestsLoader = new KarmaTestsLoader(
+      baseKarmaConfigPath,
+      this.workspaceRootPath,
+      eventEmitter,
+      angularServer,
+      testExplorerHelper,
+      this.karmaRunner
+    );
   }
 
-  public async loadTests(): Promise<TestSuiteInfo> {
+  public async loadTests(defaultProjectName: string, defaultSocketPort: number): Promise<TestSuiteInfo> {
     if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {
       return {} as TestSuiteInfo;
     }
 
     this.logger.info("Test Loading started...");
 
-    const testSuiteInfo = this.karmaTestsLoader.loadTestsFromDefaultProject("");
+    const testSuiteInfo = this.karmaTestsLoader.loadTestsFromDefaultProject(defaultProjectName, defaultSocketPort);
 
     this.logger.info("Test Loading completed!");
 

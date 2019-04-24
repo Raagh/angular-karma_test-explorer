@@ -4,7 +4,7 @@ import { TestSuiteInfo } from "vscode-test-adapter-api";
 export class TestExplorerHelper {
   public constructor() {}
 
-  public createTestSuiteInfoRootElement(id:string, label: string) {
+  public createTestSuiteInfoRootElement(id: string, label: string) {
     return {
       type: "suite",
       id,
@@ -49,17 +49,14 @@ export class TestExplorerHelper {
     const projects: AngularProject[] = [];
     Object.keys(angularJsonObject.projects).map((projectName: any) => {
       const projectConfig = angularJsonObject.projects[projectName];
-      if (projectConfig.architect.test === undefined) { return; }
+      if (projectConfig.architect.test === undefined) {
+        return;
+      }
 
       const projectPath = path.join(workspaceRootPath, projectConfig.root);
       const karmaConfigPath = path.join(workspaceRootPath, projectConfig.architect.test.options.karmaConfig);
       const isAngularDefaultProject = angularJsonObject.defaultProject === projectName;
-      const project = new AngularProject(
-        projectName,
-        projectPath,
-        karmaConfigPath,
-        isAngularDefaultProject
-      );
+      const project = new AngularProject(projectName, projectPath, karmaConfigPath, isAngularDefaultProject);
 
       projects.push(project);
     });
