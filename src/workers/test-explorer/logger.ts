@@ -13,12 +13,14 @@ interface Ilog {
 export class Logger {
   private outputChannel: OutputChannel | undefined;
 
-  constructor(outputChannel: OutputChannel) {
+  constructor(outputChannel: OutputChannel, private readonly isDebuggingMode: boolean = false) {
     this.outputChannel = outputChannel;
   }
 
   public debug(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg, LogLevel.DEBUG));
+    if (this.isDebuggingMode) {
+      global.console.log(this.formatMsg(msg, LogLevel.DEBUG));
+    }
 
     if (this.outputChannel !== undefined) {
       this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.DEBUG));
@@ -26,7 +28,9 @@ export class Logger {
   }
 
   public info(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg, LogLevel.INFO));
+    if (this.isDebuggingMode) {
+      global.console.log(this.formatMsg(msg, LogLevel.INFO));
+    }
 
     if (this.outputChannel !== undefined) {
       this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
@@ -40,7 +44,9 @@ export class Logger {
   }
 
   public warn(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg, LogLevel.WARN));
+    if (this.isDebuggingMode) {
+      global.console.log(this.formatMsg(msg, LogLevel.WARN));
+    }
 
     if (this.outputChannel !== undefined) {
       this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.WARN));
@@ -48,7 +54,9 @@ export class Logger {
   }
 
   public error(msg: string, ...params: any[]) {
-    global.console.log(this.formatMsg(msg, LogLevel.ERROR));
+    if (this.isDebuggingMode) {
+      global.console.log(this.formatMsg(msg, LogLevel.ERROR));    
+    }
 
     if (this.outputChannel !== undefined) {
       this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.ERROR));
@@ -56,7 +64,9 @@ export class Logger {
   }
 
   public karmaLogs(msg: string) {
-    global.console.log(msg);
+    if (this.isDebuggingMode) {
+      global.console.log(msg);
+    }
 
     if (this.outputChannel !== undefined) {
       this.outputChannel.appendLine(msg);

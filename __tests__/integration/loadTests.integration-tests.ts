@@ -1,3 +1,4 @@
+import { KarmaEventListener } from './../../src/workers/karma/karma-event-listener';
 jest.mock("./../../src/workers/test-explorer/logger");
 import { AngularTestExplorer } from "../../src/angular-test-explorer";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent, TestSuiteInfo } from "vscode-test-adapter-api";
@@ -21,3 +22,22 @@ test("should successfully load tests from a test project", async () => {
   const appComponentLevelSuite = projectLevelSuite.children[0] as TestSuiteInfo
   expect(appComponentLevelSuite.children.length).toBeGreaterThan(1);
 }, 740000);
+
+test("should successfully reload tests from an already loaded test project", async () => {
+  // Arrange
+  const testExplorer = new AngularTestExplorer(testProjectPath, baseKarmaConfigPath, eventEmitter, channel);
+
+  // Acts
+  await testExplorer.loadTests();
+  const loadedTestProject = await testExplorer.loadTests();
+
+  // Assert
+  const projectLevelSuite = loadedTestProject.children[0] as TestSuiteInfo;
+  const appComponentLevelSuite = projectLevelSuite.children[0] as TestSuiteInfo
+  expect(appComponentLevelSuite.children.length).toBeGreaterThan(1);
+}, 740000);
+
+afterEach(() => {
+  const listener = KarmaEventListener.getInstance(channel);
+  listener.stopListeningToKarma();
+});

@@ -15,6 +15,7 @@ export class KarmaEventListener {
     }
     return this.instance;
   }
+  
   private static instance: KarmaEventListener;
   public isServerLoaded: boolean = false;
   public isTestRunning: boolean = false;
@@ -24,12 +25,10 @@ export class KarmaEventListener {
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
-  private readonly specToTestSuiteMapper: SpecToTestSuiteMapper;
   private readonly logger: Logger;
 
   private constructor(channel: OutputChannel) {
     this.logger = new Logger(channel);
-    this.specToTestSuiteMapper = new SpecToTestSuiteMapper();
   }
 
   public listenTillKarmaReady(eventEmitter: EventEmitter): Promise<void> {
@@ -75,10 +74,12 @@ export class KarmaEventListener {
   }
 
   public getLoadedTests(): TestSuiteInfo[] {
-    return this.specToTestSuiteMapper.map(this.savedSpecs);
+    const specToTestSuiteMapper = new SpecToTestSuiteMapper();
+    return specToTestSuiteMapper.map(this.savedSpecs);
   }
 
   public stopListeningToKarma() {
+    this.isServerLoaded = false;
     this.karmaBeingReloaded = true;
     this.server.close();
   }
