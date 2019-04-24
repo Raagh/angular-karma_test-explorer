@@ -33,7 +33,7 @@ The `Angular/Karma Test Explorer` extension that works with the
 ## Disclaimer
 This project is in early stages of development.
 If you find a bug or think that a feature is missing and is not in the backlog please report it.
-If you wanna help out please read the [Contribution guidelines for this project](CONTRIBUTING.md) file.
+If you wanna help out please read the [Contribution guidelines for this project](.github/CONTRIBUTING.md) file.
 
 ### VERSION/UPDATE PROBLEM ###
 If you were using 1.0.3 version I made some mistakes in the publishing process and I had to republish the extension.

@@ -26,6 +26,10 @@ Now you should see the test suite in the side panel (angular projects take longe
 - create a pull request on the repository, please link the pull request to the feature or bug related to your changes.
 - include a summary of the changes you made in the pull request.
 
+# Verifying Before Submitting
+- run unit tests with `npm run test` and verify all existing functionality is still working.
+- run integration tests: first go to `__tests__\integration\` and create a new test project with `npx ng new test-project --defaults=true`, then run `npm run test-integration` and verify all existing functionality is still working.
+
 # Extra Guidelines
 - please include unit tests (I am using jest) for any new functionality you submit.
 - if it's a bugfix and tests exist for that module make sure the changes dont break them or that the bug is now covered by test cases.
