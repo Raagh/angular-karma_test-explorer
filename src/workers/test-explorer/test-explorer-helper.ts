@@ -53,10 +53,12 @@ export class TestExplorerHelper {
 
       const projectPath = path.join(workspaceRootPath, projectConfig.root);
       const karmaConfigPath = path.join(workspaceRootPath, projectConfig.architect.test.options.karmaConfig);
+      const isAngularDefaultProject = angularJsonObject.defaultProject === projectName;
       const project = new AngularProject(
         projectName,
         projectPath,
-        karmaConfigPath
+        karmaConfigPath,
+        isAngularDefaultProject
       );
 
       projects.push(project);

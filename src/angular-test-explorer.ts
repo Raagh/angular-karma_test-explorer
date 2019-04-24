@@ -23,7 +23,7 @@ export class AngularTestExplorer {
     this.karmaHelper = new KarmaHelper();
     this.karmaRunner = new KarmaRunner(channel);
     this.karmaEventListener = KarmaEventListener.getInstance(channel);
-    this.karmaTestsLoader = new KarmaTestsLoader(baseKarmaConfigPath, channel, eventEmitterInterface);
+    this.karmaTestsLoader = new KarmaTestsLoader(baseKarmaConfigPath, this.workspaceRootPath, channel, eventEmitterInterface);
   }
 
   public async loadTests(): Promise<TestSuiteInfo> {
@@ -33,7 +33,7 @@ export class AngularTestExplorer {
 
     this.logger.info("Test Loading started...");
 
-    const testSuiteInfo = this.karmaTestsLoader.loadTestsFromAllProjects(this.workspaceRootPath);
+    const testSuiteInfo = this.karmaTestsLoader.loadTestsFromDefaultProject("");
 
     this.logger.info("Test Loading completed!");
 
