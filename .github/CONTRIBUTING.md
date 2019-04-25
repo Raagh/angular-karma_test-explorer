@@ -6,7 +6,6 @@ This repository contains the implementation for `Angular/Karma Test Explorer` ex
 [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
 ## Development
-
 - install the [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
 - fork and clone this repository and open it in VS Code
 - run `npm install`

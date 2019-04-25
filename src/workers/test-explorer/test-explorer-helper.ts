@@ -1,4 +1,4 @@
-import { AngularProject } from "./../../model/angular-project";
+
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class TestExplorerHelper {
@@ -39,28 +39,5 @@ export class TestExplorerHelper {
         return elementsToRemove !== element;
       });
     }
-  }
-
-  public getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
-    const fs = require("fs");
-    const path = require("path");
-    const angularJsonObject = JSON.parse(fs.readFileSync(path.join(workspaceRootPath, "angular.json"), "utf8"));
-
-    const projects: AngularProject[] = [];
-    Object.keys(angularJsonObject.projects).map((projectName: any) => {
-      const projectConfig = angularJsonObject.projects[projectName];
-      if (projectConfig.architect.test === undefined) {
-        return;
-      }
-
-      const projectPath = path.join(workspaceRootPath, projectConfig.root);
-      const karmaConfigPath = path.join(workspaceRootPath, projectConfig.architect.test.options.karmaConfig);
-      const isAngularDefaultProject = angularJsonObject.defaultProject === projectName;
-      const project = new AngularProject(projectName, projectPath, karmaConfigPath, isAngularDefaultProject);
-
-      projects.push(project);
-    });
-
-    return projects;
   }
 }
