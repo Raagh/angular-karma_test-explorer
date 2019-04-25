@@ -38,7 +38,7 @@
     "package": "npx vsce package",
     "publish": "npx vsce publish",
     "test": "jest -c jest.config.js",
-    "test-integration": "jest --detectOpenHandles -c jest.integration.config.js"
+    "test-integration": "jest --forceExit --detectOpenHandles -c jest.integration.config.js "
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",

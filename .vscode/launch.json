@@ -3,6 +3,7 @@
   "configurations": [
 
 
+
     
     {
       "type": "extensionHost",
@@ -35,6 +36,7 @@
       "name": "Debug Integration Tests",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": ["--runInBand",
+        "--forceExit",
         "--config",
         "jest.integration.config.js"],
       "console": "integratedTerminal",
