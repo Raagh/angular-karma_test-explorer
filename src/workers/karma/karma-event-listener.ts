@@ -5,7 +5,7 @@ import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
 import { Logger } from "../test-explorer/logger";
 import { EventEmitter } from "../test-explorer/event-emitter";
-import { commands, OutputChannel } from "vscode";
+import { commands } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 
 export class KarmaEventListener {
@@ -19,10 +19,10 @@ export class KarmaEventListener {
   private server: any;
   private karmaBeingReloaded: boolean = false;
 
-  public constructor(channel: OutputChannel, private readonly logger: Logger) {
+  public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {
   }
 
-  public listenTillKarmaReady(eventEmitter: EventEmitter, defaultSocketPort: number | undefined): Promise<void> {
+  public listenTillKarmaReady(defaultSocketPort: number | undefined): Promise<void> {
     return new Promise<void>(resolve => {
       this.karmaBeingReloaded = false;
       const app = require("express")();
@@ -44,7 +44,7 @@ export class KarmaEventListener {
           this.runCompleteEvent = event;
         });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
-          this.onSpecComplete(event, eventEmitter);
+          this.onSpecComplete(event);
         });
 
         socket.on("disconnect", (event: any) => {
@@ -75,7 +75,7 @@ export class KarmaEventListener {
     this.server.close();
   }
 
-  private onSpecComplete(event: KarmaEvent, eventEmitter: EventEmitter) {
+  private onSpecComplete(event: KarmaEvent) {
     const { results } = event;
     const { suite, description, status } = results;
 
@@ -85,10 +85,10 @@ export class KarmaEventListener {
     }
 
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
-      eventEmitter.emitTestStateEvent(testName, TestState.Running);
+      this.eventEmitter.emitTestStateEvent(testName, TestState.Running);
       this.savedSpecs.push(results);
 
-      eventEmitter.emitTestResultEvent(testName, event);
+      this.eventEmitter.emitTestResultEvent(testName, event);
 
       if (this.lastRunTests !== "") {
         this.testStatus = status;

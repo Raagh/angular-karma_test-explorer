@@ -92,7 +92,8 @@
         "angularKarmaTestExplorer.defaultSocketConnectionPort": {
           "description": "this is the port that will be used to connect Karma with the test explorer",
           "type": "number",
-          "scope": "resource"
+          "scope": "resource",
+          "default": 9999
         },
         "angularKarmaTestExplorer.debugMode": {
           "description": "this will enable debug mode, which will create a new output channel with detailed logs",

@@ -24,19 +24,16 @@ export class AngularTestExplorer {
     isDebugMode: boolean
   ) {
     // poor's man dependency injection
-    this.logger = new Logger(channel, isDebugMode);
-    this.karmaEventListener = new KarmaEventListener(channel, this.logger);
     this.karmaHelper = new KarmaHelper();
+    this.logger = new Logger(channel, isDebugMode);
+    this.karmaEventListener = new KarmaEventListener(this.logger, new EventEmitter(eventEmitterInterface));
     this.karmaRunner = new KarmaRunner(this.karmaEventListener, this.logger);
-    const eventEmitter = new EventEmitter(eventEmitterInterface);
-    const angularServer = new AngularServer(this.karmaEventListener, this.logger);
-    const testExplorerHelper = new TestExplorerHelper();
+
     this.karmaTestsLoader = new KarmaTestsLoader(
       baseKarmaConfigPath,
       this.workspaceRootPath,
-      eventEmitter,
-      angularServer,
-      testExplorerHelper,
+      new AngularServer(this.karmaEventListener, this.logger),
+      new TestExplorerHelper(),
       this.karmaRunner
     );
   }
@@ -48,7 +45,7 @@ export class AngularTestExplorer {
 
     this.logger.info("Test Loading started...");
 
-    const testSuiteInfo = this.karmaTestsLoader.loadTestsFromDefaultProject(defaultProjectName, defaultSocketPort);
+    const testSuiteInfo = await this.karmaTestsLoader.loadTestsFromDefaultProject(defaultProjectName, defaultSocketPort);
 
     this.logger.info("Test Loading completed!");
 

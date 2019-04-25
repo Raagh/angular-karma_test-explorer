@@ -39,13 +39,17 @@ export class AngularServer {
 
     this.angularProcess = spawn(cliCommand, cliArgs, options);
 
-    this.logger.info(`Starting Angular tests with arguments: ${cliArgs.join(" ")}`);
+    this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
 
     this.angularProcess.stdout.on("data", (data: any) => {
       const { isTestRunning } = this.karmaEventListener;
       const regex = new RegExp(/\(.*?)\m/, "g");
       if (isTestRunning) {
-        this.logger.karmaLogs(`${data.toString().replace(regex, "")}`);
+        let log = data.toString().replace(regex, "");
+        if (log.startsWith("e ")) {
+          log = "HeadlessChrom" + log;
+        }
+        this.logger.karmaLogs(`${log}`);
       }
     });
 
