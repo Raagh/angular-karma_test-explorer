@@ -1,6 +1,6 @@
 ### Version 0.2.0
 - Added support for old angular-cli.json projects.
-- Added support for multi-apps in a single repository (this should include hybrid apps and component libraries).
+- Added initial support for multi-apps in a single repository (this should include hybrid apps and component libraries).
 - Added configuration properties in vscode (socketDefaultPort, debugMode and defaultProjectName).
 - Improved integration testing.
 - Dependencies refactoring.
