@@ -5,7 +5,9 @@ export class KarmaHelper {
 
   public isKarmaBasedProject(projectRootPath: string) {
     const fs = require("fs");
+    const angularJsonPath = path.join(projectRootPath, "angular.json");
+    const angularCliJsonPath = path.join(projectRootPath, ".angular-cli.json");
 
-    return fs.existsSync(path.join(projectRootPath, "angular.json")) || fs.existsSync(path.join(projectRootPath, ".angular-cli.json"));
+    return fs.existsSync(angularJsonPath) || fs.existsSync(angularCliJsonPath);
   }
 }
