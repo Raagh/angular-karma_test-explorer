@@ -9,7 +9,6 @@ import { commands } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 
 export class KarmaEventListener {
-
   public isServerLoaded: boolean = false;
   public isTestRunning: boolean = false;
   public lastRunTests: string = "";
@@ -19,10 +18,9 @@ export class KarmaEventListener {
   private server: any;
   private karmaBeingReloaded: boolean = false;
 
-  public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {
-  }
+  public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {}
 
-  public listenTillKarmaReady(defaultSocketPort: number | undefined): Promise<void> {
+  public listenTillKarmaReady(defaultSocketPort?: number): Promise<void> {
     return new Promise<void>(resolve => {
       this.karmaBeingReloaded = false;
       const app = require("express")();
@@ -96,7 +94,7 @@ export class KarmaEventListener {
     }
   }
 
-  private onBrowserConnected(resolve: (value?: void | PromiseLike<void> | undefined) => void) {
+  private onBrowserConnected(resolve: (value?: void | PromiseLike<void>) => void) {
     resolve();
     this.isServerLoaded = true;
   }

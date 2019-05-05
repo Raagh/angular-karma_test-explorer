@@ -1,4 +1,3 @@
-
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class TestExplorerHelper {
@@ -20,7 +19,7 @@ export class TestExplorerHelper {
     }, {});
   }
 
-  public removeElementsFromArrayWithoutModifyingIt(elements: any[] | undefined, elementsToRemove: any[]) {
+  public removeElementsFromArrayWithoutModifyingIt(elements?: any[], elementsToRemove?: any[]) {
     if (elements === undefined) {
       return [];
     }

@@ -11,7 +11,7 @@ interface Ilog {
 }
 
 export class Logger {
-  private outputChannel: OutputChannel | undefined;
+  private outputChannel?: OutputChannel;
 
   constructor(outputChannel: OutputChannel, private readonly isDebuggingMode: boolean = false) {
     this.outputChannel = outputChannel;

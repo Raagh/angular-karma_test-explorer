@@ -7,8 +7,7 @@ import { window } from "vscode";
 export class AngularServer {
   private angularProcess: any;
 
-  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {
-  }
+  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {}
 
   public stop(): Promise<void> {
     if (this.angularProcess != null) {

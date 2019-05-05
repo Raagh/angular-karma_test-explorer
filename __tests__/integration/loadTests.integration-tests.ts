@@ -7,7 +7,7 @@ import path = require("path");
 const testProjectPath = path.join(__dirname, "test-project");
 const baseKarmaConfigPath = path.join(__dirname, "..", "..", "out", "config", "test-explorer-karma.conf.js");
 const eventEmitter = { fire() {} } as vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>;
-const channel = { appendLine() {} , name: "", append() {}, show() {}, clear() {}, hide(){}, dispose() {}  } as vscode.OutputChannel;
+const channel = { appendLine() {}, name: "", append() {}, show() {}, clear() {}, hide() {}, dispose() {} } as vscode.OutputChannel;
 
 test("should successfully load tests from a test project", async () => {
   // Arrange
@@ -17,7 +17,7 @@ test("should successfully load tests from a test project", async () => {
   const loadedTestProject = await testExplorer.loadTests("", 9999);
 
   // Assert
-  const appComponentLevelSuite = loadedTestProject.children[0] as TestSuiteInfo
+  const appComponentLevelSuite = loadedTestProject.children[0] as TestSuiteInfo;
   expect(appComponentLevelSuite.children.length).toBeGreaterThan(1);
 }, 740000);
 

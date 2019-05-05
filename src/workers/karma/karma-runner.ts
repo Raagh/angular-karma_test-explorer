@@ -1,17 +1,15 @@
-import { Logger } from './../test-explorer/logger';
+import { Logger } from "./../test-explorer/logger";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class KarmaRunner {
-
-  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {
-  }
+  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {}
 
   public isKarmaRunning(): boolean {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async waitTillKarmaIsRunning(defaultSocketPort: number | undefined): Promise<void> {
+  public async waitTillKarmaIsRunning(defaultSocketPort?: number): Promise<void> {
     await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
   }
 

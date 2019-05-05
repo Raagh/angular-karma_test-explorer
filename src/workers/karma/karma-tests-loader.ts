@@ -2,8 +2,8 @@ import { KarmaRunner } from "./karma-runner";
 import { AngularServer } from "../servers/angular-server";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestExplorerHelper } from "../test-explorer/test-explorer-helper";
-import { AngularProject } from '../../model/angular-project';
-import { window } from 'vscode';
+import { AngularProject } from "../../model/angular-project";
+import { window } from "vscode";
 import fs = require("fs");
 import path = require("path");
 
@@ -16,7 +16,7 @@ export class KarmaTestsLoader {
     private readonly karmaRunner: KarmaRunner
   ) {}
 
-  public async loadTestsFromDefaultProject(configDefaultProject: string | undefined, defaultSocketPort: number | undefined): Promise<TestSuiteInfo> {
+  public async loadTestsFromDefaultProject(configDefaultProject?: string, defaultSocketPort?: number): Promise<TestSuiteInfo> {
     const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
 
     const project = this.getDefaultAngularProjectInformation(configDefaultProject);
@@ -31,7 +31,7 @@ export class KarmaTestsLoader {
     return testSuiteInfo;
   }
 
-  private getDefaultAngularProjectInformation(configDefaultProject: string | undefined) {
+  private getDefaultAngularProjectInformation(configDefaultProject?: string) {
     const angularProjects = this.getAllAngularProjects(this.workspaceRootPath);
     let project = angularProjects.find(x => x.isAngularDefaultProject);
     if (configDefaultProject !== "") {
@@ -52,7 +52,7 @@ export class KarmaTestsLoader {
       projects = this.mapAngularJsonObject(workspaceRootPath, angularJsonPath);
     } else if (fs.existsSync(angularCliJsonPath)) {
       projects = this.mapAngularCliJsonObject(workspaceRootPath, angularCliJsonPath);
-    } else {  
+    } else {
       const error = "No angular.json or angular-cli.json file found in root path.";
       window.showErrorMessage(error);
       throw new Error(error);
@@ -74,7 +74,7 @@ export class KarmaTestsLoader {
       const project = new AngularProject(appName, appPath, karmaConfigPath, isAngularDefaultProject);
 
       projects.push(project);
-    }   
+    }
 
     return projects;
   }
