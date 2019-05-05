@@ -22,7 +22,7 @@ export class KarmaTestsLoader {
     const project = this.getDefaultAngularProjectInformation(configDefaultProject);
 
     if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stopPreviousRun();
+      await this.angularServer.stop();
     }
 
     this.angularServer.start(project, this.baseKarmaConfigPath);

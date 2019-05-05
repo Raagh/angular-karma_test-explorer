@@ -10,7 +10,7 @@ export class AngularServer {
   public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {
   }
 
-  public stopPreviousRun(): Promise<void> {
+  public stop(): Promise<void> {
     if (this.angularProcess != null) {
       this.karmaEventListener.stopListeningToKarma();
       this.angularProcess.kill();
