@@ -38,7 +38,7 @@ The `Angular/Karma Test Explorer` extension that works with the
 
 This project is in early stages of development.
 If you find a bug or think that a feature is missing and is not in the backlog please report it.
-If you wanna help out please read the [Contribution guidelines for this project](.github/CONTRIBUTING.md).
+If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
 
 ### VERSION/UPDATE PROBLEM
 

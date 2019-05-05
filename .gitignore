@@ -36,6 +36,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 *.vsix
+.angulardoc.json
 
 # System Files
 .DS_Store
