@@ -18,54 +18,80 @@ beforeAll(() => {
   karmaEventListener = new (KarmaEventListener as any)() as any;
 });
 
-describe("isKarmaRunning", () => {
-  test("should return true if karma is running", () => {
-    // Arrange
-    karmaEventListener.isServerLoaded = true;
-    const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
+test("isKarmaRunning should return true if karma is running", () => {
+  // Arrange
+  karmaEventListener.isServerLoaded = true;
+  const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
 
-    // Act
-    karmaRunner.isKarmaRunning();
+  // Act
+  karmaRunner.isKarmaRunning();
 
-    // Assert
-    expect(karmaEventListener.isServerLoaded).toBeTruthy();
-  });
-
-  test("should return false if karma is not running", () => {
-    // Arrange
-    karmaEventListener.isServerLoaded = false;
-    const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
-
-    // Act
-    karmaRunner.isKarmaRunning();
-
-    // Assert
-    expect(karmaEventListener.isServerLoaded).toBeFalsy();
-  });
+  // Assert
+  expect(karmaEventListener.isServerLoaded).toBeTruthy();
 });
 
-describe("loadTests", () => {
-  test("should return valid tests when correct call is made to karma", async () => {
-    // Arrange
-    const mockLoadedTests = [{
+test("isKarmaRunning should return false if karma is not running", () => {
+  // Arrange
+  karmaEventListener.isServerLoaded = false;
+  const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
+
+  // Act
+  karmaRunner.isKarmaRunning();
+
+  // Assert
+  expect(karmaEventListener.isServerLoaded).toBeFalsy();
+});
+
+test("loadTests should return valid tests when correct call is made to karma", async () => {
+  // Arrange
+  const mockLoadedTests = [
+    {
       type: "suite",
       id: "root",
       label: "Angular",
       children: [],
-    } as TestSuiteInfo];
-    const mockLoadedConfig = { config: { hostname: "fakeHostname"}, tests: "" };
-    karmaEventListener.isServerLoaded = false;
-    karmaHttpCaller.callKarmaRunWithConfig.mockResolvedValue();
-    karmaHttpCaller.createKarmaRunCallConfiguration.mockReturnValue(mockLoadedConfig as any);
-    karmaEventListener.getLoadedTests.mockReturnValue(mockLoadedTests);
+    } as TestSuiteInfo,
+  ];
+  const mockLoadedConfig = { config: { hostname: "fakeHostname" }, tests: "" };
+  karmaEventListener.isServerLoaded = false;
+  karmaHttpCaller.callKarmaRunWithConfig.mockResolvedValue();
+  karmaHttpCaller.createKarmaRunCallConfiguration.mockReturnValue(mockLoadedConfig as any);
+  karmaEventListener.getLoadedTests.mockReturnValue(mockLoadedTests);
 
-    const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
+  const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
 
-    // Act
-    const result = await karmaRunner.loadTests();
+  // Act
+  const result = await karmaRunner.loadTests();
 
-    // Assert
-    expect(karmaHttpCaller.callKarmaRunWithConfig).toBeCalledWith(expect.objectContaining(mockLoadedConfig.config));
-    expect(result).toMatchObject(mockLoadedTests);
-  });
+  // Assert
+  expect(karmaHttpCaller.callKarmaRunWithConfig).toBeCalledWith(expect.objectContaining(mockLoadedConfig.config));
+  expect(result).toMatchObject(mockLoadedTests);
+});
+
+
+test("runTests should return valid tests when correct call is made to karma", async () => {
+  // Arrange
+  const mockLoadedTests = [
+    {
+      type: "suite",
+      id: "root",
+      label: "Angular",
+      children: [],
+    } as TestSuiteInfo,
+  ];
+  const mockLoadedConfig = { config: { hostname: "fakeHostname" }, tests: "fakeTest" };
+  karmaEventListener.isServerLoaded = false;
+  karmaHttpCaller.callKarmaRunWithConfig.mockResolvedValue();
+  karmaHttpCaller.createKarmaRunCallConfiguration.mockReturnValue(mockLoadedConfig as any);
+  karmaEventListener.getLoadedTests.mockReturnValue(mockLoadedTests);
+
+  const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
+
+  // Act
+  await karmaRunner.runTests(["fakeTest"]);
+
+  // Assert
+  expect(karmaEventListener.isTestRunning).toBeTruthy();
+  expect(karmaEventListener.lastRunTests).toBe("fakeTest");
+  expect(karmaHttpCaller.callKarmaRunWithConfig).toBeCalledWith(expect.objectContaining(mockLoadedConfig.config));
 });
