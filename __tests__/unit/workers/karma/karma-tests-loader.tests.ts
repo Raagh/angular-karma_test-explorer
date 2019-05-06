@@ -26,6 +26,6 @@ test("loadTestsFromDefaultProject should throw an error if angular.json is not f
         await karmaTestsLoader.loadTestsFromDefaultProject();
     } catch (error) {
         // Assert
-        expect(error).toBe("Error: No angular.json or angular-cli.json file found in root path.");
+        expect(error.toString()).toBe("Error: No angular.json or angular-cli.json file found in root path.");
     }
 });
