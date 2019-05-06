@@ -1,7 +1,7 @@
 # Angular/Karma Test Explorer for Visual Studio Code
 
-The `Angular/Karma Test Explorer` extension that works with the
-[Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
+The `Angular/Karma Test Explorer` extension allows you to run or debug your Angular or Karma tests with the
+[Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension on Visual Studio Code.
 
 ![Example run tests](img/img-running-tests-readme.png)
 
@@ -33,6 +33,17 @@ The `Angular/Karma Test Explorer` extension that works with the
 - Adds Gutter decorations to your test files showing the tests' state.
 - Adds line decorations to the source line where a test failed.
 - Forwards the console output from Karma to a VS Code output channel.
+
+## Configuration
+
+List of currently used properties:
+
+Property                                              | Description
+----------------------------------------------------- |---------------------------------------------------------------
+`angularKarmaTestExplorer.defaultAngularProjectName`  | set the default angular project to be tested, if this is is null default project in angular.json will be loaded.	
+`angularKarmaTestExplorer.defaultSocketConnectionPort`| this is the port that will be used to connect Karma with the test explorer.
+`angularKarmaTestExplorer.debugMode`                  | this will enable debug mode, which will create a new output channel with detailed logs.
+
 
 ## Disclaimer
 
