@@ -8,6 +8,7 @@ import * as vscode from "vscode";
 import { AngularServer } from "./workers/servers/angular-server";
 import { EventEmitter } from "./workers/test-explorer/event-emitter";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
+import { KarmaHttpCaller } from './workers/karma/karma-http-caller';
 
 export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;
@@ -27,7 +28,7 @@ export class AngularTestExplorer {
     this.karmaHelper = new KarmaHelper();
     this.logger = new Logger(channel, isDebugMode);
     this.karmaEventListener = new KarmaEventListener(this.logger, new EventEmitter(eventEmitterInterface));
-    this.karmaRunner = new KarmaRunner(this.karmaEventListener, this.logger);
+    this.karmaRunner = new KarmaRunner(this.karmaEventListener, this.logger, new KarmaHttpCaller());
 
     this.karmaTestsLoader = new KarmaTestsLoader(
       baseKarmaConfigPath,
