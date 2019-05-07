@@ -1,4 +1,4 @@
-import { FileHelper } from './../test-explorer/file-helper';
+import { FileHelper } from "./../test-explorer/file-helper";
 import { KarmaRunner } from "./karma-runner";
 import { AngularServer } from "../servers/angular-server";
 import { TestSuiteInfo } from "vscode-test-adapter-api";

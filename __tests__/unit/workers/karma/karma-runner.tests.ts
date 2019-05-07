@@ -68,7 +68,6 @@ test("loadTests should return valid tests when correct call is made to karma", a
   expect(result).toMatchObject(mockLoadedTests);
 });
 
-
 test("runTests should return valid tests when correct call is made to karma", async () => {
   // Arrange
   const mockLoadedTests = [

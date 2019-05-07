@@ -8,8 +8,8 @@ import * as vscode from "vscode";
 import { AngularServer } from "./workers/servers/angular-server";
 import { EventEmitter } from "./workers/test-explorer/event-emitter";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
-import { KarmaHttpCaller } from './workers/karma/karma-http-caller';
-import { FileHelper } from './workers/test-explorer/file-helper';
+import { KarmaHttpCaller } from "./workers/karma/karma-http-caller";
+import { FileHelper } from "./workers/test-explorer/file-helper";
 
 export class AngularTestExplorer {
   private readonly karmaRunner: KarmaRunner;

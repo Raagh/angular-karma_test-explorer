@@ -18,20 +18,13 @@ let fileHelper: jest.Mocked<FileHelper>;
 
 beforeAll(() => {
   karmaRunner = new (KarmaRunner as any)() as any;
-	angularServerMockedClass = <jest.Mock<AngularServer>>AngularServer;
+  angularServerMockedClass = <jest.Mock<AngularServer>>AngularServer;
   fileHelper = new (FileHelper as any)() as any;
 });
 
 test("loadTestsFromDefaultProject should throw an error if angular.json is not found", async () => {
   // Arrange
-  const karmaTestsLoader = new KarmaTestsLoader(
-    "",
-    "",
-    new angularServerMockedClass(),
-    new TestExplorerHelper(),
-    karmaRunner,
-    fileHelper
-  );
+  const karmaTestsLoader = new KarmaTestsLoader("", "", new angularServerMockedClass(), new TestExplorerHelper(), karmaRunner, fileHelper);
 
   // Act
   try {
@@ -43,48 +36,38 @@ test("loadTestsFromDefaultProject should throw an error if angular.json is not f
 });
 
 test("loadTestsFromDefaultProject return test from default project if angular.json is present", async () => {
-	// Arrange
-	when(fileHelper.doesFileExists as any as jest.Mock<boolean, string[]>)
-		.calledWith("angular.json").mockReturnValue(true)
-		.calledWith(".angular-cli.json").mockReturnValue(false);
-	fileHelper.readJSONFile.mockReturnValue(angularJsonMock.mock);
-	karmaRunner.loadTests.mockResolvedValue(expectedTests.mock)
-  const karmaTestsLoader = new KarmaTestsLoader(
-    "",
-    "",
-    new angularServerMockedClass(),
-    new TestExplorerHelper(),
-    karmaRunner,
-    fileHelper
-	);
+  // Arrange
+  when((fileHelper.doesFileExists as any) as jest.Mock<boolean, string[]>)
+    .calledWith("angular.json")
+    .mockReturnValue(true)
+    .calledWith(".angular-cli.json")
+    .mockReturnValue(false);
+  fileHelper.readJSONFile.mockReturnValue(angularJsonMock.mock);
+  karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
+  const karmaTestsLoader = new KarmaTestsLoader("", "", new angularServerMockedClass(), new TestExplorerHelper(), karmaRunner, fileHelper);
 
   // Act
-	const result = await karmaTestsLoader.loadTestsFromDefaultProject();
+  const result = await karmaTestsLoader.loadTestsFromDefaultProject();
 
-	// Assert
-	expect(result.children).not.toBeUndefined();
+  // Assert
+  expect(result.children).not.toBeUndefined();
 });
 
 test("loadTestsFromDefaultProject return test from default project if angular-cli.json is present", async () => {
-	// Arrange
-	when(fileHelper.doesFileExists as any as jest.Mock<boolean, string[]>)
-		.calledWith("angular.json").mockReturnValue(false)
-		.calledWith(".angular-cli.json").mockReturnValue(true);
+  // Arrange
+  when((fileHelper.doesFileExists as any) as jest.Mock<boolean, string[]>)
+    .calledWith("angular.json")
+    .mockReturnValue(false)
+    .calledWith(".angular-cli.json")
+    .mockReturnValue(true);
 
-	fileHelper.readJSONFile.mockReturnValue(angularCliJsonMock.mock);
-	karmaRunner.loadTests.mockResolvedValue(expectedTests.mock)
-  const karmaTestsLoader = new KarmaTestsLoader(
-    "",
-    "",
-    new angularServerMockedClass(),
-    new TestExplorerHelper(),
-    karmaRunner,
-    fileHelper
-	);
+  fileHelper.readJSONFile.mockReturnValue(angularCliJsonMock.mock);
+  karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
+  const karmaTestsLoader = new KarmaTestsLoader("", "", new angularServerMockedClass(), new TestExplorerHelper(), karmaRunner, fileHelper);
 
   // Act
-	const result = await karmaTestsLoader.loadTestsFromDefaultProject();
+  const result = await karmaTestsLoader.loadTestsFromDefaultProject();
 
-	// Assert
-	expect(result.children).not.toBeUndefined();
+  // Assert
+  expect(result.children).not.toBeUndefined();
 });

@@ -14,8 +14,6 @@ const groupByResults = [
   { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: ["test6"], suites: [] }] },
 ] as any;
 
-
-
 test("with correct grouped specs should return correctly mapped TestSuiteInfo", () => {
   // Arrange
   SpecResultGroupToSuites.prototype.group = jest.fn().mockReturnValue(groupByResults);
