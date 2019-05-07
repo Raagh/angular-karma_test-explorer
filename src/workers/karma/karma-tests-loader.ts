@@ -1,10 +1,10 @@
+import { FileHelper } from './../test-explorer/file-helper';
 import { KarmaRunner } from "./karma-runner";
 import { AngularServer } from "../servers/angular-server";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestExplorerHelper } from "../test-explorer/test-explorer-helper";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
-import fs = require("fs");
 import path = require("path");
 
 export class KarmaTestsLoader {
@@ -13,7 +13,8 @@ export class KarmaTestsLoader {
     private readonly workspaceRootPath: string,
     private readonly angularServer: AngularServer,
     private readonly testExplorerHelper: TestExplorerHelper,
-    private readonly karmaRunner: KarmaRunner
+    private readonly karmaRunner: KarmaRunner,
+    private readonly fileHelper: FileHelper
   ) {}
 
   public async loadTestsFromDefaultProject(configDefaultProject?: string, defaultSocketPort?: number): Promise<TestSuiteInfo> {
@@ -48,9 +49,9 @@ export class KarmaTestsLoader {
     const angularCliJsonPath = path.join(workspaceRootPath, ".angular-cli.json");
 
     let projects: AngularProject[] = [];
-    if (fs.existsSync(angularJsonPath)) {
+    if (this.fileHelper.doesFileExists(angularJsonPath)) {
       projects = this.mapAngularJsonObject(workspaceRootPath, angularJsonPath);
-    } else if (fs.existsSync(angularCliJsonPath)) {
+    } else if (this.fileHelper.doesFileExists(angularCliJsonPath)) {
       projects = this.mapAngularCliJsonObject(workspaceRootPath, angularCliJsonPath);
     } else {
       const error = "No angular.json or angular-cli.json file found in root path.";
@@ -61,8 +62,8 @@ export class KarmaTestsLoader {
     return projects;
   }
 
-  private mapAngularCliJsonObject(workspaceRootPath: string, angularCliJsonPath: any) {
-    const angularJsonObject = JSON.parse(fs.readFileSync(angularCliJsonPath, "utf8"));
+  private mapAngularCliJsonObject(workspaceRootPath: string, angularCliJsonPath: any): AngularProject[] {
+    const angularJsonObject = this.fileHelper.readJSONFile(angularCliJsonPath);
 
     const projects: AngularProject[] = [];
     for (const app of angularJsonObject.apps) {
@@ -79,8 +80,8 @@ export class KarmaTestsLoader {
     return projects;
   }
 
-  private mapAngularJsonObject(workspaceRootPath: string, angularJsonPath: any) {
-    const angularJsonObject = JSON.parse(fs.readFileSync(angularJsonPath, "utf8"));
+  private mapAngularJsonObject(workspaceRootPath: string, angularJsonPath: any): AngularProject[] {
+    const angularJsonObject = this.fileHelper.readJSONFile(angularJsonPath);
 
     const projects: AngularProject[] = [];
     for (const projectName of Object.keys(angularJsonObject.projects)) {
