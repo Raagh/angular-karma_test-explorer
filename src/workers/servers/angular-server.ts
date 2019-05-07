@@ -1,3 +1,5 @@
+import { FileHelper } from './../shared/file-helper';
+import { ProcessCreator } from './../shared/process-creator';
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../karma/karma-event-listener";
@@ -7,7 +9,12 @@ import { window } from "vscode";
 export class AngularServer {
   private angularProcess: any;
 
-  public constructor(private readonly karmaEventListener: KarmaEventListener, private readonly logger: Logger) {}
+  public constructor(
+    private readonly karmaEventListener: KarmaEventListener, 
+    private readonly logger: Logger,
+    private readonly processCreator: ProcessCreator,
+    private readonly fileHelper: FileHelper) {
+  }
 
   public stop(): Promise<void> {
     if (this.angularProcess != null) {
@@ -23,8 +30,7 @@ export class AngularServer {
     });
   }
 
-  public async start(project: AngularProject, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
-    const spawn = require("cross-spawn");
+  public async start(project: AngularProject, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> { 
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const testExplorerEnvironment = Object.create(process.env);
     testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
@@ -36,7 +42,7 @@ export class AngularServer {
 
     const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
 
-    this.angularProcess = spawn(cliCommand, cliArgs, options);
+    this.angularProcess = this.processCreator.create(cliCommand, cliArgs, options);
 
     this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
 
@@ -60,11 +66,10 @@ export class AngularServer {
   }
 
   private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {
-    const fs = require("fs");
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = fs.existsSync(path.join(project.rootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const isAngularInstalledLocally = this.fileHelper.doesFileExists(path.join(project.rootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
     const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";

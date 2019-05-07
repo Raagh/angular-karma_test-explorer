@@ -10,7 +10,7 @@ import {
   TestEvent,
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
-import { AngularTestExplorer } from "./angular-test-explorer";
+import { AngularKarmaTestExplorer } from "./angular_karma-test-explorer";
 import path = require("path");
 
 export class Adapter implements TestAdapter {
@@ -20,7 +20,7 @@ export class Adapter implements TestAdapter {
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
   private readonly config: vscode.WorkspaceConfiguration;
-  private readonly testExplorer: AngularTestExplorer;
+  private readonly testExplorer: AngularKarmaTestExplorer;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;

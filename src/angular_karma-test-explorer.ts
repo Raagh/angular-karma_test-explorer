@@ -7,7 +7,7 @@ import { AngularServer } from "./workers/servers/angular-server";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from 'vscode-test-adapter-api';
 
-export class AngularTestExplorer {
+export class AngularKarmaTestExplorer {
   public constructor(
     private readonly karmaRunner: KarmaRunner,
     private readonly karmaHelper: KarmaHelper,
