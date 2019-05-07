@@ -1,20 +1,22 @@
-import { FileHelper } from './../shared/file-helper';
-import { ProcessCreator } from './../shared/process-creator';
+import { FileHelper } from "./../shared/file-helper";
+import { ProcessCreator } from "./../shared/process-creator";
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../karma/karma-event-listener";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
+import { AngularProjectConfigLoader } from "../karma/angular-project-config-loader";
 
 export class AngularServer {
   private angularProcess: any;
 
   public constructor(
-    private readonly karmaEventListener: KarmaEventListener, 
+    private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,
     private readonly processCreator: ProcessCreator,
-    private readonly fileHelper: FileHelper) {
-  }
+    private readonly fileHelper: FileHelper,
+    private readonly angularProjectConfigLoader: AngularProjectConfigLoader
+  ) {}
 
   public stop(): Promise<void> {
     if (this.angularProcess != null) {
@@ -30,15 +32,10 @@ export class AngularServer {
     });
   }
 
-  public async start(project: AngularProject, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> { 
+  public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
+    const project = this.angularProjectConfigLoader.load(defaultProjectName);
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
-    const testExplorerEnvironment = Object.create(process.env);
-    testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
-    const options = {
-      cwd: project.rootPath,
-      shell: true,
-      env: testExplorerEnvironment,
-    } as SpawnOptions;
+    const options = this.createProcessOptions(project);
 
     const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
 
@@ -63,6 +60,17 @@ export class AngularServer {
     this.angularProcess.on("error", (err: any) => this.logger.error(`error from ng child process: ${err}`));
 
     await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
+  }
+
+  private createProcessOptions(project: AngularProject) {
+    const testExplorerEnvironment = Object.create(process.env);
+    testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
+    const options = {
+      cwd: project.rootPath,
+      shell: true,
+      env: testExplorerEnvironment,
+    } as SpawnOptions;
+    return options;
   }
 
   private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {

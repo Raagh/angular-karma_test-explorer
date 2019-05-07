@@ -4,10 +4,7 @@ import { window } from "vscode";
 import path = require("path");
 
 export class AngularProjectConfigLoader {
-  public constructor(
-    private readonly workspaceRootPath: string,
-    private readonly fileHelper: FileHelper
-  ) {}
+  public constructor(private readonly workspaceRootPath: string, private readonly fileHelper: FileHelper) {}
 
   public load(configDefaultProject?: string) {
     const angularProjects = this.getAllAngularProjects(this.workspaceRootPath);

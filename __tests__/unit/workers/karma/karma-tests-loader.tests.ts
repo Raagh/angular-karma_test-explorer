@@ -1,4 +1,4 @@
-import { AngularProject } from './../../../../src/model/angular-project';
+import { AngularProject } from "./../../../../src/model/angular-project";
 import { FileHelper } from "./../../../../src/workers/shared/file-helper";
 import { AngularProjectConfigLoader } from "../../../../src/workers/karma/angular-project-config-loader";
 import * as angularJsonMock from "../../../../__mocks__/angular.json.mock";
@@ -40,7 +40,7 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
   const result = await angularProjectConfigLoader.load();
 
   // Assert
-	verifyExpectedResults(result);
+  verifyExpectedResults(result);
 });
 
 test("loadTestsFromDefaultProject return valid AngularProject from default project if angular-cli.json is present", async () => {
@@ -56,12 +56,12 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
   // Act
   const result = await angularProjectConfigLoader.load();
 
-	// Assert
-	verifyExpectedResults(result);
+  // Assert
+  verifyExpectedResults(result);
 });
 
 const verifyExpectedResults = (result: AngularProject) => {
-	expect(result).not.toBeUndefined();
-	expect(result.name).toBe("test-project");
-	expect(result.isAngularDefaultProject).toBe(true);
-}
+  expect(result).not.toBeUndefined();
+  expect(result.name).toBe("test-project");
+  expect(result.isAngularDefaultProject).toBe(true);
+};

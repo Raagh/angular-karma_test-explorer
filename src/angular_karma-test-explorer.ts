@@ -1,23 +1,22 @@
-import { AngularProjectConfigLoader } from "./workers/karma/angular-project-config-loader";
 import { KarmaRunner } from "./workers/karma/karma-runner";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { KarmaEventListener } from "./workers/karma/karma-event-listener";
 import { Logger } from "./workers/shared/logger";
 import { AngularServer } from "./workers/servers/angular-server";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
-import { TestSuiteInfo } from 'vscode-test-adapter-api';
+import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class AngularKarmaTestExplorer {
   public constructor(
     private readonly karmaRunner: KarmaRunner,
     private readonly karmaHelper: KarmaHelper,
     private readonly logger: Logger,
-    private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
+
     private readonly angularServer: AngularServer,
     private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener,
     private readonly workspaceRootPath: string,
-    private readonly baseKarmaConfigPath: string,
+    private readonly baseKarmaConfigPath: string
   ) {}
 
   public async loadTests(defaultProjectName: string, defaultSocketPort: number): Promise<TestSuiteInfo> {
@@ -31,8 +30,7 @@ export class AngularKarmaTestExplorer {
 
     this.logger.info("Test Loading started...");
 
-    const project = this.angularProjectConfigLoader.load(defaultProjectName);
-    await this.angularServer.start(project, this.baseKarmaConfigPath, defaultSocketPort);
+    await this.angularServer.start(defaultProjectName, this.baseKarmaConfigPath, defaultSocketPort);
 
     const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
     testSuiteInfo.children = await this.karmaRunner.loadTests();

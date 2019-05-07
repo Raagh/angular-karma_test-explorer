@@ -11,7 +11,7 @@ import { KarmaHttpCaller } from "./workers/karma/karma-http-caller";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import * as vscode from "vscode";
 import { EventEmitter } from "./workers/shared/event-emitter";
-import { ProcessCreator } from './workers/shared/process-creator';
+import { ProcessCreator } from "./workers/shared/process-creator";
 export class IOCContainer {
   public constructor() {}
   public registerTestExplorerDependencies(
@@ -24,19 +24,17 @@ export class IOCContainer {
     // poor man's dependency injection
     const karmaHelper = new KarmaHelper();
     const fileHelper = new FileHelper();
+    const testExplorerHelper = new TestExplorerHelper();
     const logger = new Logger(channel, isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
     const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpCaller());
-    const angularServer = new AngularServer(karmaEventListener, logger, new ProcessCreator(), fileHelper);
-    const testExplorerHelper = new TestExplorerHelper();
-
-    const angularProjectLoader = new AngularProjectConfigLoader(workspaceRootPath, fileHelper);
+    const angularProjectConfigLoader = new AngularProjectConfigLoader(workspaceRootPath, fileHelper);
+    const angularServer = new AngularServer(karmaEventListener, logger, new ProcessCreator(), fileHelper, angularProjectConfigLoader);
 
     return new AngularKarmaTestExplorer(
       karmaRunner,
       karmaHelper,
       logger,
-      angularProjectLoader,
       angularServer,
       testExplorerHelper,
       karmaEventListener,
