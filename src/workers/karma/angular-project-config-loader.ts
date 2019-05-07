@@ -1,38 +1,15 @@
-import { FileHelper } from "./../test-explorer/file-helper";
-import { KarmaRunner } from "./karma-runner";
-import { AngularServer } from "../servers/angular-server";
-import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { TestExplorerHelper } from "../test-explorer/test-explorer-helper";
+import { FileHelper } from "../test-explorer/file-helper";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
 import path = require("path");
 
-export class KarmaTestsLoader {
+export class AngularProjectConfigLoader {
   public constructor(
-    private readonly baseKarmaConfigPath: string,
     private readonly workspaceRootPath: string,
-    private readonly angularServer: AngularServer,
-    private readonly testExplorerHelper: TestExplorerHelper,
-    private readonly karmaRunner: KarmaRunner,
     private readonly fileHelper: FileHelper
   ) {}
 
-  public async loadTestsFromDefaultProject(configDefaultProject?: string, defaultSocketPort?: number): Promise<TestSuiteInfo> {
-    const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
-
-    const project = this.getDefaultAngularProjectInformation(configDefaultProject);
-
-    if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stop();
-    }
-
-    this.angularServer.start(project, this.baseKarmaConfigPath);
-    await this.karmaRunner.waitTillKarmaIsRunning(defaultSocketPort);
-    testSuiteInfo.children = await this.karmaRunner.loadTests();
-    return testSuiteInfo;
-  }
-
-  private getDefaultAngularProjectInformation(configDefaultProject?: string) {
+  public load(configDefaultProject?: string) {
     const angularProjects = this.getAllAngularProjects(this.workspaceRootPath);
     let project = angularProjects.find(x => x.isAngularDefaultProject);
     if (configDefaultProject !== "") {

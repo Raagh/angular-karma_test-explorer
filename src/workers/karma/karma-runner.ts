@@ -14,10 +14,6 @@ export class KarmaRunner {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async waitTillKarmaIsRunning(defaultSocketPort?: number): Promise<void> {
-    await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
-  }
-
   public async loadTests(): Promise<TestSuiteInfo[]> {
     const fakeTestPatternForSkippingEverything = "$#%#";
     const karmaRunParameters = this.karmaHttpCaller.createKarmaRunCallConfiguration(fakeTestPatternForSkippingEverything);

@@ -23,7 +23,7 @@ export class AngularServer {
     });
   }
 
-  public start(project: AngularProject, _baseKarmaConfigFilePath: string): void {
+  public async start(project: AngularProject, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
     const spawn = require("cross-spawn");
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const testExplorerEnvironment = Object.create(process.env);
@@ -55,6 +55,8 @@ export class AngularServer {
     this.angularProcess.stderr.on("data", (data: any) => this.logger.error(`stderr: ${data}`));
 
     this.angularProcess.on("error", (err: any) => this.logger.error(`error from ng child process: ${err}`));
+
+    await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
   }
 
   private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {

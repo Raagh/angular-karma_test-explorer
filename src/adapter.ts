@@ -1,3 +1,4 @@
+import { IOCContainer } from "./ioc-container";
 import * as vscode from "vscode";
 import {
   TestAdapter,
@@ -53,12 +54,13 @@ export class Adapter implements TestAdapter {
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
-    this.testExplorer = new AngularTestExplorer(
-      path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
-      path.join(__dirname, ".", "config", "test-explorer-karma.conf.js"),
+    const container = new IOCContainer();
+    this.testExplorer = container.registerTestExplorerDependencies(
       this.testStatesEmitter,
       channel,
-      this.config.get("debugMode") as boolean
+      this.config.get("debugMode") as boolean,
+      path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
+      path.join(__dirname, ".", "config", "test-explorer-karma.conf.js")
     );
   }
 
