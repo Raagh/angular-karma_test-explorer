@@ -1,5 +1,5 @@
 import { KarmaHttpCaller } from "./karma-http-caller";
-import { Logger } from "./../test-explorer/logger";
+import { Logger } from "../shared/logger";
 import { KarmaEventListener } from "./karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 

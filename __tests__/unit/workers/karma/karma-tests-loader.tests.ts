@@ -1,11 +1,11 @@
 import { AngularProject } from './../../../../src/model/angular-project';
-import { FileHelper } from "./../../../../src/workers/test-explorer/file-helper";
+import { FileHelper } from "./../../../../src/workers/shared/file-helper";
 import { AngularProjectConfigLoader } from "../../../../src/workers/karma/angular-project-config-loader";
 import * as angularJsonMock from "../../../../__mocks__/angular.json.mock";
 import * as angularCliJsonMock from "../../../../__mocks__/angular-cli.json.mock";
 import { when } from "jest-when";
 
-jest.mock("./../../../../src/workers/test-explorer/file-helper");
+jest.mock("./../../../../src/workers/shared/file-helper");
 
 let fileHelper: jest.Mocked<FileHelper>;
 

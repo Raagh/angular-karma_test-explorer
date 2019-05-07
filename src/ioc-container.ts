@@ -1,16 +1,16 @@
 import { AngularTestExplorer } from "./angular-test-explorer";
-import { Logger } from "./workers/test-explorer/logger";
+import { Logger } from "./workers/shared/logger";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { KarmaEventListener } from "./workers/karma/karma-event-listener";
 import { KarmaRunner } from "./workers/karma/karma-runner";
 import { AngularServer } from "./workers/servers/angular-server";
 import { AngularProjectConfigLoader } from "./workers/karma/angular-project-config-loader";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
-import { FileHelper } from "./workers/test-explorer/file-helper";
+import { FileHelper } from "./workers/shared/file-helper";
 import { KarmaHttpCaller } from "./workers/karma/karma-http-caller";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import * as vscode from "vscode";
-import { EventEmitter } from "./workers/test-explorer/event-emitter";
+import { EventEmitter } from "./workers/shared/event-emitter";
 export class IOCContainer {
   public constructor() {}
   public registerTestExplorerDependencies(

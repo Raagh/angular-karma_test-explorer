@@ -1,4 +1,4 @@
-import { Logger } from "./../test-explorer/logger";
+import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../karma/karma-event-listener";
 import { AngularProject } from "../../model/angular-project";

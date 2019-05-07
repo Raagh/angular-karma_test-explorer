@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../../../src/workers/test-explorer/event-emitter";
+import { EventEmitter } from "../../../../src/workers/shared/event-emitter";
 import { TestState } from "../../../../src/model/test-state.enum";
 import { TestEvent } from "vscode-test-adapter-api";
 import { KarmaEvent } from "../../../../src/model/karma-event";

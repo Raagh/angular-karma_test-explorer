@@ -1,11 +1,11 @@
 import { KarmaHttpCaller } from "./../../../../src/workers/karma/karma-http-caller";
 import { KarmaEventListener } from "./../../../../src/workers/karma/karma-event-listener";
 import { KarmaRunner } from "./../../../../src/workers/karma/karma-runner";
-import { Logger } from "../../../../src/workers/test-explorer/logger";
+import { Logger } from "../../../../src/workers/shared/logger";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 jest.mock("./../../../../src/workers/karma/karma-event-listener");
-jest.mock("../../../../src/workers/test-explorer/logger");
+jest.mock("../../../../src/workers/shared/logger");
 jest.mock("./../../../../src/workers/karma/karma-http-caller");
 
 let loggerMockedClass: jest.Mock<Logger>;

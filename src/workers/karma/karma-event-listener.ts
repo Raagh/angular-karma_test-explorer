@@ -3,8 +3,8 @@ import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";
-import { Logger } from "../test-explorer/logger";
-import { EventEmitter } from "../test-explorer/event-emitter";
+import { Logger } from "../shared/logger";
+import { EventEmitter } from "../shared/event-emitter";
 import { commands } from "vscode";
 import { TestResult } from "../../model/test-status.enum";
 

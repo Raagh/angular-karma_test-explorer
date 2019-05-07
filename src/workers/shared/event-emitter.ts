@@ -1,7 +1,7 @@
 import { KarmaEvent } from "./../../model/karma-event";
 import { TestState } from "./../../model/test-state.enum";
 import { TestEvent } from "vscode-test-adapter-api";
-import { TestResultToTestStateMapper } from "./test-result-to-test-state.mapper";
+import { TestResultToTestStateMapper } from "../test-explorer/test-result-to-test-state.mapper";
 
 export class EventEmitter {
   public constructor(private readonly eventEmitterInterface: any) {}
