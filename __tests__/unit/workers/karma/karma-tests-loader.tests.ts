@@ -1,6 +1,6 @@
 import { AngularProject } from "./../../../../src/model/angular-project";
 import { FileHelper } from "./../../../../src/workers/shared/file-helper";
-import { AngularProjectConfigLoader } from "../../../../src/workers/karma/angular-project-config-loader";
+import { AngularProjectConfigLoader } from "../../../../src/workers/angular/angular-project-config-loader";
 import * as angularJsonMock from "../../../../__mocks__/angular.json.mock";
 import * as angularCliJsonMock from "../../../../__mocks__/angular-cli.json.mock";
 import { when } from "jest-when";

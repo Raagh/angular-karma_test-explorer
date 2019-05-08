@@ -1,35 +1,29 @@
 import { FileHelper } from "./../shared/file-helper";
-import { ProcessCreator } from "./../shared/process-creator";
+import { AngularProcessHandler } from "./angular-process-handler";
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../karma/karma-event-listener";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
-import { AngularProjectConfigLoader } from "../karma/angular-project-config-loader";
+import { AngularProjectConfigLoader } from "./angular-project-config-loader";
 
 export class AngularServer {
-  private angularProcess: any;
 
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,
-    private readonly processCreator: ProcessCreator,
+    private readonly processHandler: AngularProcessHandler,
     private readonly fileHelper: FileHelper,
     private readonly angularProjectConfigLoader: AngularProjectConfigLoader
   ) {}
 
   public stop(): Promise<void> {
-    if (this.angularProcess != null) {
+    if (this.karmaEventListener.isServerLoaded) {
       this.karmaEventListener.stopListeningToKarma();
-      this.angularProcess.kill();
+      this.processHandler.kill();
     }
 
-    return new Promise<void>(resolve => {
-      this.angularProcess.on("exit", (code: any, signal: any) => {
-        this.logger.info(`Angular exited with code ${code} and signal ${signal}`);
-        resolve();
-      });
-    });
+    return this.processHandler.onExitEvent();
   }
 
   public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
@@ -39,25 +33,9 @@ export class AngularServer {
 
     const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
 
-    this.angularProcess = this.processCreator.create(cliCommand, cliArgs, options);
-
     this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
 
-    this.angularProcess.stdout.on("data", (data: any) => {
-      const { isTestRunning } = this.karmaEventListener;
-      const regex = new RegExp(/\(.*?)\m/, "g");
-      if (isTestRunning) {
-        let log = data.toString().replace(regex, "");
-        if (log.startsWith("e ")) {
-          log = "HeadlessChrom" + log;
-        }
-        this.logger.karmaLogs(`${log}`);
-      }
-    });
-
-    this.angularProcess.stderr.on("data", (data: any) => this.logger.error(`stderr: ${data}`));
-
-    this.angularProcess.on("error", (err: any) => this.logger.error(`error from ng child process: ${err}`));
+    this.processHandler.create(cliCommand, cliArgs, options);
 
     await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
   }

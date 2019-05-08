@@ -1,6 +1,6 @@
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
-import * as TestExplorerCustomReporter from "../workers/karma/test-explorer-custom-reporter";
+import * as TestExplorerCustomReporter from "../workers/karma/test-explorer-custom-karma-reporter";
 import { TestExplorerHelper } from "../workers/test-explorer/test-explorer-helper";
 
 export class KarmaConfigurator {
