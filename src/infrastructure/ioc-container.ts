@@ -1,17 +1,17 @@
-import { AngularKarmaTestExplorer } from "./angular_karma-test-explorer";
-import { Logger } from "./core/shared/logger";
-import { KarmaHelper } from "./core/karma/karma-helper";
-import { KarmaEventListener } from "./core/integration/karma-event-listener";
-import { KarmaRunner } from "./core/karma/karma-runner";
-import { AngularServer } from "./core/angular/angular-server";
-import { AngularProjectConfigLoader } from "./core/angular/angular-project-config-loader";
-import { TestExplorerHelper } from "./core/test-explorer/test-explorer-helper";
-import { FileHelper } from "./core/shared/file-helper";
-import { KarmaHttpClient } from "./core/integration/karma-http-client";
+import { AngularKarmaTestExplorer } from "../angular_karma-test-explorer";
+import { Logger } from "../core/shared/logger";
+import { KarmaHelper } from "../core/karma/karma-helper";
+import { KarmaEventListener } from "../core/integration/karma-event-listener";
+import { KarmaRunner } from "../core/karma/karma-runner";
+import { AngularServer } from "../core/angular/angular-server";
+import { AngularProjectConfigLoader } from "../core/angular/angular-project-config-loader";
+import { TestExplorerHelper } from "../core/test-explorer/test-explorer-helper";
+import { FileHelper } from "../core/integration/file-helper";
+import { KarmaHttpClient } from "../core/integration/karma-http-client";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import * as vscode from "vscode";
-import { EventEmitter } from "./core/shared/event-emitter";
-import { AngularProcessHandler } from "./core/integration/angular-process-handler";
+import { EventEmitter } from "../core/shared/event-emitter";
+import { AngularProcessHandler } from "../core/integration/angular-process-handler";
 export class IOCContainer {
   public constructor() {}
   public registerTestExplorerDependencies(

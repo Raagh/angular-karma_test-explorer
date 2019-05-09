@@ -1,8 +1,8 @@
-import { SpecToTestSuiteMapper } from "../../../../src/core/test-explorer/spec-to-test-suite.mapper";
-import * as expectedTests from "../../../../__mocks__/expectedTests.mock";
-import { SpecResultGroupToSuites } from "./../../../../src/core/test-explorer/spec-result-groupby";
+import { SpecToTestSuiteMapper } from "../../../src/core/test-explorer/spec-to-test-suite.mapper";
+import * as expectedTests from "../../../__mocks__/expectedTests.mock";
+import { SpecResultGroupToSuites } from "../../../src/core/test-explorer/spec-result-groupby";
 
-jest.mock("./../../../../src/core/test-explorer/spec-result-groupby");
+jest.mock("../../../src/core/test-explorer/spec-result-groupby");
 
 const groupByResults = [
   { name: "suite1", suites: [], tests: ["test1"] },
@@ -22,8 +22,11 @@ test("with correct grouped specs should return correctly mapped TestSuiteInfo", 
   /* savedSpecs dont really matter cause the values are grouped by the mocked dependency SpecResultGroupToSuites */
   const savedSpecs: any[] = [];
 
+  // Act
   const result = mapper.map(savedSpecs);
 
+
+  // Assert
   expect(result).toEqual(expectedTests.mock);
 });
 

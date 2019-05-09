@@ -1,4 +1,4 @@
-import { FileHelper } from "../shared/file-helper";
+import { FileHelper } from "../integration/file-helper";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
 import path = require("path");

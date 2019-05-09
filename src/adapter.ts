@@ -1,4 +1,4 @@
-import { IOCContainer } from "./ioc-container";
+import { IOCContainer } from "./infrastructure/ioc-container";
 import * as vscode from "vscode";
 import {
   TestAdapter,

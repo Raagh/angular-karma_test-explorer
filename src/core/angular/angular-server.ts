@@ -1,4 +1,4 @@
-import { FileHelper } from "./../shared/file-helper";
+import { FileHelper } from "../integration/file-helper";
 import { AngularProcessHandler } from "../integration/angular-process-handler";
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";

@@ -1,8 +1,8 @@
-import { EventEmitter } from "../../../../src/core/shared/event-emitter";
-import { TestState } from "../../../../src/model/test-state.enum";
+import { EventEmitter } from "../../../src/core/shared/event-emitter";
+import { TestState } from "../../../src/model/test-state.enum";
 import { TestEvent } from "vscode-test-adapter-api";
-import { KarmaEvent } from "../../../../src/model/karma-event";
-import { TestResult } from "../../../../src/model/test-status.enum";
+import { KarmaEvent } from "../../../src/model/karma-event";
+import { TestResult } from "../../../src/model/test-status.enum";
 
 test("should emit correctly a test state event", () => {
   // Arrange

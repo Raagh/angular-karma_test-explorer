@@ -7,13 +7,10 @@ export class TestResultToTestStateMapper {
     switch (testResult) {
       case TestResult.Failed:
         return TestState.Failed;
-        break;
       case TestResult.Skipped:
         return TestState.Skipped;
-        break;
       case TestResult.Success:
         return TestState.Passed;
-        break;
     }
   }
 }

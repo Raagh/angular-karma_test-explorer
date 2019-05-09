@@ -19,7 +19,7 @@ export class TestExplorerHelper {
     }, {});
   }
 
-  public removeElementsFromArrayWithoutModifyingIt(elements?: any[], elementsToRemove?: any[]) {
+  public removeElementsFromArrayWithoutModifyingIt(elements?: any[], elementsToRemove?: any[] | any) {
     if (elements === undefined) {
       return [];
     }
