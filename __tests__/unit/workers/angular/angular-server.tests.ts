@@ -29,7 +29,8 @@ beforeEach(() => {
 test("start should effectively start a new angular process", async () => {
   // Arrange
   angularProjectConfigLoader.load.mockReturnValue(new AngularProject("test-project", "", "", true));
-  processHandler.create.mockReturnValue({ stdout: { on() { }}, stderr: { on() { }}, on() {} });
+  fileHelper.doesFileExists.mockReturnValue(true);
+  processHandler.create.mockReturnValue({ stdout: { on() {} }, stderr: { on() {} }, on() {} });
   const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
 
   // Act
