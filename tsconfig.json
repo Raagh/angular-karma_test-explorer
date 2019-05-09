@@ -13,6 +13,6 @@
     "skipLibCheck": true,
     "allowJs": true
   },
-  "include": ["src/main.ts", "typings/*", "src/config/*"],
+  "include": ["src/main.ts", "@types/*", "src/config/*"],
   "exclude": ["tests/integration/test-project/*"]
 }
