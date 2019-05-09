@@ -13,7 +13,8 @@ export class AngularServer {
     private readonly logger: Logger,
     private readonly processHandler: AngularProcessHandler,
     private readonly fileHelper: FileHelper,
-    private readonly angularProjectConfigLoader: AngularProjectConfigLoader
+    private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
+    private readonly workspaceRootPath: string
   ) {}
 
   public stop(): Promise<void> {
@@ -54,7 +55,9 @@ export class AngularServer {
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = this.fileHelper.doesFileExists(path.join(project.rootPath, "node_modules", "@angular", "cli", "bin", "ng"));
+    const isAngularInstalledLocally = this.fileHelper.doesFileExists(
+      path.join(this.workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng")
+    );
 
     const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";

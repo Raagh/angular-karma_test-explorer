@@ -6,7 +6,7 @@ import path = require("path");
 export class AngularProjectConfigLoader {
   public constructor(private readonly workspaceRootPath: string, private readonly fileHelper: FileHelper) {}
 
-  public getDefaultAngularProjectConfig(configDefaultProject?: string) {
+  public getDefaultAngularProjectConfig(configDefaultProject?: string): AngularProject {
     const angularProjects = this.getAllAngularProjectsConfig(this.workspaceRootPath);
     let project = angularProjects.find(x => x.isAngularDefaultProject);
     if (configDefaultProject !== "") {
@@ -15,6 +15,7 @@ export class AngularProjectConfigLoader {
     if (project === undefined) {
       project = angularProjects[0];
     }
+
     return project;
   }
 

@@ -34,7 +34,8 @@ export class IOCContainer {
       logger,
       new AngularProcessHandler(logger, karmaEventListener),
       fileHelper,
-      angularProjectConfigLoader
+      angularProjectConfigLoader,
+      workspaceRootPath
     );
 
     return new AngularKarmaTestExplorer(
