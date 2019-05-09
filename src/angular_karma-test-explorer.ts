@@ -2,7 +2,7 @@ import { KarmaRunner } from "./workers/karma/karma-runner";
 import { KarmaHelper } from "./workers/karma/karma-helper";
 import { KarmaEventListener } from "./workers/karma/karma-event-listener";
 import { Logger } from "./workers/shared/logger";
-import { AngularServer } from "./workers/servers/angular-server";
+import { AngularServer } from "./workers/angular/angular-server";
 import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
