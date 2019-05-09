@@ -13,6 +13,5 @@
     "skipLibCheck": true,
     "allowJs": true
   },
-  "include": ["src/main.ts", "@types/*", "src/config/*"],
-  "exclude": ["tests/integration/test-project/*"]
+  "include": ["src/main.ts", "@types/*", "src/config/*"]
 }

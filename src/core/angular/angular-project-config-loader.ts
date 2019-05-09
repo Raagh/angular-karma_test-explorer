@@ -18,7 +18,7 @@ export class AngularProjectConfigLoader {
     return project;
   }
 
-  private getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
+  public getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
     const angularJsonPath = path.join(workspaceRootPath, "angular.json");
     const angularCliJsonPath = path.join(workspaceRootPath, ".angular-cli.json");
 

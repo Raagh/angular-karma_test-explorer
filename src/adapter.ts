@@ -64,13 +64,17 @@ export class Adapter implements TestAdapter {
     );
   }
 
-  public async load(): Promise<void> {
+  public async load(angularProject?: string): Promise<void> {
     this.log.info("Loading tests");
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
+    if (angularProject === undefined) {
+      angularProject = this.config.get("defaultAngularProjectName") as string;
+    } 
+
     const loadedTests = await this.testExplorer.loadTests(
-      this.config.get("defaultAngularProjectName") as string,
+      angularProject,
       this.config.get("defaultSocketConnectionPort") as number
     );
 
@@ -97,6 +101,15 @@ export class Adapter implements TestAdapter {
   public cancel(): void {
     // in a "real" TestAdapter this would kill the child process for the current test run (if there is any)
     throw new Error("Method not implemented.");
+  }
+
+  public async selectProject(): Promise<void> {
+    const loadedProjects = this.testExplorer.loadProjectsConfiguration();
+    const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
+      placeHolder: 'Select project'
+    });
+
+    this.load(selectedProject);
   }
 
   public dispose(): void {

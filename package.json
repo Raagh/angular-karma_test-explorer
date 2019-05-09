@@ -120,6 +120,25 @@
         "scopeName": "angular-test.output",
         "path": "./syntaxes/angular-test-log.tmLanguage"
       }
-    ]
+    ],
+    "commands":[
+      {
+        "command": "angular-karma-test-explorer.select-project",
+        "title": "Angular/Karma Test Explorer: Select Project",
+        "icon": {
+          "dark": "./img/select-project-dark-icon.svg",
+          "light": "./img/select-project-light-icon.svg"
+        }
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "angular-karma-test-explorer.select-project",
+          "group": "navigation@1",
+          "when": "view == test-explorer"
+        }
+      ]
+    }
   }
 }

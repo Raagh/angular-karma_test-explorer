@@ -22,7 +22,15 @@ export async function activate(context: vscode.ExtensionContext) {
   if (testExplorerExtension) {
     const testHub = testExplorerExtension.exports;
 
+    const registerCommand = (command: string, callback: (...args: any[]) => any) => {
+      context.subscriptions.push(vscode.commands.registerCommand(command, callback));
+    };
+
+    const testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
+
+    registerCommand("angular-karma-test-explorer.select-project", async () => testExplorerAdapter.selectProject());
+
     // this will register an AngularKarmaTestAdapter for each WorkspaceFolder
-    context.subscriptions.push(new TestAdapterRegistrar(testHub, workspaceFolder => new Adapter(workspaceFolder, log, channel), log));
+    context.subscriptions.push(new TestAdapterRegistrar(testHub, workspaceFolder => testExplorerAdapter, log));
   }
 }
