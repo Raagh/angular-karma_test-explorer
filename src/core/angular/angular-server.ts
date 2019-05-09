@@ -26,7 +26,7 @@ export class AngularServer {
   }
 
   public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
-    const project = this.angularProjectConfigLoader.load(defaultProjectName);
+    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(defaultProjectName);
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const options = this.createProcessOptions(project);
 

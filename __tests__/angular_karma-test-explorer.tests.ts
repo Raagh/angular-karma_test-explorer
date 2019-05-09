@@ -1,5 +1,3 @@
-import { AngularProject } from './../src/model/angular-project';
-import { AngularProjectConfigLoader } from "./../src/core/angular/angular-project-config-loader";
 import { AngularKarmaTestExplorer } from "./../src/angular_karma-test-explorer";
 import { TestExplorerHelper } from "./../src/core/test-explorer/test-explorer-helper";
 import { KarmaEventListener } from "./../src/core/integration/karma-event-listener";
@@ -20,7 +18,6 @@ let karmaRunner: jest.Mocked<KarmaRunner>;
 let karmaHelper: jest.Mocked<KarmaHelper>;
 let angularServer: jest.Mocked<AngularServer>;
 let karmaEventListener: jest.Mocked<KarmaEventListener>;
-let angularProjectConfigLoader: jest.Mocked<AngularProjectConfigLoader>;
 let logger: jest.Mocked<Logger>;
 
 beforeEach(() => {
@@ -28,34 +25,7 @@ beforeEach(() => {
   karmaEventListener = new (KarmaEventListener as any)() as any;
   karmaHelper = new (KarmaHelper as any)() as any;
   angularServer = new (AngularServer as any)() as any;
-  angularProjectConfigLoader = new (AngularProjectConfigLoader as any)() as any;
   logger = new (Logger as any)() as any;
-});
-
-test("loadProjectsConfiguration should return a valid set of projects loaded from config", async () => {
-  // Arrange
-  karmaHelper.isKarmaBasedProject.mockReturnValue(true);
-  karmaRunner.isKarmaRunning.mockReturnValue(false);
-  angularServer.start.mockResolvedValue();
-  karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
-  angularProjectConfigLoader.getAllAngularProjects.mockReturnValue([new AngularProject("test-project", "", "", true)])
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    karmaHelper,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener,
-    angularProjectConfigLoader,
-    "",
-    ""
-  );
-
-  // Act
-  const loadedProjectsConfig = await angularKarmaTestExplorer.loadProjectsConfiguration();
-
-  // Assert
-  expect(loadedProjectsConfig).toBeDefined();
 });
 
 test("loadTests should return a valid set of tests if its the first run", async () => {
@@ -70,8 +40,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
     logger,
     angularServer,
     new TestExplorerHelper(),
-	karmaEventListener,
-	angularProjectConfigLoader,
+    karmaEventListener,
     "",
     ""
   );
@@ -98,8 +67,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
     logger,
     angularServer,
     new TestExplorerHelper(),
-	karmaEventListener,
-	angularProjectConfigLoader,
+    karmaEventListener,
     "",
     ""
   );
@@ -123,8 +91,7 @@ test("loadTests should return an empty test suite if its not a karma based proje
     logger,
     angularServer,
     new TestExplorerHelper(),
-	karmaEventListener,
-	angularProjectConfigLoader,
+    karmaEventListener,
     "",
     ""
   );
@@ -149,8 +116,7 @@ test("runTests should be called only once with the correct sent tests name", asy
     logger,
     angularServer,
     new TestExplorerHelper(),
-	karmaEventListener,
-	angularProjectConfigLoader,
+    karmaEventListener,
     "",
     ""
   );
@@ -172,8 +138,7 @@ test("debug tests should throw not implemented exception", async () => {
     logger,
     angularServer,
     new TestExplorerHelper(),
-	karmaEventListener,
-	angularProjectConfigLoader,
+    karmaEventListener,
     "",
     ""
   );

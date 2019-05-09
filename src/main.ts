@@ -3,6 +3,7 @@ import { TestHub, testExplorerExtensionId } from "vscode-test-adapter-api";
 import { Log, TestAdapterRegistrar } from "vscode-test-adapter-util";
 import { Adapter } from "./adapter";
 import { OUTPUT_CHANNEL } from "./core/shared/logger";
+import { UIExtensionMethods } from "./infrastructure/ui-extension-methods";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
@@ -28,7 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
 
-    registerCommand("angular-karma-test-explorer.select-project", async () => testExplorerAdapter.selectProject());
+    registerCommand("angular-karma-test-explorer.select-project", async () => UIExtensionMethods.createSelectProjectQuickPick(testExplorerAdapter));
 
     // this will register an AngularKarmaTestAdapter for each WorkspaceFolder
     context.subscriptions.push(new TestAdapterRegistrar(testHub, workspaceFolder => testExplorerAdapter, log));

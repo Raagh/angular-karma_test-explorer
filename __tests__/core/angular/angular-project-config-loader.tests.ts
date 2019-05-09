@@ -19,7 +19,7 @@ test("loadTestsFromDefaultProject should throw an error if angular.json is not f
 
   // Act
   try {
-    await angularProjectConfigLoader.load();
+    await angularProjectConfigLoader.getDefaultAngularProjectConfig();
   } catch (error) {
     // Assert
     expect(error.toString()).toBe("Error: No angular.json or angular-cli.json file found in root path.");
@@ -37,7 +37,7 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
   const angularProjectConfigLoader = new AngularProjectConfigLoader("", fileHelper);
 
   // Act
-  const result = await angularProjectConfigLoader.load();
+  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig();
 
   // Assert
   verifyExpectedResults(result);
@@ -54,7 +54,7 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
   const angularProjectConfigLoader = new AngularProjectConfigLoader("", fileHelper);
 
   // Act
-  const result = await angularProjectConfigLoader.load();
+  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig();
 
   // Assert
   verifyExpectedResults(result);

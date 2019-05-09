@@ -21,6 +21,7 @@ export class Adapter implements TestAdapter {
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
   private readonly config: vscode.WorkspaceConfiguration;
   private readonly testExplorer: AngularKarmaTestExplorer;
+  public readonly workspaceRootPath: string;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -54,12 +55,13 @@ export class Adapter implements TestAdapter {
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
+    this.workspaceRootPath = path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/"));
     const container = new IOCContainer();
     this.testExplorer = container.registerTestExplorerDependencies(
       this.testStatesEmitter,
       channel,
       this.config.get("debugMode") as boolean,
-      path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/")),
+      this.workspaceRootPath,
       path.join(__dirname, ".", "config", "test-explorer-karma.conf.js")
     );
   }
@@ -71,12 +73,9 @@ export class Adapter implements TestAdapter {
 
     if (angularProject === undefined) {
       angularProject = this.config.get("defaultAngularProjectName") as string;
-    } 
+    }
 
-    const loadedTests = await this.testExplorer.loadTests(
-      angularProject,
-      this.config.get("defaultSocketConnectionPort") as number
-    );
+    const loadedTests = await this.testExplorer.loadTests(angularProject, this.config.get("defaultSocketConnectionPort") as number);
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
@@ -101,15 +100,6 @@ export class Adapter implements TestAdapter {
   public cancel(): void {
     // in a "real" TestAdapter this would kill the child process for the current test run (if there is any)
     throw new Error("Method not implemented.");
-  }
-
-  public async selectProject(): Promise<void> {
-    const loadedProjects = this.testExplorer.loadProjectsConfiguration();
-    const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
-      placeHolder: 'Select project'
-    });
-
-    this.load(selectedProject);
   }
 
   public dispose(): void {

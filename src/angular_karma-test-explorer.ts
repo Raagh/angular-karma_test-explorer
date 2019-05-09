@@ -1,5 +1,3 @@
-import { AngularProject } from './model/angular-project';
-import { AngularProjectConfigLoader } from './core/angular/angular-project-config-loader';
 import { KarmaRunner } from "./core/karma/karma-runner";
 import { KarmaHelper } from "./core/karma/karma-helper";
 import { KarmaEventListener } from "./core/integration/karma-event-listener";
@@ -17,18 +15,9 @@ export class AngularKarmaTestExplorer {
     private readonly angularServer: AngularServer,
     private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener,
-    private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
     private readonly workspaceRootPath: string,
     private readonly baseKarmaConfigPath: string
   ) {}
-
-  public loadProjectsConfiguration(): AngularProject[] {
-    if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {
-      return [] as AngularProject[];
-    }
-
-    return this.angularProjectConfigLoader.getAllAngularProjects(this.workspaceRootPath);
-  }
 
   public async loadTests(defaultProjectName: string, defaultSocketPort: number): Promise<TestSuiteInfo> {
     if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {

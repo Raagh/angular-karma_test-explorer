@@ -6,8 +6,8 @@ import path = require("path");
 export class AngularProjectConfigLoader {
   public constructor(private readonly workspaceRootPath: string, private readonly fileHelper: FileHelper) {}
 
-  public load(configDefaultProject?: string) {
-    const angularProjects = this.getAllAngularProjects(this.workspaceRootPath);
+  public getDefaultAngularProjectConfig(configDefaultProject?: string) {
+    const angularProjects = this.getAllAngularProjectsConfig(this.workspaceRootPath);
     let project = angularProjects.find(x => x.isAngularDefaultProject);
     if (configDefaultProject !== "") {
       project = angularProjects.find(x => x.name === configDefaultProject);
@@ -18,7 +18,7 @@ export class AngularProjectConfigLoader {
     return project;
   }
 
-  public getAllAngularProjects(workspaceRootPath: string): AngularProject[] {
+  public getAllAngularProjectsConfig(workspaceRootPath: string): AngularProject[] {
     const angularJsonPath = path.join(workspaceRootPath, "angular.json");
     const angularCliJsonPath = path.join(workspaceRootPath, ".angular-cli.json");
 

@@ -44,7 +44,6 @@ export class IOCContainer {
       angularServer,
       testExplorerHelper,
       karmaEventListener,
-      angularProjectConfigLoader,
       workspaceRootPath,
       baseKarmaConfigPath
     );
