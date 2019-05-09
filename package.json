@@ -121,7 +121,7 @@
         "path": "./syntaxes/angular-test-log.tmLanguage"
       }
     ],
-    "commands":[
+    "commands": [
       {
         "command": "angular-karma-test-explorer.select-project",
         "title": "Angular/Karma Test Explorer: Select Project",
@@ -136,7 +136,7 @@
         {
           "command": "angular-karma-test-explorer.select-project",
           "group": "navigation@1",
-          "when": "view == test-explorer"
+          "when": "view == test-explorer && isAngularEnviroment"
         }
       ]
     }

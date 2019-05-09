@@ -2,15 +2,25 @@ import { AngularProjectConfigLoader } from "../core/angular/angular-project-conf
 import { FileHelper } from "../core/integration/file-helper";
 import * as vscode from "vscode";
 import { Adapter } from "../adapter";
+import { KarmaHelper } from "../core/karma/karma-helper";
 
 export class UIExtensionMethods {
-  public static async createSelectProjectQuickPick(testExplorerAdapter: Adapter): Promise<void> {
-    const angularProjectConfigLoader = new AngularProjectConfigLoader(testExplorerAdapter.workspaceRootPath, new FileHelper());
-    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(testExplorerAdapter.workspaceRootPath);
+  public constructor(private readonly testExplorerAdapter: Adapter) {
+    const karmaHelper = new KarmaHelper();
+    if (karmaHelper.isKarmaBasedProject(testExplorerAdapter.workspaceRootPath)) {
+      vscode.commands.executeCommand("setContext", "isAngularEnviroment", true);
+    } else {
+      vscode.commands.executeCommand("setContext", "isAngularEnviroment", false);
+    }
+  }
+
+  public async createSelectProjectQuickPick(): Promise<void> {
+    const angularProjectConfigLoader = new AngularProjectConfigLoader(this.testExplorerAdapter.workspaceRootPath, new FileHelper());
+    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(this.testExplorerAdapter.workspaceRootPath);
     const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
       placeHolder: "Select project",
     });
 
-    await testExplorerAdapter.load(selectedProject);
+    await this.testExplorerAdapter.load(selectedProject);
   }
 }

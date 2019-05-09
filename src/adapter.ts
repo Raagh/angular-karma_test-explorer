@@ -10,7 +10,7 @@ import {
   TestEvent,
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
-import { AngularKarmaTestExplorer } from "./angular_karma-test-explorer";
+import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
 import path = require("path");
 
 export class Adapter implements TestAdapter {

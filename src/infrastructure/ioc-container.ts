@@ -1,4 +1,4 @@
-import { AngularKarmaTestExplorer } from "../angular_karma-test-explorer";
+import { AngularKarmaTestExplorer } from "../core/angular-karma-test-explorer";
 import { Logger } from "../core/shared/logger";
 import { KarmaHelper } from "../core/karma/karma-helper";
 import { KarmaEventListener } from "../core/integration/karma-event-listener";

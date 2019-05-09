@@ -1,18 +1,17 @@
-import { AngularKarmaTestExplorer } from "./../src/angular_karma-test-explorer";
-import { TestExplorerHelper } from "./../src/core/test-explorer/test-explorer-helper";
-import { KarmaEventListener } from "./../src/core/integration/karma-event-listener";
-import { AngularServer } from "./../src/core/angular/angular-server";
-import { KarmaHelper } from "./../src/core/karma/karma-helper";
-import { KarmaRunner } from "./../src/core/karma/karma-runner";
-import { Logger } from "../src/core/shared/logger";
-import * as expectedTests from "../__mocks__/expectedTests.mock";
+import { AngularKarmaTestExplorer } from "../../src/core/angular-karma-test-explorer";
+import { TestExplorerHelper } from "../../src/core/test-explorer/test-explorer-helper";
+import { KarmaEventListener } from "../../src/core/integration/karma-event-listener";
+import { AngularServer } from "../../src/core/angular/angular-server";
+import { KarmaHelper } from "../../src/core/karma/karma-helper";
+import { KarmaRunner } from "../../src/core/karma/karma-runner";
+import { Logger } from "../../src/core/shared/logger";
+import * as expectedTests from "../../__mocks__/expectedTests.mock";
 
-jest.mock("./../src/core/integration/karma-event-listener");
-jest.mock("./../src/core/angular/angular-server");
-jest.mock("./../src/core/karma/karma-helper");
-jest.mock("./../src/core/karma/karma-runner");
-jest.mock("../src/core/shared/logger");
-jest.mock("./../src/core/angular/angular-project-config-loader");
+jest.mock("../../src/core/integration/karma-event-listener");
+jest.mock("../../src/core/angular/angular-server");
+jest.mock("../../src/core/karma/karma-helper");
+jest.mock("../../src/core/karma/karma-runner");
+jest.mock("../../src/core/shared/logger");
 
 let karmaRunner: jest.Mocked<KarmaRunner>;
 let karmaHelper: jest.Mocked<KarmaHelper>;

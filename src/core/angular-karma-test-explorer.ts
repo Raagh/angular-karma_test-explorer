@@ -1,9 +1,9 @@
-import { KarmaRunner } from "./core/karma/karma-runner";
-import { KarmaHelper } from "./core/karma/karma-helper";
-import { KarmaEventListener } from "./core/integration/karma-event-listener";
-import { Logger } from "./core/shared/logger";
-import { AngularServer } from "./core/angular/angular-server";
-import { TestExplorerHelper } from "./core/test-explorer/test-explorer-helper";
+import { KarmaRunner } from "./karma/karma-runner";
+import { KarmaHelper } from "./karma/karma-helper";
+import { KarmaEventListener } from "./integration/karma-event-listener";
+import { Logger } from "./shared/logger";
+import { AngularServer } from "./angular/angular-server";
+import { TestExplorerHelper } from "./test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class AngularKarmaTestExplorer {
