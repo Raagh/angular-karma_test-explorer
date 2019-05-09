@@ -1,7 +1,7 @@
 const fs = require("fs");
 import path = require("path");
 import { when } from "jest-when";
-import { KarmaHelper } from "../../../../src/workers/karma/karma-helper";
+import { KarmaHelper } from "../../../../src/core/karma/karma-helper";
 
 jest.mock("fs");
 

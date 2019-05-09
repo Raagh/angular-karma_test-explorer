@@ -1,17 +1,17 @@
 import { AngularKarmaTestExplorer } from "./angular_karma-test-explorer";
-import { Logger } from "./workers/shared/logger";
-import { KarmaHelper } from "./workers/karma/karma-helper";
-import { KarmaEventListener } from "./workers/karma/karma-event-listener";
-import { KarmaRunner } from "./workers/karma/karma-runner";
-import { AngularServer } from "./workers/angular/angular-server";
-import { AngularProjectConfigLoader } from "./workers/angular/angular-project-config-loader";
-import { TestExplorerHelper } from "./workers/test-explorer/test-explorer-helper";
-import { FileHelper } from "./workers/shared/file-helper";
-import { KarmaHttpCaller } from "./workers/karma/karma-http-caller";
+import { Logger } from "./core/shared/logger";
+import { KarmaHelper } from "./core/karma/karma-helper";
+import { KarmaEventListener } from "./core/integration/karma-event-listener";
+import { KarmaRunner } from "./core/karma/karma-runner";
+import { AngularServer } from "./core/angular/angular-server";
+import { AngularProjectConfigLoader } from "./core/angular/angular-project-config-loader";
+import { TestExplorerHelper } from "./core/test-explorer/test-explorer-helper";
+import { FileHelper } from "./core/shared/file-helper";
+import { KarmaHttpClient } from "./core/integration/karma-http-client";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import * as vscode from "vscode";
-import { EventEmitter } from "./workers/shared/event-emitter";
-import { AngularProcessHandler } from "./workers/angular/angular-process-handler";
+import { EventEmitter } from "./core/shared/event-emitter";
+import { AngularProcessHandler } from "./core/integration/angular-process-handler";
 export class IOCContainer {
   public constructor() {}
   public registerTestExplorerDependencies(
@@ -27,9 +27,15 @@ export class IOCContainer {
     const testExplorerHelper = new TestExplorerHelper();
     const logger = new Logger(channel, isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
-    const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpCaller());
+    const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpClient());
     const angularProjectConfigLoader = new AngularProjectConfigLoader(workspaceRootPath, fileHelper);
-    const angularServer = new AngularServer(karmaEventListener, logger, new AngularProcessHandler(logger, karmaEventListener), fileHelper, angularProjectConfigLoader);
+    const angularServer = new AngularServer(
+      karmaEventListener,
+      logger,
+      new AngularProcessHandler(logger, karmaEventListener),
+      fileHelper,
+      angularProjectConfigLoader
+    );
 
     return new AngularKarmaTestExplorer(
       karmaRunner,

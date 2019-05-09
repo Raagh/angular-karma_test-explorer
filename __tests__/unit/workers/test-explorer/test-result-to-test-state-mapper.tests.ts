@@ -1,4 +1,4 @@
-import { TestResultToTestStateMapper } from "../../../../src/workers/test-explorer/test-result-to-test-state.mapper";
+import { TestResultToTestStateMapper } from "../../../../src/core/test-explorer/test-result-to-test-state.mapper";
 import { TestResult } from "../../../../src/model/test-status.enum";
 import { TestState } from "../../../../src/model/test-state.enum";
 

@@ -1,8 +1,8 @@
-import { SpecToTestSuiteMapper } from "../../../../src/workers/test-explorer/spec-to-test-suite.mapper";
+import { SpecToTestSuiteMapper } from "../../../../src/core/test-explorer/spec-to-test-suite.mapper";
 import * as expectedTests from "../../../../__mocks__/expectedTests.mock";
-import { SpecResultGroupToSuites } from "./../../../../src/workers/test-explorer/spec-result-groupby";
+import { SpecResultGroupToSuites } from "./../../../../src/core/test-explorer/spec-result-groupby";
 
-jest.mock("./../../../../src/workers/test-explorer/spec-result-groupby");
+jest.mock("./../../../../src/core/test-explorer/spec-result-groupby");
 
 const groupByResults = [
   { name: "suite1", suites: [], tests: ["test1"] },

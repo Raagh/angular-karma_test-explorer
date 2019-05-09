@@ -1,13 +1,13 @@
-import { KarmaHttpCaller } from "./karma-http-caller";
+import { KarmaHttpClient } from "../integration/karma-http-client";
 import { Logger } from "../shared/logger";
-import { KarmaEventListener } from "./karma-event-listener";
+import { KarmaEventListener } from "../integration/karma-event-listener";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
 export class KarmaRunner {
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,
-    private readonly karmaHttpCaller: KarmaHttpCaller
+    private readonly karmaHttpCaller: KarmaHttpClient
   ) {}
 
   public isKarmaRunning(): boolean {

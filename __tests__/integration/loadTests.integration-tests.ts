@@ -1,4 +1,4 @@
-jest.mock("./../../src/workers/test-explorer/logger");
+jest.mock("./../../src/core/test-explorer/logger");
 import { AngularTestExplorer } from "../../src/angular-test-explorer";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent, TestSuiteInfo } from "vscode-test-adapter-api";
 import * as vscode from "vscode";

@@ -1,4 +1,4 @@
-import { TestExplorerHelper } from "../../../../src/workers/test-explorer/test-explorer-helper";
+import { TestExplorerHelper } from "../../../../src/core/test-explorer/test-explorer-helper";
 
 test("groupBy should return grouped values by the used key", () => {
   // Arrange

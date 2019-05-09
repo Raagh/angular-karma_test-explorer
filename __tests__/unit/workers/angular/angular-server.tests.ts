@@ -1,16 +1,16 @@
-import { AngularServer } from "../../../../src/workers/angular/angular-server";
-import { AngularProjectConfigLoader } from "../../../../src/workers/angular/angular-project-config-loader";
-import { AngularProcessHandler } from "../../../../src/workers/angular/angular-process-handler";
-import { KarmaEventListener } from "../../../../src/workers/karma/karma-event-listener";
-import { FileHelper } from "../../../../src/workers/shared/file-helper";
-import { Logger } from "../../../../src/workers/shared/logger";
+import { AngularServer } from "../../../../src/core/angular/angular-server";
+import { AngularProjectConfigLoader } from "../../../../src/core/angular/angular-project-config-loader";
+import { AngularProcessHandler } from "../../../../src/core/integration/angular-process-handler";
+import { KarmaEventListener } from "../../../../src/core/integration/karma-event-listener";
+import { FileHelper } from "../../../../src/core/shared/file-helper";
+import { Logger } from "../../../../src/core/shared/logger";
 import { AngularProject } from "../../../../src/model/angular-project";
 
-jest.mock("../../../../src/workers/angular/angular-project-config-loader");
-jest.mock("../../../../src/workers/angular/angular-process-handler");
-jest.mock("./../../../../src/workers/karma/karma-event-listener");
-jest.mock("./../../../../src/workers/shared/file-helper");
-jest.mock("../../../../src/workers/shared/logger");
+jest.mock("../../../../src/core/angular/angular-project-config-loader");
+jest.mock("../../../../src/core/integration/angular-process-handler");
+jest.mock("./../../../../src/core/integration/karma-event-listener");
+jest.mock("./../../../../src/core/shared/file-helper");
+jest.mock("../../../../src/core/shared/logger");
 
 let fileHelper: jest.Mocked<FileHelper>;
 let karmaEventListener: jest.Mocked<KarmaEventListener>;

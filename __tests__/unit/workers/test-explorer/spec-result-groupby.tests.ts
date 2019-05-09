@@ -1,4 +1,4 @@
-import { SpecResultGroupToSuites } from "../../../../src/workers/test-explorer/spec-result-groupby";
+import { SpecResultGroupToSuites } from "../../../../src/core/test-explorer/spec-result-groupby";
 
 test("SpecResultToSuiteGroupBy should return grouped values with multiple levels of suites", () => {
   const grouper = new SpecResultGroupToSuites();

@@ -1,4 +1,4 @@
-export class KarmaHttpCaller {
+export class KarmaHttpClient {
   public constructor() {}
   public createKarmaRunCallConfiguration(tests: any) {
     // if testName is undefined, reset jasmine.getEnv().specFilter function

@@ -1,14 +1,13 @@
 import { FileHelper } from "./../shared/file-helper";
-import { AngularProcessHandler } from "./angular-process-handler";
+import { AngularProcessHandler } from "../integration/angular-process-handler";
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
-import { KarmaEventListener } from "../karma/karma-event-listener";
+import { KarmaEventListener } from "../integration/karma-event-listener";
 import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
 import { AngularProjectConfigLoader } from "./angular-project-config-loader";
 
 export class AngularServer {
-
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,

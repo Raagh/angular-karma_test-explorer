@@ -1,20 +1,20 @@
-import { KarmaHttpCaller } from "./../../../../src/workers/karma/karma-http-caller";
-import { KarmaEventListener } from "./../../../../src/workers/karma/karma-event-listener";
-import { KarmaRunner } from "./../../../../src/workers/karma/karma-runner";
-import { Logger } from "../../../../src/workers/shared/logger";
+import { KarmaHttpClient } from "../../../../src/core/integration/karma-http-client";
+import { KarmaEventListener } from "./../../../../src/core/integration/karma-event-listener";
+import { KarmaRunner } from "./../../../../src/core/karma/karma-runner";
+import { Logger } from "../../../../src/core/shared/logger";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 
-jest.mock("./../../../../src/workers/karma/karma-event-listener");
-jest.mock("../../../../src/workers/shared/logger");
-jest.mock("./../../../../src/workers/karma/karma-http-caller");
+jest.mock("./../../../../src/core/integration/karma-event-listener");
+jest.mock("../../../../src/core/shared/logger");
+jest.mock("../../../../src/core/integration/karma-http-client");
 
 let loggerMockedClass: jest.Mock<Logger>;
-let karmaHttpCaller: jest.Mocked<KarmaHttpCaller>;
+let karmaHttpCaller: jest.Mocked<KarmaHttpClient>;
 let karmaEventListener: jest.Mocked<KarmaEventListener>;
 
 beforeAll(() => {
   loggerMockedClass = <jest.Mock<Logger>>Logger;
-  karmaHttpCaller = new (KarmaHttpCaller as any)() as any;
+  karmaHttpCaller = new (KarmaHttpClient as any)() as any;
   karmaEventListener = new (KarmaEventListener as any)() as any;
 });
 

@@ -1,6 +1,6 @@
-import { KarmaEventListener } from '../karma/karma-event-listener';
+import { KarmaEventListener } from "../integration/karma-event-listener";
 import { SpawnOptions } from "child_process";
-import { Logger } from '../shared/logger';
+import { Logger } from "../shared/logger";
 const spawn = require("cross-spawn");
 export class AngularProcessHandler {
   private process: any;
@@ -10,7 +10,7 @@ export class AngularProcessHandler {
     this.process = spawn(command, processArguments, options);
     this.setupProcessOutputs();
   }
-  
+
   public kill() {
     this.process.kill();
   }

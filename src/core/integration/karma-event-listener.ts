@@ -1,5 +1,5 @@
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { SpecToTestSuiteMapper } from "../../workers/test-explorer/spec-to-test-suite.mapper";
+import { SpecToTestSuiteMapper } from "../../core/test-explorer/spec-to-test-suite.mapper";
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/karma-event-name.enum";
 import { TestState } from "../../model/test-state.enum";

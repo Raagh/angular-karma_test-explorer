@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { TestHub, testExplorerExtensionId } from "vscode-test-adapter-api";
 import { Log, TestAdapterRegistrar } from "vscode-test-adapter-util";
 import { Adapter } from "./adapter";
-import { OUTPUT_CHANNEL } from "./workers/shared/logger";
+import { OUTPUT_CHANNEL } from "./core/shared/logger";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
