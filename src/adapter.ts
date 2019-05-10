@@ -102,8 +102,9 @@ export class Adapter implements TestAdapter {
     throw new Error("Method not implemented.");
   }
 
-  public dispose(): void {
-    this.cancel();
+  public async dispose(): Promise<void> {
+    await this.testExplorer.dispose();
+
     for (const disposable of this.disposables) {
       disposable.dispose();
     }
