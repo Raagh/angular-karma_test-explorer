@@ -17,13 +17,13 @@ export class AngularServer {
     private readonly workspaceRootPath: string
   ) {}
 
-  public stop(): Promise<void> {
+  public async stop(): Promise<void> {
     if (this.karmaEventListener.isServerLoaded) {
       this.karmaEventListener.stopListeningToKarma();
       this.processHandler.kill();
     }
 
-    return this.processHandler.onExitEvent();
+    return await this.processHandler.onExitEvent();
   }
 
   public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
