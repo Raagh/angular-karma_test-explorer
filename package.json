@@ -43,6 +43,7 @@
   "dependencies": {
     "cross-spawn": "^6.0.5",
     "express": "^4.16.4",
+    "glob": "^7.1.4",
     "karma": "~4.0.1",
     "request-promise": "^4.2.4",
     "resolve-global": "^0.1.0",

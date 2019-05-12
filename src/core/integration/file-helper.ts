@@ -8,4 +8,8 @@ export class FileHelper {
   public readJSONFile(path: string): any {
     return JSON.parse(fs.readFileSync(path, "utf8"));
   }
+
+  public readFile(path: string, encoding: any) {
+    return fs.readFileSync(path, encoding);
+  }
 }

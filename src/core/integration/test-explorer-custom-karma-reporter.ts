@@ -1,13 +1,27 @@
-import * as karma from "karma";
 import { TestResult } from "../../model/test-status.enum";
 import { RunStatus } from "../../model/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
+import { PathFinder } from "../shared/path-finder";
+import { FileHelper } from "../integration/file-helper";
 import * as io from "socket.io-client";
+import * as karma from "karma";
+import path = require("path");
 
 function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
   this.emitter = emitter;
   this.socket = io("http://localhost:9999/", { forceNew: true });
+
+  const BASE_PATH = "src/app/";
+  const FILE_PATTERN = "**/*spec.ts";
+  const ENCODING = "utf-8";
+
+  global.console.log("reached this!");
+  const pathFinder = new PathFinder(new FileHelper());
+
+  const pattern = path.join(BASE_PATH, FILE_PATTERN);
+
+  const paths = pathFinder.parseTestFiles(pattern, ENCODING);
 
   const emitEvent = (eventName: any, eventResults: any = null) => {
     this.socket.emit(eventName, { name: eventName, results: eventResults });
@@ -40,6 +54,13 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
 
   this.onBrowserStart = (browser: any, info: any) => {
     emitEvent("browser_start");
+  };
+
+  this.specSkipped = (browser: any, result: any) => {
+    var localPath = pathFinder.testFile(paths, result.suite[0], result.description);
+    if (localPath !== undefined) {
+      emitEvent("spec_skipped", localPath);
+    }
   };
 
   this.emitter.on("browsers_change", (capturedBrowsers: any) => {
