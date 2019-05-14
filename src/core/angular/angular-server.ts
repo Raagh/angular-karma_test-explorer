@@ -18,7 +18,7 @@ export class AngularServer {
   ) {}
 
   public async stop(): Promise<void> {
-    if (this.karmaEventListener.isServerLoaded) {
+    if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
       this.karmaEventListener.stopListeningToKarma();
       this.processHandler.kill();
     }

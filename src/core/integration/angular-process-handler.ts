@@ -11,8 +11,12 @@ export class AngularProcessHandler {
     this.setupProcessOutputs();
   }
 
+  public isProcessRunning(): boolean {
+    return this.angularProcess != undefined;
+  }
+
   public kill() {
-    this.angularProcess.kill();
+    this.angularProcess.kill("SIGKILL");
   }
 
   public onExitEvent(): Promise<void> {
