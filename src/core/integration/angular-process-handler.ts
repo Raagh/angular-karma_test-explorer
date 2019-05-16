@@ -16,13 +16,10 @@ export class AngularProcessHandler {
   }
 
   public kill() {
-    this.angularProcess.kill("SIGKILL");
-  }
-
-  public onExitEvent(): Promise<void> {
     return new Promise<void>(resolve => {
-      this.angularProcess.on("exit", (code: any, signal: any) => {
-        this.logger.info(`Angular exited with code ${code} and signal ${signal}`);
+      var kill = require("tree-kill");
+      kill(this.angularProcess.pid, "SIGTERM", () => {
+        this.logger.info(`Angular exited succesfully`);
         resolve();
       });
     });

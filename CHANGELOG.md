@@ -1,3 +1,8 @@
+### Version 0.2.2
+
+- Kill all karma processes before starting a new one.
+- Setup up project config file and new validation properties.
+
 ### Version 0.2.1
 
 - Added select project button in UI for multiple project apps.

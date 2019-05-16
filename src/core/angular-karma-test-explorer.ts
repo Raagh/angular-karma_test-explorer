@@ -53,10 +53,4 @@ export class AngularKarmaTestExplorer {
   public debugTests(tests: string[]): void {
     throw new Error("Not Implemented");
   }
-
-  public async dispose(): Promise<void> {
-    if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stop();
-    }
-  }
 }

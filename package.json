@@ -49,6 +49,7 @@
     "socket.io": "2.2.0",
     "socket.io-client": "2.2.0",
     "socket.io-json-parser": "^2.1.0",
+    "tree-kill": "^1.2.1",
     "tslib": "^1.9.3",
     "vscode-test-adapter-api": "^1.6.0",
     "vscode-test-adapter-util": "^0.6.4"

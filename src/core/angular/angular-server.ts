@@ -20,10 +20,8 @@ export class AngularServer {
   public async stop(): Promise<void> {
     if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
       this.karmaEventListener.stopListeningToKarma();
-      this.processHandler.kill();
+      return await this.processHandler.kill();
     }
-
-    return await this.processHandler.onExitEvent();
   }
 
   public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {

@@ -53,5 +53,4 @@ test("stop should effectively stop a the running angular process", async () => {
   // Assert
   expect(processHandler.kill).toBeCalledTimes(1);
   expect(karmaEventListener.stopListeningToKarma).toBeCalledTimes(1);
-  expect(processHandler.onExitEvent).toBeCalledTimes(1);
 });
