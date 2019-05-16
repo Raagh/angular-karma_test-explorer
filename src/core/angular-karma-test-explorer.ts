@@ -32,7 +32,7 @@ export class AngularKarmaTestExplorer {
 
     await this.angularServer.start(defaultProjectName, this.baseKarmaConfigPath, defaultSocketPort);
 
-    const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
+    const testSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
     testSuiteInfo.children = await this.karmaRunner.loadTests();
 
     this.logger.info("Test Loading completed!");
