@@ -27,7 +27,7 @@ export class AngularServer {
   public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
     const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(defaultProjectName);
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
-    const options = this.createProcessOptions(project);
+    const options = this.createProcessOptions(project, defaultSocketPort);
 
     const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
 
@@ -38,9 +38,10 @@ export class AngularServer {
     await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
   }
 
-  private createProcessOptions(project: AngularProject) {
+  private createProcessOptions(project: AngularProject, defaultSocketPort: number) {
     const testExplorerEnvironment = Object.create(process.env);
     testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
+    testExplorerEnvironment.defaultSocketPort = defaultSocketPort;
     const options = {
       cwd: project.rootPath,
       shell: true,
