@@ -15,12 +15,11 @@ export class AngularKarmaTestExplorer {
     private readonly angularServer: AngularServer,
     private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener,
-    private readonly workspaceRootPath: string,
     private readonly baseKarmaConfigPath: string
   ) {}
 
-  public async loadTests(defaultProjectName: string, defaultSocketPort: number): Promise<TestSuiteInfo> {
-    if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {
+  public async loadTests(defaultProjectName: string, defaultSocketPort: number, workspaceRootPath: string): Promise<TestSuiteInfo> {
+    if (!this.karmaHelper.isKarmaBasedProject(workspaceRootPath)) {
       return {} as TestSuiteInfo;
     }
 
@@ -30,7 +29,7 @@ export class AngularKarmaTestExplorer {
 
     this.logger.info("Test Loading started...");
 
-    await this.angularServer.start(defaultProjectName, this.baseKarmaConfigPath, defaultSocketPort);
+    await this.angularServer.start(defaultProjectName, this.baseKarmaConfigPath, defaultSocketPort, workspaceRootPath);
 
     const testSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
     testSuiteInfo.children = await this.karmaRunner.loadTests();

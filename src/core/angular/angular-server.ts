@@ -13,8 +13,7 @@ export class AngularServer {
     private readonly logger: Logger,
     private readonly processHandler: AngularProcessHandler,
     private readonly fileHelper: FileHelper,
-    private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
-    private readonly workspaceRootPath: string
+    private readonly angularProjectConfigLoader: AngularProjectConfigLoader
   ) {}
 
   public async stop(): Promise<void> {
@@ -24,12 +23,17 @@ export class AngularServer {
     }
   }
 
-  public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
-    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(defaultProjectName);
+  public async start(
+    defaultProjectName: string,
+    _baseKarmaConfigFilePath: string,
+    defaultSocketPort: number,
+    workspaceRootPath: string
+  ): Promise<void> {
+    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(workspaceRootPath, defaultProjectName);
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
     const options = this.createProcessOptions(project, defaultSocketPort);
 
-    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
+    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath, workspaceRootPath);
 
     this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
 
@@ -50,13 +54,11 @@ export class AngularServer {
     return options;
   }
 
-  private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {
+  private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = this.fileHelper.doesFileExists(
-      path.join(this.workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng")
-    );
+    const isAngularInstalledLocally = this.fileHelper.doesFileExists(path.join(workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
     const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";

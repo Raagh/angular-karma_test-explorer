@@ -31,10 +31,10 @@ test("start should effectively start a new angular process", async () => {
   angularProjectConfigLoader.getDefaultAngularProjectConfig.mockReturnValue(new AngularProject("test-project", "", "", true));
   fileHelper.doesFileExists.mockReturnValue(true);
   processHandler.create.mockReturnValue({ stdout: { on() {} }, stderr: { on() {} }, on() {} });
-  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader, "");
+  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
 
   // Act
-  angularServer.start("", "", 2000);
+  angularServer.start("", "", 2000, "");
 
   // Assert
   expect(processHandler.create).toBeCalledTimes(1);
@@ -45,7 +45,7 @@ test("start should effectively start a new angular process", async () => {
 test("stop should effectively stop a the running angular process", async () => {
   // Arrange
   karmaEventListener.isServerLoaded = true;
-  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader, "");
+  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
 
   // Act
   angularServer.stop();
