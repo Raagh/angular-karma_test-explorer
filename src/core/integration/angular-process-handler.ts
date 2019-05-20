@@ -15,7 +15,7 @@ export class AngularProcessHandler {
     return this.angularProcess != undefined;
   }
 
-  public kill() {
+  public kill(): Promise<void> {
     return new Promise<void>(resolve => {
       var kill = require("tree-kill");
       kill(this.angularProcess.pid, "SIGTERM", () => {
@@ -43,9 +43,9 @@ export class AngularProcessHandler {
     // Prevent karma server from being an orphan process.
     // For example, if VSCODE is killed using SIGKILL, karma server will still be alive.
     // When VSCODE is terminated, karma server's standard input is closed automatically.
-    process.stdin.on("close", () => {
+    process.stdin.on("close", async () => {
       // terminating orphan process
-      this.angularProcess.exit(123);
+      await this.kill();
     });
   }
 }
