@@ -15,7 +15,7 @@ export class UIExtensionMethods {
   }
 
   public async createSelectProjectQuickPick(): Promise<void> {
-    const angularProjectConfigLoader = new AngularProjectConfigLoader(this.testExplorerAdapter.workspaceRootPath, new FileHelper());
+    const angularProjectConfigLoader = new AngularProjectConfigLoader(new FileHelper());
     const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(this.testExplorerAdapter.workspaceRootPath);
     const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
       placeHolder: "Select project",

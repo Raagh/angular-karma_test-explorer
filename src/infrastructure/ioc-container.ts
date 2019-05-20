@@ -18,7 +18,6 @@ export class IOCContainer {
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
     channel: vscode.OutputChannel,
     isDebugMode: boolean,
-    workspaceRootPath: string,
     baseKarmaConfigPath: string
   ): AngularKarmaTestExplorer {
     // poor man's dependency injection
@@ -28,25 +27,15 @@ export class IOCContainer {
     const logger = new Logger(channel, isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
     const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpClient());
-    const angularProjectConfigLoader = new AngularProjectConfigLoader(workspaceRootPath, fileHelper);
+    const angularProjectConfigLoader = new AngularProjectConfigLoader(fileHelper);
     const angularServer = new AngularServer(
       karmaEventListener,
       logger,
       new AngularProcessHandler(logger, karmaEventListener),
       fileHelper,
-      angularProjectConfigLoader,
-      workspaceRootPath
+      angularProjectConfigLoader
     );
 
-    return new AngularKarmaTestExplorer(
-      karmaRunner,
-      karmaHelper,
-      logger,
-      angularServer,
-      testExplorerHelper,
-      karmaEventListener,
-      workspaceRootPath,
-      baseKarmaConfigPath
-    );
+    return new AngularKarmaTestExplorer(karmaRunner, karmaHelper, logger, angularServer, testExplorerHelper, karmaEventListener, baseKarmaConfigPath);
   }
 }

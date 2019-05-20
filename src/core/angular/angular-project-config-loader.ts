@@ -4,10 +4,10 @@ import { window } from "vscode";
 import path = require("path");
 
 export class AngularProjectConfigLoader {
-  public constructor(private readonly workspaceRootPath: string, private readonly fileHelper: FileHelper) {}
+  public constructor(private readonly fileHelper: FileHelper) {}
 
-  public getDefaultAngularProjectConfig(configDefaultProject?: string): AngularProject {
-    const angularProjects = this.getAllAngularProjectsConfig(this.workspaceRootPath);
+  public getDefaultAngularProjectConfig(workspaceRootPath: string, configDefaultProject?: string): AngularProject {
+    const angularProjects = this.getAllAngularProjectsConfig(workspaceRootPath);
     let project = angularProjects.find(x => x.isAngularDefaultProject);
     if (configDefaultProject !== "") {
       project = angularProjects.find(x => x.name === configDefaultProject);
