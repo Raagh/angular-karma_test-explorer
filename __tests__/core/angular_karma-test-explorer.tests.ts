@@ -40,12 +40,11 @@ test("loadTests should return a valid set of tests if its the first run", async 
     angularServer,
     new TestExplorerHelper(),
     karmaEventListener,
-    "",
     ""
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000);
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -67,12 +66,11 @@ test("loadTests should return a valid set of tests if its the reload run", async
     angularServer,
     new TestExplorerHelper(),
     karmaEventListener,
-    "",
     ""
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000);
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -91,12 +89,11 @@ test("loadTests should return an empty test suite if its not a karma based proje
     angularServer,
     new TestExplorerHelper(),
     karmaEventListener,
-    "",
     ""
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000);
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
 
   // Assert
   expect(loadedTests.label).not.toBeDefined();
@@ -116,7 +113,6 @@ test("runTests should be called only once with the correct sent tests name", asy
     angularServer,
     new TestExplorerHelper(),
     karmaEventListener,
-    "",
     ""
   );
   const fakeTests = ["fakeTests"];
@@ -138,7 +134,6 @@ test("debug tests should throw not implemented exception", async () => {
     angularServer,
     new TestExplorerHelper(),
     karmaEventListener,
-    "",
     ""
   );
   const fakeTests = ["fakeTests"];

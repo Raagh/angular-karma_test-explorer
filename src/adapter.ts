@@ -11,6 +11,7 @@ import {
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
+import { AngularKarmaTestExplorerConfiguration } from "./model/angular-karma-test-explorer-configuration";
 import path = require("path");
 
 export class Adapter implements TestAdapter {
@@ -19,9 +20,9 @@ export class Adapter implements TestAdapter {
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
-  private readonly config: vscode.WorkspaceConfiguration;
   private readonly testExplorer: AngularKarmaTestExplorer;
   private readonly baseRootPath: string;
+  private config: AngularKarmaTestExplorerConfiguration;
   public workspaceRootPath: string;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
@@ -36,8 +37,10 @@ export class Adapter implements TestAdapter {
 
   constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
     this.log.info("Initializing adapter");
-    this.config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
-
+    this.baseRootPath = workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/");
+    this.disposables.push(this.testsEmitter);
+    this.disposables.push(this.testStatesEmitter);
+    this.disposables.push(this.autorunEmitter);
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(async configChange => {
         this.log.info("Configuration changed");
@@ -45,30 +48,24 @@ export class Adapter implements TestAdapter {
         if (
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri)
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri)
         ) {
-          const angularProjectRootPath = this.config.get("angularProjectRootPath") as string;
-          this.workspaceRootPath = path.join(this.baseRootPath, angularProjectRootPath);
+          this.config = new AngularKarmaTestExplorerConfiguration(this.workspace);
+          this.workspaceRootPath = path.join(this.baseRootPath, this.config.angularProjectRootPath);
           this.log.info("Sending reload event");
 
-          const adapterConfig = vscode.workspace.getConfiguration('angularKarmaTestExplorer', this.workspace.uri);
-          global.console.log(adapterConfig);
           this.load();
         }
       })
     );
 
-    this.disposables.push(this.testsEmitter);
-    this.disposables.push(this.testStatesEmitter);
-    this.disposables.push(this.autorunEmitter);
-    this.baseRootPath = workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/");
-    this.workspaceRootPath = path.join(this.baseRootPath, this.config.get("angularProjectRootPath") as string);
+    this.config = new AngularKarmaTestExplorerConfiguration(this.workspace);
+    this.workspaceRootPath = path.join(this.baseRootPath, this.config.angularProjectRootPath);
     const container = new IOCContainer();
     this.testExplorer = container.registerTestExplorerDependencies(
       this.testStatesEmitter,
       channel,
-      this.config.get("debugMode") as boolean,
+      this.config.isDebugModeEnabled,
       path.join(__dirname, ".", "config", "test-explorer-karma.conf.js")
     );
   }
@@ -79,14 +76,10 @@ export class Adapter implements TestAdapter {
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
     if (angularProject === undefined) {
-      angularProject = this.config.get("defaultAngularProjectName") as string;
+      angularProject = this.config.defaultAngularProjectName;
     }
 
-    const loadedTests = await this.testExplorer.loadTests(
-      angularProject,
-      this.config.get("defaultSocketConnectionPort") as number,
-      this.workspaceRootPath
-    );
+    const loadedTests = await this.testExplorer.loadTests(angularProject, this.config.defaultSocketConnectionPort, this.workspaceRootPath);
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
