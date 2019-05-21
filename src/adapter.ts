@@ -45,12 +45,15 @@ export class Adapter implements TestAdapter {
         if (
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri)
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri)
         ) {
           const angularProjectRootPath = this.config.get("angularProjectRootPath") as string;
           this.workspaceRootPath = path.join(this.baseRootPath, angularProjectRootPath);
           this.log.info("Sending reload event");
 
+          const adapterConfig = vscode.workspace.getConfiguration('angularKarmaTestExplorer', this.workspace.uri);
+          global.console.log(adapterConfig);
           this.load();
         }
       })

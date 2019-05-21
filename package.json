@@ -88,23 +88,28 @@
       "title": "Angular/Karma Test Explorer configuration",
       "properties": {
         "angularKarmaTestExplorer.angularProjectRootPath": {
-          "description": "The working directory where the angular app is located (relative to the workspace folder)",
+          "description": "The working directory where the angular project is located (relative to the workspace folder)",
+          "type": "string",
+          "scope": "resource"
+        },
+        "angularKarmaTestExplorer.karmaConfFilePath": {
+          "description": "The path where the karma.conf.js from your angular app is located (relative to the angular project folder)",
           "type": "string",
           "scope": "resource"
         },
         "angularKarmaTestExplorer.defaultAngularProjectName": {
-          "description": "set the default angular project to be tested, if this is is null default project in angular.json will be loaded",
+          "description": "Set the default angular project to be tested, if this is is null default project in angular.json will be loaded",
           "type": "string",
           "scope": "resource"
         },
         "angularKarmaTestExplorer.defaultSocketConnectionPort": {
-          "description": "this is the port that will be used to connect Karma with the test explorer",
+          "description": "This is the port that will be used to connect Karma with the test explorer",
           "type": "number",
           "scope": "resource",
           "default": 9999
         },
         "angularKarmaTestExplorer.debugMode": {
-          "description": "this will enable debug mode, which will create a new output channel with detailed logs",
+          "description": "This will enable debug mode, which will create a new output channel with detailed logs",
           "type": "boolean",
           "scope": "resource",
           "default": true
