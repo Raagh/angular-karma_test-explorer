@@ -1,7 +1,7 @@
 ### Version 0.2.2
 
 - Kill all karma processes before starting a new one.
-- Setup up project config file and new validation properties.
+- Now users can config the root path of the Angular App relative to the workspace.
 
 ### Version 0.2.1
 

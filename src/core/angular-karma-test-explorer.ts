@@ -24,7 +24,7 @@ export class AngularKarmaTestExplorer {
     }
 
     if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stop();
+      await this.angularServer.stopAsync();
     }
 
     this.logger.info("Test Loading started...");
@@ -51,5 +51,11 @@ export class AngularKarmaTestExplorer {
 
   public debugTests(tests: string[]): void {
     throw new Error("Not Implemented");
+  }
+
+  public dispose(): void {
+    if (this.karmaRunner.isKarmaRunning()) {
+      this.angularServer.stop();
+    }
   }
 }

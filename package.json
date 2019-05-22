@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "preview": true,
   "license": "MIT",
   "repository": {
@@ -89,11 +89,6 @@
       "properties": {
         "angularKarmaTestExplorer.angularProjectRootPath": {
           "description": "The working directory where the angular project is located (relative to the workspace folder)",
-          "type": "string",
-          "scope": "resource"
-        },
-        "angularKarmaTestExplorer.karmaConfFilePath": {
-          "description": "The path where the karma.conf.js from your angular app is located (relative to the angular project folder)",
           "type": "string",
           "scope": "resource"
         },

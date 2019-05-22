@@ -75,7 +75,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
   // Assert
   expect(loadedTests.label).toBeDefined();
   expect(loadedTests.children).toBeDefined();
-  expect(angularServer.stop).toBeCalledTimes(1);
+  expect(angularServer.stopAsync).toBeCalledTimes(1);
   expect(angularServer.start).toBeCalledTimes(1);
 });
 

@@ -15,14 +15,19 @@ export class AngularProcessHandler {
     return this.angularProcess != undefined;
   }
 
-  public kill(): Promise<void> {
+  public killAsync(): Promise<void> {
     return new Promise<void>(resolve => {
-      var kill = require("tree-kill");
+      const kill = require("tree-kill");
       kill(this.angularProcess.pid, "SIGTERM", () => {
         this.logger.info(`Angular exited succesfully`);
         resolve();
       });
     });
+  }
+
+  public kill(): void {
+    const kill = require("tree-kill");
+    kill(this.angularProcess.pid, "SIGKILL");
   }
 
   private setupProcessOutputs() {
@@ -45,7 +50,7 @@ export class AngularProcessHandler {
     // When VSCODE is terminated, karma server's standard input is closed automatically.
     process.stdin.on("close", async () => {
       // terminating orphan process
-      await this.kill();
+      this.kill();
     });
   }
 }

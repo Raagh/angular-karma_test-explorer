@@ -107,7 +107,7 @@ export class Adapter implements TestAdapter {
   }
 
   public async dispose(): Promise<void> {
-    await this.cancel();
+    this.testExplorer.dispose();
 
     for (const disposable of this.disposables) {
       disposable.dispose();

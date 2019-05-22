@@ -16,10 +16,17 @@ export class AngularServer {
     private readonly angularProjectConfigLoader: AngularProjectConfigLoader
   ) {}
 
-  public async stop(): Promise<void> {
+  public async stopAsync(): Promise<void> {
     if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
       this.karmaEventListener.stopListeningToKarma();
-      return await this.processHandler.kill();
+      return await this.processHandler.killAsync();
+    }
+  }
+
+  public stop(): void {
+    if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
+      this.karmaEventListener.stopListeningToKarma();
+      this.processHandler.kill();
     }
   }
 
