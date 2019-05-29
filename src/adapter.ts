@@ -14,13 +14,12 @@ import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
 import { TestExplorerConfiguration } from "./model/test-explorer-configuration";
 
 export class Adapter implements TestAdapter {
+  public config: TestExplorerConfiguration = {} as TestExplorerConfiguration;
   private disposables: Array<{ dispose(): void }> = [];
-
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
   private readonly testExplorer: AngularKarmaTestExplorer;
-  public config: TestExplorerConfiguration = { angularProjectPath: "" } as TestExplorerConfiguration;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -44,10 +43,8 @@ export class Adapter implements TestAdapter {
         if (
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
-          configChange.affectsConfiguration(
-            "angularKarmaTestExplorer.angularProjectRootPath",
-            this.workspace.uri || configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri)
-          )
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri)
         ) {
           this.log.info("Sending reload event");
 
