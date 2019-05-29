@@ -27,7 +27,7 @@ test("should map Success test result to Passed test state", () => {
 test("should map Skipped test result to Skipped test state", () => {
   // Arrage
   const mapper = new TestResultToTestStateMapper();
-  
+
   // Act
   const result = mapper.Map(TestResult.Failed);
 

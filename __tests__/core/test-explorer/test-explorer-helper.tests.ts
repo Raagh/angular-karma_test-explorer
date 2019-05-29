@@ -55,9 +55,9 @@ test("removeElementsFromArrayWithoutModifyingIt should return an empty array if 
 test("removeElementsFromArrayWithoutModifyingIt should return an array without the pass value if its only one value", () => {
   // Arrange
   const helper = new TestExplorerHelper();
-  const completeSetOfValues = ["43" ,  "2" , "3" ];
-  const removeValues = "43" ;
-  const expectedResults = [ "2" , "3" ];
+  const completeSetOfValues = ["43", "2", "3"];
+  const removeValues = "43";
+  const expectedResults = ["2", "3"];
 
   // Act
   const result = helper.removeElementsFromArrayWithoutModifyingIt(completeSetOfValues, removeValues);
