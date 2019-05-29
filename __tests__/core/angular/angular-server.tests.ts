@@ -5,6 +5,7 @@ import { KarmaEventListener } from "../../../src/core/integration/karma-event-li
 import { FileHelper } from "../../../src/core/integration/file-helper";
 import { Logger } from "../../../src/core/shared/logger";
 import { AngularProject } from "../../../src/model/angular-project";
+import { TestExplorerConfiguration } from "../../../src/model/test-explorer-configuration";
 
 jest.mock("../../../src/core/angular/angular-project-config-loader");
 jest.mock("../../../src/core/integration/angular-process-handler");
@@ -17,6 +18,7 @@ let karmaEventListener: jest.Mocked<KarmaEventListener>;
 let processHandler: jest.Mocked<AngularProcessHandler>;
 let angularProjectConfigLoader: jest.Mocked<AngularProjectConfigLoader>;
 let loggerMockedClass: jest.Mock<Logger>;
+let testExplorerConfiguration: TestExplorerConfiguration;
 
 beforeEach(() => {
   fileHelper = new (FileHelper as any)() as any;
@@ -24,6 +26,13 @@ beforeEach(() => {
   processHandler = new (AngularProcessHandler as any)() as any;
   angularProjectConfigLoader = new (AngularProjectConfigLoader as any)() as any;
   loggerMockedClass = <jest.Mock<Logger>>Logger;
+  testExplorerConfiguration = {
+    angularProjectPath: "",
+    defaultAngularProjectName: "",
+    defaultSocketConnectionPort: 2000,
+    userKarmaConfFilePath: "",
+    baseKarmaConfFilePath: "",
+  } as TestExplorerConfiguration;
 });
 
 test("start should effectively start a new angular process", async () => {
@@ -34,7 +43,7 @@ test("start should effectively start a new angular process", async () => {
   const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
 
   // Act
-  angularServer.start("", "", 2000, "", "");
+  angularServer.start(testExplorerConfiguration);
 
   // Assert
   expect(processHandler.create).toBeCalledTimes(1);

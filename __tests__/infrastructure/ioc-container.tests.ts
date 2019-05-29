@@ -8,7 +8,7 @@ test("registerTestExplorerDependencies should return a valid AngularKarmaTestExp
   const eventEmitter = {} as vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>;
 
   // Act
-  const angularKarmaTestExplorer = iocContainer.registerTestExplorerDependencies(eventEmitter, {} as vscode.OutputChannel, true, "");
+  const angularKarmaTestExplorer = iocContainer.registerTestExplorerDependencies(eventEmitter, {} as vscode.OutputChannel, true);
 
   // Assert
   expect(angularKarmaTestExplorer).not.toBeUndefined();

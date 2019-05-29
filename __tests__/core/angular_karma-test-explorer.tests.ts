@@ -1,3 +1,4 @@
+import { TestExplorerConfiguration } from "./../../src/model/test-explorer-configuration";
 import { AngularKarmaTestExplorer } from "../../src/core/angular-karma-test-explorer";
 import { TestExplorerHelper } from "../../src/core/test-explorer/test-explorer-helper";
 import { KarmaEventListener } from "../../src/core/integration/karma-event-listener";
@@ -18,6 +19,7 @@ let karmaHelper: jest.Mocked<KarmaHelper>;
 let angularServer: jest.Mocked<AngularServer>;
 let karmaEventListener: jest.Mocked<KarmaEventListener>;
 let logger: jest.Mocked<Logger>;
+let testExplorerConfiguration: TestExplorerConfiguration;
 
 beforeEach(() => {
   karmaRunner = new (KarmaRunner as any)() as any;
@@ -25,6 +27,12 @@ beforeEach(() => {
   karmaHelper = new (KarmaHelper as any)() as any;
   angularServer = new (AngularServer as any)() as any;
   logger = new (Logger as any)() as any;
+  testExplorerConfiguration = {
+    angularProjectPath: "",
+    defaultAngularProjectName: "",
+    defaultSocketConnectionPort: 2000,
+    userKarmaConfFilePath: "",
+  } as TestExplorerConfiguration;
 });
 
 test("loadTests should return a valid set of tests if its the first run", async () => {
@@ -39,12 +47,11 @@ test("loadTests should return a valid set of tests if its the first run", async 
     logger,
     angularServer,
     new TestExplorerHelper(),
-    karmaEventListener,
-    ""
+    karmaEventListener
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -65,12 +72,11 @@ test("loadTests should return a valid set of tests if its the reload run", async
     logger,
     angularServer,
     new TestExplorerHelper(),
-    karmaEventListener,
-    ""
+    karmaEventListener
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -88,12 +94,11 @@ test("loadTests should return an empty test suite if its not a karma based proje
     logger,
     angularServer,
     new TestExplorerHelper(),
-    karmaEventListener,
-    ""
+    karmaEventListener
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
 
   // Assert
   expect(loadedTests.label).not.toBeDefined();
@@ -112,8 +117,7 @@ test("runTests should be called only once with the correct sent tests name", asy
     logger,
     angularServer,
     new TestExplorerHelper(),
-    karmaEventListener,
-    ""
+    karmaEventListener
   );
   const fakeTests = ["fakeTests"];
 
@@ -133,8 +137,7 @@ test("debug tests should throw not implemented exception", async () => {
     logger,
     angularServer,
     new TestExplorerHelper(),
-    karmaEventListener,
-    ""
+    karmaEventListener
   );
   const fakeTests = ["fakeTests"];
 
