@@ -3,7 +3,6 @@ import { AngularProcessHandler } from "../integration/angular-process-handler";
 import { Logger } from "../shared/logger";
 import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../integration/karma-event-listener";
-import { AngularProject } from "../../model/angular-project";
 import { window } from "vscode";
 import { AngularProjectConfigLoader } from "./angular-project-config-loader";
 
@@ -34,40 +33,58 @@ export class AngularServer {
     defaultProjectName: string,
     _baseKarmaConfigFilePath: string,
     defaultSocketPort: number,
-    workspaceRootPath: string
+    workspaceRootPath: string,
+    userKarmaConfFilePath: string
   ): Promise<void> {
-    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(workspaceRootPath, defaultProjectName);
+    let options = {};
+    let cliCommand = "";
+    let cliArgs = [] as any[];
     const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
-    const options = this.createProcessOptions(project, defaultSocketPort);
 
-    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath, workspaceRootPath);
+    if (!userKarmaConfFilePath) {
+      const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(workspaceRootPath, defaultProjectName);
 
-    this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
+      options = this.createProcessOptions(project.rootPath, project.karmaConfPath, defaultSocketPort);
+  
+      const commandAndArguments = this.createAngularCommandAndArguments(project.name, baseKarmaConfigFilePath, workspaceRootPath);
+      cliCommand = commandAndArguments.cliCommand;
+      cliArgs = commandAndArguments.cliArgs;
+  
+      this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
+    } else {
+      options = this.createProcessOptions(workspaceRootPath, userKarmaConfFilePath, defaultSocketPort);
+
+      const commandAndArguments = this.createAngularCommandAndArguments("", baseKarmaConfigFilePath, workspaceRootPath);
+      cliCommand = commandAndArguments.cliCommand;
+      cliArgs = commandAndArguments.cliArgs;
+
+      this.logger.info(`Starting Angular test enviroment for non-cli project`);
+    }
 
     this.processHandler.create(cliCommand, cliArgs, options);
 
     await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
   }
 
-  private createProcessOptions(project: AngularProject, defaultSocketPort: number) {
+  private createProcessOptions(projectRootPath:string, userKarmaConfigPath: string, defaultSocketPort: number) {
     const testExplorerEnvironment = Object.create(process.env);
-    testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
+    testExplorerEnvironment.userKarmaConfigPath = userKarmaConfigPath;
     testExplorerEnvironment.defaultSocketPort = defaultSocketPort;
     const options = {
-      cwd: project.rootPath,
+      cwd: projectRootPath,
       shell: true,
       env: testExplorerEnvironment,
     } as SpawnOptions;
     return options;
   }
 
-  private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
+  private createAngularCommandAndArguments(projectName:string, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
     const isAngularInstalledLocally = this.fileHelper.doesFileExists(path.join(workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
-    const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
+    const commonArgs = ["test", projectName, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
     let cliCommand: string = "";
     let cliArgs: string[] = [];
 

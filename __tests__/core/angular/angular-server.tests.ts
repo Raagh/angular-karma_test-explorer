@@ -34,7 +34,7 @@ test("start should effectively start a new angular process", async () => {
   const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
 
   // Act
-  angularServer.start("", "", 2000, "");
+  angularServer.start("", "", 2000, "", "");
 
   // Assert
   expect(processHandler.create).toBeCalledTimes(1);

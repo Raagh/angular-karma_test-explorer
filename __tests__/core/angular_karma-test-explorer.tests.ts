@@ -44,7 +44,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -70,7 +70,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
 
   // Assert
   expect(loadedTests.label).toBeDefined();
@@ -93,7 +93,7 @@ test("loadTests should return an empty test suite if its not a karma based proje
   );
 
   // Act
-  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "");
+  const loadedTests = await angularKarmaTestExplorer.loadTests("test-project", 2000, "", "");
 
   // Assert
   expect(loadedTests.label).not.toBeDefined();
