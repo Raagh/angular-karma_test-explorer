@@ -6,6 +6,7 @@ import { FileHelper } from "../../../src/core/integration/file-helper";
 import { Logger } from "../../../src/core/shared/logger";
 import { AngularProject } from "../../../src/model/angular-project";
 import { TestExplorerConfiguration } from "../../../src/model/test-explorer-configuration";
+import { AngularProcessConfigurator } from "../../../src/core/angular/angular-process-configurator";
 
 jest.mock("../../../src/core/angular/angular-project-config-loader");
 jest.mock("../../../src/core/integration/angular-process-handler");
@@ -40,7 +41,13 @@ test("start should effectively start a new angular process", async () => {
   angularProjectConfigLoader.getDefaultAngularProjectConfig.mockReturnValue(new AngularProject("test-project", "", "", true));
   fileHelper.doesFileExists.mockReturnValue(true);
   processHandler.create.mockReturnValue({ stdout: { on() {} }, stderr: { on() {} }, on() {} });
-  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
+  const angularServer = new AngularServer(
+    karmaEventListener,
+    new loggerMockedClass(),
+    processHandler,
+    angularProjectConfigLoader,
+    new AngularProcessConfigurator(fileHelper)
+  );
 
   // Act
   angularServer.start(testExplorerConfiguration);
@@ -54,7 +61,13 @@ test("start should effectively start a new angular process", async () => {
 test("stop should effectively stop a the running angular process", async () => {
   // Arrange
   karmaEventListener.isServerLoaded = true;
-  const angularServer = new AngularServer(karmaEventListener, new loggerMockedClass(), processHandler, fileHelper, angularProjectConfigLoader);
+  const angularServer = new AngularServer(
+    karmaEventListener,
+    new loggerMockedClass(),
+    processHandler,
+    angularProjectConfigLoader,
+    new AngularProcessConfigurator(fileHelper)
+  );
 
   // Act
   angularServer.stop();

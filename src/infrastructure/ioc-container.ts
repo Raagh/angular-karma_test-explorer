@@ -12,6 +12,7 @@ import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } 
 import * as vscode from "vscode";
 import { EventEmitter } from "../core/shared/event-emitter";
 import { AngularProcessHandler } from "../core/integration/angular-process-handler";
+import { AngularProcessConfigurator } from "../core/angular/angular-process-configurator";
 export class IOCContainer {
   public constructor() {}
   public registerTestExplorerDependencies(
@@ -31,8 +32,8 @@ export class IOCContainer {
       karmaEventListener,
       logger,
       new AngularProcessHandler(logger, karmaEventListener),
-      fileHelper,
-      angularProjectConfigLoader
+      angularProjectConfigLoader,
+      new AngularProcessConfigurator(fileHelper)
     );
 
     return new AngularKarmaTestExplorer(karmaRunner, karmaHelper, logger, angularServer, testExplorerHelper, karmaEventListener);
