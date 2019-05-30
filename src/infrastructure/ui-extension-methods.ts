@@ -5,22 +5,26 @@ import { Adapter } from "../adapter";
 import { KarmaHelper } from "../core/karma/karma-helper";
 
 export class UIExtensionMethods {
-  public constructor(private readonly testExplorerAdapter: Adapter) {
+  public constructor() {}
+
+  public isKarmaBasedEnviroment(testExplorerAdapter: Adapter): boolean {
     const karmaHelper = new KarmaHelper();
     if (karmaHelper.isKarmaBasedProject(testExplorerAdapter.config.angularProjectPath)) {
       vscode.commands.executeCommand("setContext", "isAngularEnviroment", true);
+      return true;
     } else {
       vscode.commands.executeCommand("setContext", "isAngularEnviroment", false);
+      return false;
     }
   }
 
-  public async createSelectProjectQuickPick(): Promise<void> {
+  public async createSelectProjectQuickPick(testExplorerAdapter: Adapter): Promise<void> {
     const angularProjectConfigLoader = new AngularProjectConfigLoader(new FileHelper());
-    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(this.testExplorerAdapter.config.angularProjectPath);
+    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(testExplorerAdapter.config.angularProjectPath);
     const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
       placeHolder: "Select project",
     });
 
-    await this.testExplorerAdapter.load(selectedProject);
+    await testExplorerAdapter.load(selectedProject);
   }
 }

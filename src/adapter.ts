@@ -48,7 +48,6 @@ export class Adapter implements TestAdapter {
         ) {
           this.log.info("Sending reload event");
 
-          this.loadConfig();
           this.load();
         }
       })
@@ -62,6 +61,7 @@ export class Adapter implements TestAdapter {
   }
 
   public async load(angularProject?: string): Promise<void> {
+    this.loadConfig();
     this.log.info("Loading tests");
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);

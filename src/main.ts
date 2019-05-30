@@ -5,8 +5,7 @@ import { Adapter } from "./adapter";
 import { OUTPUT_CHANNEL } from "./core/shared/logger";
 import { UIExtensionMethods } from "./infrastructure/ui-extension-methods";
 
-let testExplorerAdapter: Adapter;
-
+let testExplorerAdapters: Adapter[] = [];
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
   const channel = vscode.window.createOutputChannel(OUTPUT_CHANNEL);
@@ -29,16 +28,32 @@ export async function activate(context: vscode.ExtensionContext) {
       context.subscriptions.push(vscode.commands.registerCommand(command, callback));
     };
 
-    testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
-    const uiExtensionMethods = new UIExtensionMethods(testExplorerAdapter);
-
-    registerCommand("angular-karma-test-explorer.select-project", async () => uiExtensionMethods.createSelectProjectQuickPick());
+    const uiExtensionMethods = new UIExtensionMethods();
 
     // this will register an AngularKarmaTestAdapter for each WorkspaceFolder
-    context.subscriptions.push(new TestAdapterRegistrar(testHub, workspaceFolder => testExplorerAdapter, log));
+    context.subscriptions.push(
+      new TestAdapterRegistrar(
+        testHub,
+        workspaceFolder => {
+          let testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
+          testExplorerAdapters.push(testExplorerAdapter);
+
+          if (uiExtensionMethods.isKarmaBasedEnviroment(testExplorerAdapter)) {
+            registerCommand("angular-karma-test-explorer.select-project", async () =>
+              uiExtensionMethods.createSelectProjectQuickPick(testExplorerAdapter)
+            );
+          }
+
+          return testExplorerAdapter;
+        },
+        log
+      )
+    );
   }
 }
 
 export async function deactivate() {
-  testExplorerAdapter.dispose();
+  for (const testExplorerAdapter of testExplorerAdapters) {
+    testExplorerAdapter.dispose();
+  }
 }

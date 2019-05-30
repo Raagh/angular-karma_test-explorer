@@ -2,7 +2,7 @@
 
 - Refactor configuration properties.
 - Added configuration properties for custom folder structure.
-- Added support for Non-CLI angular projects.
+- Added support for multi-root workspaces (only one folder of the workspace can be an angular app).
 
 ### Version 0.2.2
 
