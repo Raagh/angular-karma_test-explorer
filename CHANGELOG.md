@@ -1,3 +1,9 @@
+### Version 0.2.3
+
+- Refactor configuration properties.
+- Added configuration properties for custom folder structure.
+- Added support for Non-CLI angular projects.
+
 ### Version 0.2.2
 
 - Kill all karma processes before starting a new one.
