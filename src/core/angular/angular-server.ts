@@ -4,8 +4,9 @@ import { KarmaEventListener } from "../integration/karma-event-listener";
 import { AngularProjectConfigLoader } from "./angular-project-config-loader";
 import { TestExplorerConfiguration } from "../../model/test-explorer-configuration";
 import { AngularProcessConfigurator } from "../../../src/core/angular/angular-process-configurator";
+import { TestServer } from "../../model/test-server";
 
-export class AngularServer {
+export class AngularServer implements TestServer {
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,

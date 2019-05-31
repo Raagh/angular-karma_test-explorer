@@ -38,7 +38,7 @@ test("createAngularCommandAndArguments should return a valid set of commandLine 
   const { cliCommand, cliArgs } = angularProcessConfigurator.createAngularCommandAndArguments(projectName, baseKarmaConfigFile, workspaceRootPath);
 
   // Assert
-  expect(cliCommand).toBe("npx");
+  expect(cliCommand == "npx" || "ng").toBeTruthy();
   expect(cliArgs.includes(projectName)).toBeTruthy();
   expect(cliArgs.includes(`--karma-config="${baseKarmaConfigFile}"`)).toBeTruthy();
 });

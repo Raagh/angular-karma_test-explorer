@@ -2,14 +2,14 @@ import { AngularProjectConfigLoader } from "../core/angular/angular-project-conf
 import { FileHelper } from "../core/integration/file-helper";
 import * as vscode from "vscode";
 import { Adapter } from "../adapter";
-import { KarmaHelper } from "../core/karma/karma-helper";
+import { TestServerValidation } from "../core/test-server/test-server-validation";
 
 export class UIExtensionMethods {
   public constructor() {}
 
   public isKarmaBasedEnviroment(testExplorerAdapter: Adapter): boolean {
-    const karmaHelper = new KarmaHelper();
-    if (karmaHelper.isKarmaBasedProject(testExplorerAdapter.config.angularProjectPath)) {
+    const karmaHelper = new TestServerValidation();
+    if (karmaHelper.isAngularCliProject(testExplorerAdapter.config.angularProjectPath)) {
       vscode.commands.executeCommand("setContext", "isAngularEnviroment", true);
       return true;
     } else {

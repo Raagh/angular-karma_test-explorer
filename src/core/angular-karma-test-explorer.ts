@@ -1,25 +1,25 @@
 import { KarmaRunner } from "./karma/karma-runner";
-import { KarmaHelper } from "./karma/karma-helper";
+import { TestServerValidation } from "./test-server/test-server-validation";
 import { KarmaEventListener } from "./integration/karma-event-listener";
 import { Logger } from "./shared/logger";
-import { AngularServer } from "./angular/angular-server";
 import { TestExplorerHelper } from "./test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestExplorerConfiguration } from "../model/test-explorer-configuration";
+import { TestServer } from "../model/test-server";
 
 export class AngularKarmaTestExplorer {
   public constructor(
     private readonly karmaRunner: KarmaRunner,
-    private readonly karmaHelper: KarmaHelper,
+    private readonly testServerValidation: TestServerValidation,
     private readonly logger: Logger,
 
-    private readonly angularServer: AngularServer,
+    private readonly angularServer: TestServer,
     private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener
   ) {}
 
   public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo> {
-    if (!this.karmaHelper.isKarmaBasedProject(config.angularProjectPath)) {
+    if (!this.testServerValidation.isAngularCliProject(config.angularProjectPath)) {
       return {} as TestSuiteInfo;
     }
 
