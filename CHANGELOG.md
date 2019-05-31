@@ -1,3 +1,8 @@
+### Version 0.3.0
+
+- Added support for standalone karma.
+- Added support for Non CLI angular projects.
+
 ### Version 0.2.3
 
 - Refactor configuration properties.
