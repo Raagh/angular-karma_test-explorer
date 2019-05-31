@@ -12,6 +12,7 @@ import {
 import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
 import { TestExplorerConfiguration } from "./model/test-explorer-configuration";
+import { ProjectType } from "./model/project-type.enum";
 
 export class Adapter implements TestAdapter {
   public config: TestExplorerConfiguration = {} as TestExplorerConfiguration;
@@ -31,7 +32,7 @@ export class Adapter implements TestAdapter {
     return this.autorunEmitter.event;
   }
 
-  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
+  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel, projectType: ProjectType) {
     this.log.info("Initializing adapter");
     this.disposables.push(this.testsEmitter);
     this.disposables.push(this.testStatesEmitter);
@@ -55,9 +56,12 @@ export class Adapter implements TestAdapter {
 
     this.loadConfig();
     const container = new IOCContainer();
-    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, channel, vscode.workspace
-      .getConfiguration("angularKarmaTestExplorer", workspace.uri)
-      .get("debugMode") as boolean);
+    this.testExplorer = container.registerTestExplorerDependencies(
+      this.testStatesEmitter,
+      channel,
+      vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspace.uri).get("debugMode") as boolean,
+      projectType
+    );
   }
 
   public async load(angularProject?: string): Promise<void> {

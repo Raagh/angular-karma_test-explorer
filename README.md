@@ -50,6 +50,7 @@ List of currently used properties:
 | `angularKarmaTestExplorer.debugMode`                   | This will enable debug mode, which will create a new output channel with detailed logs                          |
 | `angularKarmaTestExplorer.angularProjectRootPath`      | The working directory where the angular project is located (relative to the workspace folder)                   |
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                            |
+| `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI         |
 
 ## Disclaimer
 

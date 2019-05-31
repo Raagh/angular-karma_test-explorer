@@ -113,6 +113,12 @@
           "type": "boolean",
           "scope": "resource",
           "default": true
+        },
+        "angularKarmaTestExplorer.projectType": {
+          "description": "Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI",
+          "type": "string",
+          "scope": "resource",
+          "default": "AngularCLI"
         }
       }
     },

@@ -3,13 +3,17 @@ import { FileHelper } from "../core/integration/file-helper";
 import * as vscode from "vscode";
 import { Adapter } from "../adapter";
 import { TestServerValidation } from "../core/test-server/test-server-validation";
+import { ProjectType } from "../model/project-type.enum";
 
 export class UIExtensionMethods {
   public constructor() {}
 
-  public isKarmaBasedEnviroment(testExplorerAdapter: Adapter): boolean {
+  public isAngularCLIProject(testExplorerAdapter: Adapter, projectType: ProjectType): boolean {
     const karmaHelper = new TestServerValidation();
-    if (karmaHelper.isAngularCliProject(testExplorerAdapter.config.angularProjectPath)) {
+    const isAngularCLIProject =
+      karmaHelper.isAngularCliProject(testExplorerAdapter.config.angularProjectPath) && projectType == ProjectType.AngularCLI;
+
+    if (isAngularCLIProject) {
       vscode.commands.executeCommand("setContext", "isAngularEnviroment", true);
       return true;
     } else {

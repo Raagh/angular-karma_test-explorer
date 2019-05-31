@@ -4,6 +4,7 @@ import { Log, TestAdapterRegistrar } from "vscode-test-adapter-util";
 import { Adapter } from "./adapter";
 import { OUTPUT_CHANNEL } from "./core/shared/logger";
 import { UIExtensionMethods } from "./infrastructure/ui-extension-methods";
+import { ProjectType } from "./model/project-type.enum";
 
 let testExplorerAdapters: Adapter[] = [];
 export async function activate(context: vscode.ExtensionContext) {
@@ -35,10 +36,12 @@ export async function activate(context: vscode.ExtensionContext) {
       new TestAdapterRegistrar(
         testHub,
         workspaceFolder => {
-          let testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
+          const projectType = vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspaceFolder.uri).get("projectType") as ProjectType;
+
+          let testExplorerAdapter = new Adapter(workspaceFolder, log, channel, projectType);
           testExplorerAdapters.push(testExplorerAdapter);
 
-          if (uiExtensionMethods.isKarmaBasedEnviroment(testExplorerAdapter)) {
+          if (uiExtensionMethods.isAngularCLIProject(testExplorerAdapter, projectType)) {
             registerCommand("angular-karma-test-explorer.select-project", async () =>
               uiExtensionMethods.createSelectProjectQuickPick(testExplorerAdapter)
             );
