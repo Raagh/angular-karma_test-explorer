@@ -13,23 +13,23 @@ export class AngularKarmaTestExplorer {
     private readonly testServerValidation: TestServerValidation,
     private readonly logger: Logger,
 
-    private readonly angularServer: TestServer,
+    private readonly testServer: TestServer,
     private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener
   ) {}
 
   public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo> {
-    if (!this.testServerValidation.isAngularCliProject(config.angularProjectPath)) {
+    if (this.testServerValidation.isAngularCliProject(config.angularProjectPath)) {
       return {} as TestSuiteInfo;
     }
 
     if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stopAsync();
+      await this.testServer.stopAsync();
     }
 
     this.logger.info("Test Loading started...");
 
-    await this.angularServer.start(config);
+    await this.testServer.start(config);
 
     const testSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
     testSuiteInfo.children = await this.karmaRunner.loadTests();
@@ -55,7 +55,7 @@ export class AngularKarmaTestExplorer {
 
   public dispose(): void {
     if (this.karmaRunner.isKarmaRunning()) {
-      this.angularServer.stop();
+      this.testServer.stop();
     }
   }
 }

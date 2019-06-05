@@ -26,9 +26,9 @@ export class TestServerFactory {
           new AngularProcessConfigurator(this.fileHelper)
         );
       case ProjectType.Karma:
-        return new KarmaServer(this.karmaEventListener, this.logger);
+        return new KarmaServer(this.karmaEventListener, this.logger, new AngularProcessHandler(this.logger, this.karmaEventListener));
       case ProjectType.Angular:
-        return new KarmaServer(this.karmaEventListener, this.logger);
+        return new KarmaServer(this.karmaEventListener, this.logger, new AngularProcessHandler(this.logger, this.karmaEventListener));
       default:
         return new AngularServer(
           this.karmaEventListener,
