@@ -9,9 +9,8 @@ export class UIExtensionMethods {
   public constructor() {}
 
   public isAngularCLIProject(testExplorerAdapter: Adapter, projectType: ProjectType): boolean {
-    const karmaHelper = new TestServerValidation();
-    const isAngularCLIProject =
-      karmaHelper.isAngularCliProject(testExplorerAdapter.config.angularProjectPath) && projectType == ProjectType.AngularCLI;
+    const testServerValidation = new TestServerValidation();
+    const isAngularCLIProject = testServerValidation.isAngularCLIProject(testExplorerAdapter.config.projectRootPath, projectType);
 
     if (isAngularCLIProject) {
       vscode.commands.executeCommand("setContext", "isAngularEnviroment", true);
@@ -24,7 +23,7 @@ export class UIExtensionMethods {
 
   public async createSelectProjectQuickPick(testExplorerAdapter: Adapter): Promise<void> {
     const angularProjectConfigLoader = new AngularProjectConfigLoader(new FileHelper());
-    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(testExplorerAdapter.config.angularProjectPath);
+    const loadedProjects = angularProjectConfigLoader.getAllAngularProjectsConfig(testExplorerAdapter.config.projectRootPath);
     const selectedProject = await vscode.window.showQuickPick(loadedProjects.map(x => x.name), {
       placeHolder: "Select project",
     });

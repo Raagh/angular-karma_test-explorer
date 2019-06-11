@@ -1,8 +1,8 @@
-import { KarmaEventListener } from "../integration/karma-event-listener";
+import { KarmaEventListener } from "./karma-event-listener";
 import { SpawnOptions } from "child_process";
 import { Logger } from "../shared/logger";
 const spawn = require("cross-spawn");
-export class AngularProcessHandler {
+export class CommandlineProcessHandler {
   private angularProcess: any;
   public constructor(private readonly logger: Logger, private readonly karmaEventListener: KarmaEventListener) {}
 

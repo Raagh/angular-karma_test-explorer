@@ -14,7 +14,7 @@ test("isAngularCliProject should return true if angular.json is present", () => 
     .mockReturnValue(true);
 
   // Act
-  const result = testServerValidation.isAngularCliProject("");
+  const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
 
   // Assert
   expect(result).toBeTruthy();
@@ -29,7 +29,7 @@ test("isAngularCliProject should return true if .angular-cli.json is present", (
     .mockReturnValue(true);
 
   // Act
-  const result = testServerValidation.isAngularCliProject("");
+  const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
 
   // Assert
   expect(result).toBeTruthy();
@@ -41,7 +41,7 @@ test("isAngularCliProject should return false if no angular json file is present
   fs.existsSync.mockReturnValue(false);
 
   // Act
-  const result = testServerValidation.isAngularCliProject("");
+  const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
 
   // Assert
   expect(result).toBeFalsy();

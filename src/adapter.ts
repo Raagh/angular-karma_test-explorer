@@ -44,7 +44,7 @@ export class Adapter implements TestAdapter {
         if (
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProjectRootPath", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.projectRootPath", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri)
         ) {
           this.log.info("Sending reload event");

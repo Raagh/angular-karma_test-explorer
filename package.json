@@ -89,15 +89,16 @@
       "type": "object",
       "title": "Angular/Karma Test Explorer configuration",
       "properties": {
-        "angularKarmaTestExplorer.angularProjectRootPath": {
+        "angularKarmaTestExplorer.projectRootPath": {
           "description": "The working directory where the angular project is located (relative to the workspace folder)",
           "type": "string",
           "scope": "resource"
         },
         "angularKarmaTestExplorer.karmaConfFilePath": {
-          "description": "The path where the karma.conf.js is located (relative to the angular project folder)",
+          "description": "The path where the karma.conf.js is located (relative to the project folder)",
           "type": "string",
-          "scope": "resource"
+          "scope": "resource",
+          "default": "karma.conf.js"
         },
         "angularKarmaTestExplorer.defaultAngularProjectName": {
           "description": "Set the default angular project to be tested, if this is is null default project in angular.json will be loaded",

@@ -5,9 +5,10 @@ import { AngularServer } from "./../angular/angular-server";
 import { TestServer } from "../../model/test-server";
 import { ProjectType } from "../../model/project-type.enum";
 import { Logger } from "../shared/logger";
-import { AngularProcessHandler } from "../integration/angular-process-handler";
+import { CommandlineProcessHandler } from "../integration/commandline-process-handler";
 import { AngularProjectConfigLoader } from "../angular/angular-project-config-loader";
 import { AngularProcessConfigurator } from "../angular/angular-process-configurator";
+import { KarmaProcessConfigurator } from "../karma/karma-process-configurator";
 
 export class TestServerFactory {
   public constructor(
@@ -21,19 +22,29 @@ export class TestServerFactory {
         return new AngularServer(
           this.karmaEventListener,
           this.logger,
-          new AngularProcessHandler(this.logger, this.karmaEventListener),
+          new CommandlineProcessHandler(this.logger, this.karmaEventListener),
           new AngularProjectConfigLoader(this.fileHelper),
           new AngularProcessConfigurator(this.fileHelper)
         );
       case ProjectType.Karma:
-        return new KarmaServer(this.karmaEventListener, this.logger, new AngularProcessHandler(this.logger, this.karmaEventListener));
+        return new KarmaServer(
+          this.karmaEventListener,
+          this.logger,
+          new CommandlineProcessHandler(this.logger, this.karmaEventListener),
+          new KarmaProcessConfigurator()
+        );
       case ProjectType.Angular:
-        return new KarmaServer(this.karmaEventListener, this.logger, new AngularProcessHandler(this.logger, this.karmaEventListener));
+        return new KarmaServer(
+          this.karmaEventListener,
+          this.logger,
+          new CommandlineProcessHandler(this.logger, this.karmaEventListener),
+          new KarmaProcessConfigurator()
+        );
       default:
         return new AngularServer(
           this.karmaEventListener,
           this.logger,
-          new AngularProcessHandler(this.logger, this.karmaEventListener),
+          new CommandlineProcessHandler(this.logger, this.karmaEventListener),
           new AngularProjectConfigLoader(this.fileHelper),
           new AngularProcessConfigurator(this.fileHelper)
         );

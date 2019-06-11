@@ -35,7 +35,7 @@ test("createAngularCommandAndArguments should return a valid set of commandLine 
   const workspaceRootPath = "workspaceRootPath";
 
   // Act
-  const { cliCommand, cliArgs } = angularProcessConfigurator.createAngularCommandAndArguments(projectName, baseKarmaConfigFile, workspaceRootPath);
+  const { cliCommand, cliArgs } = angularProcessConfigurator.createProcessCommandAndArguments(projectName, baseKarmaConfigFile, workspaceRootPath);
 
   // Assert
   expect(cliCommand == "npx" || "ng").toBeTruthy();

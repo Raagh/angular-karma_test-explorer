@@ -17,7 +17,7 @@ export class AngularProcessConfigurator {
     return options;
   }
 
-  public createAngularCommandAndArguments(projectName: string, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
+  public createProcessCommandAndArguments(projectName: string, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;

@@ -1,30 +1,27 @@
-import { AngularProcessHandler } from "./../integration/angular-process-handler";
+import { CommandlineProcessHandler } from "../integration/commandline-process-handler";
 import { TestServer } from "../../model/test-server";
 import { KarmaEventListener } from "../integration/karma-event-listener";
 import { Logger } from "../shared/logger";
 import { TestExplorerConfiguration } from "../../model/test-explorer-configuration";
-import { SpawnOptions } from "child_process";
+import { KarmaProcessConfigurator } from "../karma/karma-process-configurator";
 
 export class KarmaServer implements TestServer {
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,
-    private readonly processHandler: AngularProcessHandler
+    private readonly processHandler: CommandlineProcessHandler,
+    private readonly processConfigurator: KarmaProcessConfigurator
   ) {}
 
   public async start(config: TestExplorerConfiguration): Promise<void> {
     const baseKarmaConfigFilePath = require.resolve(config.baseKarmaConfFilePath);
 
-    const command = "npx";
-    const processArguments = ["karma", "start", baseKarmaConfigFilePath];
-    const testExplorerEnvironment = Object.create(process.env);
-    testExplorerEnvironment.userKarmaConfigPath = config.userKarmaConfFilePath;
-    testExplorerEnvironment.defaultSocketPort = config.defaultSocketConnectionPort;
-    const options = {
-      cwd: config.angularProjectPath,
-      shell: true,
-      env: testExplorerEnvironment,
-    } as SpawnOptions;
+    const { command, processArguments } = this.processConfigurator.createProcessCommandAndArguments(baseKarmaConfigFilePath);
+    const options = this.processConfigurator.createProcessOptions(
+      config.projectRootPath,
+      config.userKarmaConfFilePath,
+      config.defaultSocketConnectionPort
+    );
 
     this.processHandler.create(command, processArguments, options);
 

@@ -48,7 +48,7 @@ List of currently used properties:
 | `angularKarmaTestExplorer.defaultAngularProjectName`   | Set the default angular project to be tested, if this is is null default project in angular.json will be loaded |
 | `angularKarmaTestExplorer.defaultSocketConnectionPort` | This is the port that will be used to connect Karma with the test explorer                                      |
 | `angularKarmaTestExplorer.debugMode`                   | This will enable debug mode, which will create a new output channel with detailed logs                          |
-| `angularKarmaTestExplorer.angularProjectRootPath`      | The working directory where the angular project is located (relative to the workspace folder)                   |
+| `angularKarmaTestExplorer.projectRootPath`             | The working directory where the project is located (relative to the root folder)                                |
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                            |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI         |
 

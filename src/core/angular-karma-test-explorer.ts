@@ -19,7 +19,7 @@ export class AngularKarmaTestExplorer {
   ) {}
 
   public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo> {
-    if (this.testServerValidation.isAngularCliProject(config.angularProjectPath)) {
+    if (!this.testServerValidation.isValidProject(config.projectRootPath, config.projectType)) {
       return {} as TestSuiteInfo;
     }
 

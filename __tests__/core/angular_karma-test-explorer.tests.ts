@@ -37,7 +37,7 @@ beforeEach(() => {
 
 test("loadTests should return a valid set of tests if its the first run", async () => {
   // Arrange
-  testServerValidation.isAngularCliProject.mockReturnValue(true);
+  testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(false);
   angularServer.start.mockResolvedValue();
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
@@ -62,7 +62,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
 
 test("loadTests should return a valid set of tests if its the reload run", async () => {
   // Arrange
-  testServerValidation.isAngularCliProject.mockReturnValue(true);
+  testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(true);
   angularServer.start.mockResolvedValue();
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
@@ -87,7 +87,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
 
 test("loadTests should return an empty test suite if its not a karma based project", async () => {
   // Arrange
-  testServerValidation.isAngularCliProject.mockReturnValue(false);
+  testServerValidation.isValidProject.mockReturnValue(false);
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
     karmaRunner,
     testServerValidation,
