@@ -30,8 +30,8 @@ jobs:
           command: custom
           verbose: false
           customCommand: "run package"
-      - task: PublishPipelineArtifact@0
-        displayName: "Publish Artifact"
+      - task: PublishBuildArtifacts@1
         inputs:
-          artifactName: "VSIX Installer"
-          targetPath: "build"
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
