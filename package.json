@@ -90,7 +90,7 @@
       "title": "Angular/Karma Test Explorer configuration",
       "properties": {
         "angularKarmaTestExplorer.projectRootPath": {
-          "description": "The working directory where the angular project is located (relative to the workspace folder)",
+          "description": "The working directory where the angular project is located (relative to the root folder)",
           "type": "string",
           "scope": "resource"
         },

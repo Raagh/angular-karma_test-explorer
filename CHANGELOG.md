@@ -2,6 +2,7 @@
 
 - Added support for standalone karma.
 - Added support for Non CLI angular projects.
+- Integrated CI/CD azure pipeline for all future builds.
 
 ### Version 0.2.3
 
