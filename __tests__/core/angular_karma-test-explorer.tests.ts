@@ -28,7 +28,7 @@ beforeEach(() => {
   angularServer = new (AngularServer as any)() as any;
   logger = new (Logger as any)() as any;
   testExplorerConfiguration = {
-    angularProjectPath: "",
+    projectRootPath: "",
     defaultAngularProjectName: "",
     defaultSocketConnectionPort: 2000,
     userKarmaConfFilePath: "",

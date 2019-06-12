@@ -23,7 +23,7 @@ beforeEach(() => {
   loggerMockedClass = <jest.Mock<Logger>>Logger;
   processHandler = new (CommandlineProcessHandler as any)() as any;
   testExplorerConfiguration = {
-    angularProjectPath: "",
+    projectRootPath: "",
     defaultAngularProjectName: "",
     defaultSocketConnectionPort: 2000,
     userKarmaConfFilePath: "",

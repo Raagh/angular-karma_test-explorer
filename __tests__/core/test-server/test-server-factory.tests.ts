@@ -1,6 +1,6 @@
-import { KarmaServer } from "./../../../src/core/karma/karma-server";
-import { ProjectType } from "./../../../src/model/project-type.enum";
-import { AngularServer } from "./../../../src/core/angular/angular-server";
+import { KarmaServer } from "../../../src/core/karma/karma-server";
+import { ProjectType } from "../../../src/model/project-type.enum";
+import { AngularServer } from "../../../src/core/angular/angular-server";
 import { TestServerFactory } from "../../../src/core/test-server/test-server-factory";
 import { KarmaEventListener } from "../../../src/core/integration/karma-event-listener";
 import { FileHelper } from "../../../src/core/integration/file-helper";
