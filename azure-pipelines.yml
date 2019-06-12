@@ -1,0 +1,37 @@
+jobs:
+  - job: Windows
+    pool:
+      name: Hosted VS2017
+      demands: npm
+    steps:
+      - task: NodeTool@0
+        displayName: "Use Node 8.x"
+        inputs:
+          versionSpec: 8.x
+      - task: Npm@1
+        displayName: "Install dependencies"
+        inputs:
+          verbose: false
+      - task: Npm@1
+        displayName: "Run tests"
+        inputs:
+          command: custom
+          verbose: false
+          customCommand: "run test"
+      - task: Npm@1
+        displayName: "Compile sources"
+        inputs:
+          command: custom
+          verbose: false
+          customCommand: "run rebuild"
+      - task: Npm@1
+        displayName: "Package sources"
+        inputs:
+          command: custom
+          verbose: false
+          customCommand: "run package"
+      - task: PublishPipelineArtifact@0
+        displayName: "Publish Artifact"
+        inputs:
+          artifactName: "VSIX Installer"
+          targetPath: "build"
