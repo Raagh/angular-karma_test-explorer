@@ -1,0 +1,40 @@
+pool:
+  name: Hosted VS2017
+  demands: npm
+
+steps:
+  - task: Npm@1
+    displayName: "npm install"
+    inputs:
+      verbose: false
+
+  - task: Npm@1
+    displayName: rebuild
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: "run rebuild"
+
+  - task: Npm@1
+    displayName: "run tests"
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: "run test"
+
+  - task: Npm@1
+    displayName: package
+    inputs:
+      command: custom
+      verbose: false
+      customCommand: "run package"
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: D:\a\1\a'
+    inputs:
+      SourceFolder: 'D:\a\1\s'
+      Contents: "*.vsix"
+      TargetFolder: 'D:\a\1\a'
+
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Artifact: drop"
