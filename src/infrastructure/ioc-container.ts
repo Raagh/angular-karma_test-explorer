@@ -21,9 +21,9 @@ export class IOCContainer {
     projectType: ProjectType
   ): AngularKarmaTestExplorer {
     // poor man's dependency injection
-    const karmaHelper = new TestServerValidation();
     const fileHelper = new FileHelper();
     const testExplorerHelper = new TestExplorerHelper();
+    const karmaHelper = new TestServerValidation(fileHelper);
     const logger = new Logger(channel, isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
     const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpClient());

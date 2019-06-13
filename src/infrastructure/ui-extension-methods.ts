@@ -9,7 +9,7 @@ export class UIExtensionMethods {
   public constructor() {}
 
   public isAngularCLIProject(testExplorerAdapter: Adapter, projectType: ProjectType): boolean {
-    const testServerValidation = new TestServerValidation();
+    const testServerValidation = new TestServerValidation(new FileHelper());
     const isAngularCLIProject = testServerValidation.isAngularCLIProject(testExplorerAdapter.config.projectRootPath, projectType);
 
     if (isAngularCLIProject) {

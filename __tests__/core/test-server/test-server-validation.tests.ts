@@ -1,17 +1,18 @@
-const fs = require("fs");
-import path = require("path");
-import { when } from "jest-when";
 import { TestServerValidation } from "../../../src/core/test-server/test-server-validation";
+import { FileHelper } from "../../../src/core/integration/file-helper";
 
-jest.mock("fs");
+jest.mock("../../../src/core/integration/file-helper");
+
+let fileHelper: jest.Mocked<FileHelper>;
+
+beforeEach(() => {
+  fileHelper = new (FileHelper as any)() as any;
+});
 
 test("isAngularCliProject should return true if angular.json is present", () => {
   // Arrange
-  const pathJson = path.join("", "angular.json");
-  const testServerValidation = new TestServerValidation();
-  when(fs.existsSync)
-    .calledWith(pathJson)
-    .mockReturnValue(true);
+  fileHelper.doesFileExists.mockReturnValue(true);
+  const testServerValidation = new TestServerValidation(fileHelper);
 
   // Act
   const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
@@ -22,11 +23,9 @@ test("isAngularCliProject should return true if angular.json is present", () => 
 
 test("isAngularCliProject should return true if .angular-cli.json is present", () => {
   // Arrange
-  const pathCliJson = path.join("", ".angular-cli.json");
-  const testServerValidation = new TestServerValidation();
-  when(fs.existsSync)
-    .calledWith(pathCliJson)
-    .mockReturnValue(true);
+  fileHelper.doesFileExists.mockReturnValueOnce(false);
+  fileHelper.doesFileExists.mockReturnValueOnce(true);
+  const testServerValidation = new TestServerValidation(fileHelper);
 
   // Act
   const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
@@ -37,8 +36,7 @@ test("isAngularCliProject should return true if .angular-cli.json is present", (
 
 test("isAngularCliProject should return false if no angular json file is present", () => {
   // Arrange
-  const testServerValidation = new TestServerValidation();
-  fs.existsSync.mockReturnValue(false);
+  const testServerValidation = new TestServerValidation(fileHelper);
 
   // Act
   const result = testServerValidation.isAngularCLIProject("", "AngularCLI");
