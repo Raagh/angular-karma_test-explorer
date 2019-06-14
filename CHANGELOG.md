@@ -1,3 +1,7 @@
+### Version 0.3.1
+
+- Fix Azure pipeline package problem on windows hosted system.
+  
 ### Version 0.3.0
 
 - Added support for standalone karma.
