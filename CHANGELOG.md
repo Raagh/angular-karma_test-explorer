@@ -1,3 +1,7 @@
+### Version 0.3.2
+
+- Manual release till azure pipeline publish is verified.
+
 ### Version 0.3.1
 
 - Fix Azure pipeline package problem on windows hosted system.
