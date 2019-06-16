@@ -2,7 +2,6 @@ import { TestResult } from "../../model/test-status.enum";
 import { RunStatus } from "../../model/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import { PathFinder } from "../shared/path-finder";
-import { FileHelper } from "../integration/file-helper";
 import * as io from "socket.io-client";
 import * as karma from "karma";
 import path = require("path");
@@ -18,7 +17,7 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
   const ENCODING = "utf-8";
 
   global.console.log("reached this!");
-  const pathFinder = new PathFinder(new FileHelper());
+  const pathFinder = new PathFinder();
 
   const pattern = path.join(BASE_PATH, FILE_PATTERN);
 

@@ -1,35 +1,37 @@
-import { FileHelper } from "../integration/file-helper";
+const fs = require("fs");
 const glob = require("glob");
 
 export class PathFinder {
-  public constructor(private readonly fileHelper: FileHelper) {}
-  public parseTestFiles(pattern: any, encoding: any) {
-    var paths = {};
-    glob.sync(pattern).find((path: any, index: number, array: any) => {
+  public parseTestFiles(pattern: string, encoding: string) {
+    const paths = {};
+    const results = glob.sync(pattern);
+    results.find((path: any, index: any, array: any) => {
       this.parseTestFile(paths, path, this.testFileData(path, encoding));
     });
+
     return paths;
   }
 
   public testFile(paths: any, describe: any, it: any) {
-    var testFile = Object.keys(paths).find(path => this.exist(paths, path, describe, it));
+    const testFile = Object.keys(paths).find(path => this.exist(paths, path, describe, it));
     if (testFile === undefined) {
-      global.console.log("Test file path not found! %s | %s | %s", JSON.stringify(paths), describe, it);
+      global.console.log("Test file path not found!" + JSON.stringify(paths) + "|" + describe + "|" + it);
     }
     return testFile;
   }
 
   private testFileData(path: any, encoding: any) {
-    return this.removeNewLines(this.removeComments(this.fileHelper.readFile(path, encoding)));
+    return this.removeNewLines(this.removeComments(fs.readFileSync(path, encoding)));
   }
 
   private parseTestFile(paths: any, path: any, data: any) {
-    var result,
-      regex = this.regexPattern();
-    while ((result = regex.exec(data)) != null) {
-      var type = result[2] || result[3];
-      var text = result[5];
-      if (paths[path] == undefined) {
+    let result: any;
+    const regex = this.regexPattern();
+    while (result != null) {
+      result = regex.exec(data);
+      const type = result[2] || result[3];
+      const text = result[5];
+      if (paths[path] === undefined) {
         paths[path] = { describe: [], it: [] };
       }
       if (type === "describe") {
@@ -46,19 +48,19 @@ export class PathFinder {
   }
 
   private existDescribe(paths: any, path: any, describe: any) {
-    return paths[path].describe.find((element: any) => describe.startsWith(element) || this.escapeQuotes(describe).startsWith(element)) !== undefined;
+    return paths[path].describe.find((element: any) => describe.startsWith(this.removeEscapedQuotes(element)));
   }
 
   private existIt(paths: any, path: any, it: any) {
-    return paths[path].it.find((element: any) => it.startsWith(element) || this.escapeQuotes(it).startsWith(element)) !== undefined;
+    return paths[path].it.find((element: any) => it.startsWith(this.removeEscapedQuotes(element)));
   }
 
-  private regexPattern(): RegExp {
-    return new RegExp("/((describe)|(it))s*(s*((?<![\\])[`'\"])((?:.(?!(?<![\\])\4))*.?)\4/gi");
+  private regexPattern() {
+    return /((describe)|(it))\s*\(\s*((?<![\\])[\`\'\"])((?:.(?!(?<![\\])\4))*.?)\4/gi;
   }
 
-  private escapeQuotes(str: any) {
-    return str.replace(/\\([\s\S])|("|')/g, "\\$1$2");
+  private removeEscapedQuotes(str: any) {
+    return str.replace(/(?:\\|\\\\)((")|(')|(`))/g, "$1");
   }
 
   private removeComments(data: any) {

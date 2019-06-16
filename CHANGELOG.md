@@ -1,3 +1,9 @@
+### Version 0.4.0
+
+- Add file gutter decorations.
+- Add view source feature.
+- Better errors in output channel.
+
 ### Version 0.3.3
 
 - Trying single build/release azure pipeline for correct uploading.
