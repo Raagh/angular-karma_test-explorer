@@ -1,3 +1,7 @@
+### Version 0.3.3
+
+- Trying single build/release azure pipeline for correct uploading.
+
 ### Version 0.3.2
 
 - Manual release till azure pipeline publish is verified.
@@ -5,7 +9,7 @@
 ### Version 0.3.1
 
 - Fix Azure pipeline package problem on windows hosted system.
-  
+
 ### Version 0.3.0
 
 - Added support for standalone karma.
