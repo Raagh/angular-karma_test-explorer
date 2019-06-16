@@ -1,80 +1,49 @@
-import { FileHelper } from "../integration/file-helper";
-import { AngularProcessHandler } from "../integration/angular-process-handler";
+import { CommandlineProcessHandler } from "../integration/commandline-process-handler";
 import { Logger } from "../shared/logger";
-import { SpawnOptions } from "child_process";
 import { KarmaEventListener } from "../integration/karma-event-listener";
-import { AngularProject } from "../../model/angular-project";
-import { window } from "vscode";
 import { AngularProjectConfigLoader } from "./angular-project-config-loader";
+import { TestExplorerConfiguration } from "../../model/test-explorer-configuration";
+import { AngularProcessConfigurator } from "../../../src/core/angular/angular-process-configurator";
+import { TestServer } from "../../model/test-server";
 
-export class AngularServer {
+export class AngularServer implements TestServer {
   public constructor(
     private readonly karmaEventListener: KarmaEventListener,
     private readonly logger: Logger,
-    private readonly processHandler: AngularProcessHandler,
-    private readonly fileHelper: FileHelper,
+    private readonly processHandler: CommandlineProcessHandler,
     private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
-    private readonly workspaceRootPath: string
+    private readonly angularProcessConfigurator: AngularProcessConfigurator
   ) {}
 
-  public async stop(): Promise<void> {
-    if (this.karmaEventListener.isServerLoaded) {
+  public async stopAsync(): Promise<void> {
+    if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
+      this.karmaEventListener.stopListeningToKarma();
+      return await this.processHandler.killAsync();
+    }
+  }
+
+  public stop(): void {
+    if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
       this.karmaEventListener.stopListeningToKarma();
       this.processHandler.kill();
     }
-
-    return await this.processHandler.onExitEvent();
   }
 
-  public async start(defaultProjectName: string, _baseKarmaConfigFilePath: string, defaultSocketPort: number): Promise<void> {
-    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(defaultProjectName);
-    const baseKarmaConfigFilePath = require.resolve(_baseKarmaConfigFilePath);
-    const options = this.createProcessOptions(project);
+  public async start(config: TestExplorerConfiguration): Promise<void> {
+    const baseKarmaConfigFilePath = require.resolve(config.baseKarmaConfFilePath);
 
-    const { cliCommand, cliArgs } = this.createAngularCommandAndArguments(project, baseKarmaConfigFilePath);
+    const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(config.projectRootPath, config.defaultAngularProjectName);
+    const options = this.angularProcessConfigurator.createProcessOptions(project.rootPath, project.karmaConfPath, config.defaultSocketConnectionPort);
+    const { cliCommand, cliArgs } = this.angularProcessConfigurator.createProcessCommandAndArguments(
+      project.name,
+      baseKarmaConfigFilePath,
+      config.projectRootPath
+    );
 
     this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
 
     this.processHandler.create(cliCommand, cliArgs, options);
 
-    await this.karmaEventListener.listenTillKarmaReady(defaultSocketPort);
-  }
-
-  private createProcessOptions(project: AngularProject) {
-    const testExplorerEnvironment = Object.create(process.env);
-    testExplorerEnvironment.userKarmaConfigPath = project.karmaConfPath;
-    const options = {
-      cwd: project.rootPath,
-      shell: true,
-      env: testExplorerEnvironment,
-    } as SpawnOptions;
-    return options;
-  }
-
-  private createAngularCommandAndArguments(project: AngularProject, baseKarmaConfigFilePath: string) {
-    const path = require("path");
-    const resolveGlobal = require("resolve-global");
-    const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
-    const isAngularInstalledLocally = this.fileHelper.doesFileExists(
-      path.join(this.workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng")
-    );
-
-    const commonArgs = ["test", project.name, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
-    let cliCommand: string = "";
-    let cliArgs: string[] = [];
-
-    if (isAngularInstalledGlobally) {
-      cliArgs = commonArgs;
-      cliCommand = "ng";
-    } else if (isAngularInstalledLocally) {
-      cliArgs = ["ng", ...commonArgs];
-      cliCommand = "npx";
-    } else {
-      const error = "@angular/cli is not installed, install it and restart vscode";
-      window.showErrorMessage(error);
-      throw new Error(error);
-    }
-
-    return { cliCommand, cliArgs };
+    await this.karmaEventListener.listenTillKarmaReady(config.defaultSocketConnectionPort);
   }
 }

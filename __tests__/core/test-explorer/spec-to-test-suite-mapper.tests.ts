@@ -25,7 +25,6 @@ test("with correct grouped specs should return correctly mapped TestSuiteInfo", 
   // Act
   const result = mapper.map(savedSpecs);
 
-
   // Assert
   expect(result).toEqual(expectedTests.mock);
 });

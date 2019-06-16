@@ -1,3 +1,32 @@
+### Version 0.3.3
+
+- Trying single build/release azure pipeline for correct uploading.
+
+### Version 0.3.2
+
+- Manual release till azure pipeline publish is verified.
+
+### Version 0.3.1
+
+- Fix Azure pipeline package problem on windows hosted system.
+
+### Version 0.3.0
+
+- Added support for standalone karma.
+- Added support for Non CLI angular projects.
+- Integrated CI/CD azure pipeline for all future builds.
+
+### Version 0.2.3
+
+- Refactor configuration properties.
+- Added configuration properties for custom folder structure.
+- Added support for multi-root workspaces (only one folder of the workspace can be an angular app).
+
+### Version 0.2.2
+
+- Kill all karma processes before starting a new one.
+- Now users can config the root path of the Angular App relative to the workspace.
+
 ### Version 0.2.1
 
 - Added select project button in UI for multiple project apps.

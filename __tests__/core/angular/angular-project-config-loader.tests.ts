@@ -15,11 +15,11 @@ beforeAll(() => {
 
 test("loadTestsFromDefaultProject should throw an error if angular.json is not found", async () => {
   // Arrange
-  const angularProjectConfigLoader = new AngularProjectConfigLoader("", fileHelper);
+  const angularProjectConfigLoader = new AngularProjectConfigLoader(fileHelper);
 
   // Act
   try {
-    await angularProjectConfigLoader.getDefaultAngularProjectConfig();
+    await angularProjectConfigLoader.getDefaultAngularProjectConfig("");
   } catch (error) {
     // Assert
     expect(error.toString()).toBe("Error: No angular.json or angular-cli.json file found in root path.");
@@ -34,10 +34,10 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
     .calledWith(".angular-cli.json")
     .mockReturnValue(false);
   fileHelper.readJSONFile.mockReturnValue(angularJsonMock.mock);
-  const angularProjectConfigLoader = new AngularProjectConfigLoader("", fileHelper);
+  const angularProjectConfigLoader = new AngularProjectConfigLoader(fileHelper);
 
   // Act
-  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig();
+  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig("");
 
   // Assert
   verifyExpectedResults(result);
@@ -51,10 +51,10 @@ test("loadTestsFromDefaultProject return valid AngularProject from default proje
     .calledWith(".angular-cli.json")
     .mockReturnValue(true);
   fileHelper.readJSONFile.mockReturnValue(angularCliJsonMock.mock);
-  const angularProjectConfigLoader = new AngularProjectConfigLoader("", fileHelper);
+  const angularProjectConfigLoader = new AngularProjectConfigLoader(fileHelper);
 
   // Act
-  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig();
+  const result = await angularProjectConfigLoader.getDefaultAngularProjectConfig("");
 
   // Assert
   verifyExpectedResults(result);

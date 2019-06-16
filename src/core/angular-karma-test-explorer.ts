@@ -1,38 +1,37 @@
 import { KarmaRunner } from "./karma/karma-runner";
-import { KarmaHelper } from "./karma/karma-helper";
+import { TestServerValidation } from "./test-server/test-server-validation";
 import { KarmaEventListener } from "./integration/karma-event-listener";
 import { Logger } from "./shared/logger";
-import { AngularServer } from "./angular/angular-server";
 import { TestExplorerHelper } from "./test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
+import { TestExplorerConfiguration } from "../model/test-explorer-configuration";
+import { TestServer } from "../model/test-server";
 
 export class AngularKarmaTestExplorer {
   public constructor(
     private readonly karmaRunner: KarmaRunner,
-    private readonly karmaHelper: KarmaHelper,
+    private readonly testServerValidation: TestServerValidation,
     private readonly logger: Logger,
 
-    private readonly angularServer: AngularServer,
+    private readonly testServer: TestServer,
     private readonly testExplorerHelper: TestExplorerHelper,
-    private readonly karmaEventListener: KarmaEventListener,
-    private readonly workspaceRootPath: string,
-    private readonly baseKarmaConfigPath: string
+    private readonly karmaEventListener: KarmaEventListener
   ) {}
 
-  public async loadTests(defaultProjectName: string, defaultSocketPort: number): Promise<TestSuiteInfo> {
-    if (!this.karmaHelper.isKarmaBasedProject(this.workspaceRootPath)) {
+  public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo> {
+    if (!this.testServerValidation.isValidProject(config.projectRootPath, config.projectType)) {
       return {} as TestSuiteInfo;
     }
 
     if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stop();
+      await this.testServer.stopAsync();
     }
 
     this.logger.info("Test Loading started...");
 
-    await this.angularServer.start(defaultProjectName, this.baseKarmaConfigPath, defaultSocketPort);
+    await this.testServer.start(config);
 
-    const testSuiteInfo: TestSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
+    const testSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
     testSuiteInfo.children = await this.karmaRunner.loadTests();
 
     this.logger.info("Test Loading completed!");
@@ -54,9 +53,9 @@ export class AngularKarmaTestExplorer {
     throw new Error("Not Implemented");
   }
 
-  public async dispose(): Promise<void> {
+  public dispose(): void {
     if (this.karmaRunner.isKarmaRunning()) {
-      await this.angularServer.stop();
+      this.testServer.stop();
     }
   }
 }

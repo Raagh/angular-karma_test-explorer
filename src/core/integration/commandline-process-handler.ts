@@ -1,8 +1,8 @@
-import { KarmaEventListener } from "../integration/karma-event-listener";
+import { KarmaEventListener } from "./karma-event-listener";
 import { SpawnOptions } from "child_process";
 import { Logger } from "../shared/logger";
 const spawn = require("cross-spawn");
-export class AngularProcessHandler {
+export class CommandlineProcessHandler {
   private angularProcess: any;
   public constructor(private readonly logger: Logger, private readonly karmaEventListener: KarmaEventListener) {}
 
@@ -11,17 +11,23 @@ export class AngularProcessHandler {
     this.setupProcessOutputs();
   }
 
-  public kill() {
-    this.angularProcess.kill();
+  public isProcessRunning(): boolean {
+    return this.angularProcess != undefined;
   }
 
-  public onExitEvent(): Promise<void> {
+  public killAsync(): Promise<void> {
     return new Promise<void>(resolve => {
-      this.angularProcess.on("exit", (code: any, signal: any) => {
-        this.logger.info(`Angular exited with code ${code} and signal ${signal}`);
+      const kill = require("tree-kill");
+      kill(this.angularProcess.pid, "SIGTERM", () => {
+        this.logger.info(`Angular exited succesfully`);
         resolve();
       });
     });
+  }
+
+  public kill(): void {
+    const kill = require("tree-kill");
+    kill(this.angularProcess.pid, "SIGKILL");
   }
 
   private setupProcessOutputs() {
@@ -42,9 +48,9 @@ export class AngularProcessHandler {
     // Prevent karma server from being an orphan process.
     // For example, if VSCODE is killed using SIGKILL, karma server will still be alive.
     // When VSCODE is terminated, karma server's standard input is closed automatically.
-    process.stdin.on("close", () => {
+    process.stdin.on("close", async () => {
       // terminating orphan process
-      this.angularProcess.exit(123);
+      this.kill();
     });
   }
 }

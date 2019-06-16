@@ -11,17 +11,16 @@ import {
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
-import path = require("path");
+import { TestExplorerConfiguration } from "./model/test-explorer-configuration";
+import { ProjectType } from "./model/project-type.enum";
 
 export class Adapter implements TestAdapter {
+  public config: TestExplorerConfiguration = {} as TestExplorerConfiguration;
   private disposables: Array<{ dispose(): void }> = [];
-
   private readonly testsEmitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
-  private readonly config: vscode.WorkspaceConfiguration;
   private readonly testExplorer: AngularKarmaTestExplorer;
-  public readonly workspaceRootPath: string;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -33,17 +32,21 @@ export class Adapter implements TestAdapter {
     return this.autorunEmitter.event;
   }
 
-  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel) {
+  constructor(public readonly workspace: vscode.WorkspaceFolder, private readonly log: Log, channel: vscode.OutputChannel, projectType: ProjectType) {
     this.log.info("Initializing adapter");
-    this.config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
-
+    this.disposables.push(this.testsEmitter);
+    this.disposables.push(this.testStatesEmitter);
+    this.disposables.push(this.autorunEmitter);
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration(async configChange => {
         this.log.info("Configuration changed");
 
         if (
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultAngularProjectName", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri)
+          configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.projectRootPath", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.projectType", this.workspace.uri)
         ) {
           this.log.info("Sending reload event");
 
@@ -52,30 +55,27 @@ export class Adapter implements TestAdapter {
       })
     );
 
-    this.disposables.push(this.testsEmitter);
-    this.disposables.push(this.testStatesEmitter);
-    this.disposables.push(this.autorunEmitter);
-    this.workspaceRootPath = path.join(workspace.uri.path.replace(/^\/([a-z]):\//, "$1:/"));
+    this.loadConfig();
     const container = new IOCContainer();
     this.testExplorer = container.registerTestExplorerDependencies(
       this.testStatesEmitter,
       channel,
-      this.config.get("debugMode") as boolean,
-      this.workspaceRootPath,
-      path.join(__dirname, ".", "config", "test-explorer-karma.conf.js")
+      vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspace.uri).get("debugMode") as boolean,
+      projectType
     );
   }
 
   public async load(angularProject?: string): Promise<void> {
+    this.loadConfig();
     this.log.info("Loading tests");
 
     this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    if (angularProject === undefined) {
-      angularProject = this.config.get("defaultAngularProjectName") as string;
+    if (angularProject !== undefined) {
+      this.config.defaultAngularProjectName = angularProject;
     }
 
-    const loadedTests = await this.testExplorer.loadTests(angularProject, this.config.get("defaultSocketConnectionPort") as number);
+    const loadedTests = await this.testExplorer.loadTests(this.config);
 
     this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
@@ -103,11 +103,16 @@ export class Adapter implements TestAdapter {
   }
 
   public async dispose(): Promise<void> {
-    await this.testExplorer.dispose();
+    this.testExplorer.dispose();
 
     for (const disposable of this.disposables) {
       disposable.dispose();
     }
     this.disposables = [];
+  }
+
+  private loadConfig() {
+    const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
+    this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
   }
 }

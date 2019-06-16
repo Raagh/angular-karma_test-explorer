@@ -10,7 +10,8 @@ import path = require("path");
 function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
   this.emitter = emitter;
-  this.socket = io("http://localhost:9999/", { forceNew: true });
+  const defaultSocketPort = process.env.defaultSocketPort as string;
+  this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true });
 
   const BASE_PATH = "src/app/";
   const FILE_PATTERN = "**/*spec.ts";

@@ -4,7 +4,9 @@ import { Log, TestAdapterRegistrar } from "vscode-test-adapter-util";
 import { Adapter } from "./adapter";
 import { OUTPUT_CHANNEL } from "./core/shared/logger";
 import { UIExtensionMethods } from "./infrastructure/ui-extension-methods";
+import { ProjectType } from "./model/project-type.enum";
 
+let testExplorerAdapters: Adapter[] = [];
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
   const channel = vscode.window.createOutputChannel(OUTPUT_CHANNEL);
@@ -27,12 +29,34 @@ export async function activate(context: vscode.ExtensionContext) {
       context.subscriptions.push(vscode.commands.registerCommand(command, callback));
     };
 
-    const testExplorerAdapter = new Adapter(workspaceFolder, log, channel);
-    const uiExtensionMethods = new UIExtensionMethods(testExplorerAdapter);
-
-    registerCommand("angular-karma-test-explorer.select-project", async () => uiExtensionMethods.createSelectProjectQuickPick());
+    const uiExtensionMethods = new UIExtensionMethods();
 
     // this will register an AngularKarmaTestAdapter for each WorkspaceFolder
-    context.subscriptions.push(new TestAdapterRegistrar(testHub, workspaceFolder => testExplorerAdapter, log));
+    context.subscriptions.push(
+      new TestAdapterRegistrar(
+        testHub,
+        workspaceFolder => {
+          const projectType = vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspaceFolder.uri).get("projectType") as ProjectType;
+
+          let testExplorerAdapter = new Adapter(workspaceFolder, log, channel, projectType);
+          testExplorerAdapters.push(testExplorerAdapter);
+
+          if (uiExtensionMethods.isAngularCLIProject(testExplorerAdapter, projectType)) {
+            registerCommand("angular-karma-test-explorer.select-project", async () =>
+              uiExtensionMethods.createSelectProjectQuickPick(testExplorerAdapter)
+            );
+          }
+
+          return testExplorerAdapter;
+        },
+        log
+      )
+    );
+  }
+}
+
+export async function deactivate() {
+  for (const testExplorerAdapter of testExplorerAdapters) {
+    testExplorerAdapter.dispose();
   }
 }
