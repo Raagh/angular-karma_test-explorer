@@ -1,10 +1,11 @@
+import { FileHelper } from "./file-helper";
 import { TestResult } from "../../model/test-status.enum";
 import { RunStatus } from "../../model/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import { PathFinder } from "../shared/path-finder";
 import * as io from "socket.io-client";
 import * as karma from "karma";
-import path = require("path");
+import * as path from "path";
 
 function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
@@ -12,20 +13,17 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
   const defaultSocketPort = process.env.defaultSocketPort as string;
   this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true });
 
-  const BASE_PATH = "src/app/";
-  const FILE_PATTERN = "**/*spec.ts";
-  const ENCODING = "utf-8";
-
-  global.console.log("reached this!");
-  const pathFinder = new PathFinder();
-
-  const pattern = path.join(BASE_PATH, FILE_PATTERN);
-
-  const paths = pathFinder.parseTestFiles(pattern, ENCODING);
-
   const emitEvent = (eventName: any, eventResults: any = null) => {
     this.socket.emit(eventName, { name: eventName, results: eventResults });
   };
+
+  const BASE_PATH = "src/app/";
+  const FILE_PATTERN = "**/*spec.ts";
+  const ENCODING = "utf-8";
+  const pattern = path.join(BASE_PATH, FILE_PATTERN);
+
+  const pathFinder = new PathFinder(new FileHelper());
+  const paths = pathFinder.getTestFilesPaths(pattern, ENCODING);
 
   baseReporterDecorator(this);
 
@@ -35,11 +33,13 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
     let status: TestResult = TestResult.Failed;
     if (spec.skipped) {
       status = TestResult.Skipped;
+      this.specSkipped(browser, spec);
     } else if (spec.success) {
       status = TestResult.Success;
     }
 
-    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time);
+    const filePath = pathFinder.getTestFilePath(paths, spec.suite[0], spec.description);
+    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath);
 
     emitEvent("spec_complete", result);
   };
@@ -54,13 +54,6 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
 
   this.onBrowserStart = (browser: any, info: any) => {
     emitEvent("browser_start");
-  };
-
-  this.specSkipped = (browser: any, result: any) => {
-    var localPath = pathFinder.testFile(paths, result.suite[0], result.description);
-    if (localPath !== undefined) {
-      emitEvent("spec_skipped", localPath);
-    }
   };
 
   this.emitter.on("browsers_change", (capturedBrowsers: any) => {

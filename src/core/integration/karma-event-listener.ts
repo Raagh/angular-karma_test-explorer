@@ -45,8 +45,6 @@ export class KarmaEventListener {
           this.onSpecComplete(event);
         });
 
-        socket.on("spec_skipped", (event: any) => global.console.log(event.results));
-
         socket.on("disconnect", (event: any) => {
           this.logger.info("AngularReporter closed connection with event: " + event);
 
@@ -77,12 +75,14 @@ export class KarmaEventListener {
 
   private onSpecComplete(event: KarmaEvent) {
     const { results } = event;
-    const { suite, description, status } = results;
+    const { suite, description, status, filePath } = results;
 
     let testName = suite + " " + description;
     if (suite.length > 1) {
       testName = suite.join(" ") + " " + description;
     }
+
+    this.logger.debug(filePath);
 
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       this.eventEmitter.emitTestStateEvent(testName, TestState.Running);

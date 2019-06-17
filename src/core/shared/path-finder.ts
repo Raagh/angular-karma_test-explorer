@@ -1,5 +1,5 @@
 import { FileHelper } from "./../integration/file-helper";
-const glob = require("glob");
+import * as glob from "glob";
 
 export class PathFinder {
   private readonly regexPattern: RegExp = /((describe)|(it))\s*\(\s*((?<![\\])[\`\'\"])((?:.(?!(?<![\\])\4))*.?)\4/gi;
@@ -10,7 +10,7 @@ export class PathFinder {
   public getTestFilesPaths(pattern: string, encoding: string) {
     const paths = {};
     const results = glob.sync(pattern);
-    results.find((path: any, index: any, array: any) => {
+    results.map((path: any, index: any, array: any) => {
       this.parseTestFile(paths, path, this.getTestFileData(path, encoding));
     });
 
