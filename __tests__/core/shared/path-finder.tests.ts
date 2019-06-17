@@ -1,31 +1,13 @@
 import { PathFinder } from "../../../src/core/shared/path-finder";
 import { FileHelper } from "../../../src/core/integration/file-helper";
+import * as mockParsedTestFiles from "../../../__mocks__/parsedTestFiles.mock";
+import * as mockTestFileData from "../../../__mocks__/testFileData.mock";
 import * as lodash from "lodash";
 
 jest.mock("../../../src/core/integration/file-helper");
 
-const testFileData: any = {
-  "path/t1.spec.js": "describe('s1', () => { it('d1', () => {}); });",
-  "path/t2.spec.js": "describe('s2', () => { it('d2', () => {}); });",
-  "path/t3.spec.js": "describe('s3', () => { " + "it('d3.1', () => {}); }); it('d3.2', () => {}); });",
-  "path/t4.spec.js": "describe('\\'s4\\'', () => { it('\\'d4\\'', () => {}); });",
-  "path/t5.spec.js": "describe('\\\"s5\\\"', () => { it('\\\"d5\\\"', () => {}); });",
-  "path/t6.spec.js":
-    "describe('s6', () => { it('d6.1', () => {}); });" +
-    "describe('s6.2', () => { it('d6.2', () => {}); });" +
-    "describe('s6.3', () => { it('d6.3', () => {}); });" +
-    "describe('s6.4', () => { describe('s6.4.1'+'text', () => { " +
-    "it('d6.4.1'+'text', () => {}); }); });",
-};
-
-const parsedTestFiles: any = {
-  "path/t1.spec.js": { describe: ["s1"], it: ["d1"] },
-  "path/t2.spec.js": { describe: ["s2"], it: ["d2"] },
-  "path/t3.spec.js": { describe: ["s3"], it: ["d3.1", "d3.2"] },
-  "path/t4.spec.js": { describe: ["\\'s4\\'"], it: ["\\'d4\\'"] },
-  "path/t5.spec.js": { describe: ['\\"s5\\"'], it: ['\\"d5\\"'] },
-  "path/t6.spec.js": { describe: ["s6", "s6.2", "s6.3", "s6.4", "s6.4.1"], it: ["d6.1", "d6.2", "d6.3", "d6.4.1"] },
-};
+const testFileData: any = mockTestFileData.mock;
+const parsedTestFiles: any = mockParsedTestFiles.mock;
 
 let fileHelper: jest.Mocked<FileHelper>;
 let pathFinder: PathFinder;

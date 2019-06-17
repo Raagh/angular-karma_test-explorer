@@ -47,26 +47,11 @@ export class PathFinder {
   }
 
   private exist(paths: any, path: any, describe: any, it: any) {
-    return this.existDescribe(paths, path, describe) && this.existIt(paths, path, it);
-  }
+    const existsDescribe = paths[path].describe.some((element: any) => describe.startsWith(element));
+    const existsIt = paths[path].it.some((element: any) => it.startsWith(element));
 
-  private existDescribe(paths: any, path: any, describe: any) {
-    return paths[path].describe.some((element: any) => {
-      // const elementWithoutQuotes = this.removeEscapedQuotes(element);
-      return describe.startsWith(element);
-    });
+    return existsDescribe && existsIt;
   }
-
-  private existIt(paths: any, path: any, it: any) {
-    return paths[path].it.some((element: any) => {
-      // const elementWithoutQuotes = this.removeEscapedQuotes(element);
-      return it.startsWith(element);
-    });
-  }
-
-  // private removeEscapedQuotes(str: any) {
-  //   return str.replace(/(?:\\|\\\\)((")|(')|(`))/g, "$1");
-  // }
 
   private removeComments(data: any) {
     return data.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, "");
