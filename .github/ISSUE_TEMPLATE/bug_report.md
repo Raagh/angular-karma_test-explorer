@@ -21,7 +21,6 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
  - Angular Version [eg. 6.0.1]
 - Node version [eg. 6.0.1]
 
