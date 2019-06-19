@@ -61,7 +61,7 @@ test("loadTests should return valid tests when correct call is made to karma", a
   const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
 
   // Act
-  const result = await karmaRunner.loadTests();
+  const result = await karmaRunner.loadTests("");
 
   // Assert
   expect(karmaHttpCaller.callKarmaRunWithConfig).toBeCalledWith(expect.objectContaining(mockLoadedConfig.config));

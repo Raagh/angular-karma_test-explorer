@@ -14,14 +14,14 @@ export class KarmaRunner {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async loadTests(): Promise<TestSuiteInfo[]> {
+  public async loadTests(projectRootPath: string): Promise<TestSuiteInfo[]> {
     const fakeTestPatternForSkippingEverything = "$#%#";
     const karmaRunParameters = this.karmaHttpCaller.createKarmaRunCallConfiguration(fakeTestPatternForSkippingEverything);
     this.karmaEventListener.lastRunTests = "";
 
     await this.karmaHttpCaller.callKarmaRunWithConfig(karmaRunParameters.config);
 
-    return this.karmaEventListener.getLoadedTests();
+    return this.karmaEventListener.getLoadedTests(projectRootPath);
   }
 
   public async runTests(tests: string[]): Promise<void> {

@@ -13,7 +13,8 @@
     "no-var-requires": false,
     "no-empty": false,
     "max-func-body-length": [true, { "ignore-comments": true }],
-    "no-banned-terms": true
+    "no-banned-terms": true,
+    "no-conditional-assignment": false
   },
   "rulesDirectory": []
 }

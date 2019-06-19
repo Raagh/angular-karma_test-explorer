@@ -5,19 +5,25 @@ import { SpecResultGroupToSuites } from "../../../src/core/test-explorer/spec-re
 jest.mock("../../../src/core/test-explorer/spec-result-groupby");
 
 const groupByResults = [
-  { name: "suite1", suites: [], tests: ["test1"] },
+  { name: "suite1", suites: [], tests: [{ name: "test1" }] },
   {
     name: "suite2",
-    tests: ["test2"],
-    suites: [{ name: "innersuite1", tests: ["test3", "test4"], suites: [{ name: "innersuite2", tests: ["test5"], suites: [] }] }],
+    tests: [{ name: "test2" }],
+    suites: [
+      {
+        name: "innersuite1",
+        tests: [{ name: "test3" }, { name: "test4" }],
+        suites: [{ name: "innersuite2", tests: [{ name: "test5" }], suites: [] }],
+      },
+    ],
   },
-  { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: ["test6"], suites: [] }] },
-] as any;
+  { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: [{ name: "test6" }], suites: [] }] },
+];
 
 test("with correct grouped specs should return correctly mapped TestSuiteInfo", () => {
   // Arrange
   SpecResultGroupToSuites.prototype.group = jest.fn().mockReturnValue(groupByResults);
-  const mapper = new SpecToTestSuiteMapper();
+  const mapper = new SpecToTestSuiteMapper("");
 
   /* savedSpecs dont really matter cause the values are grouped by the mocked dependency SpecResultGroupToSuites */
   const savedSpecs: any[] = [];
@@ -32,7 +38,7 @@ test("with correct grouped specs should return correctly mapped TestSuiteInfo", 
 test("with no grouped specs should return TestSuiteInfo with no children", () => {
   // Arrange
   SpecResultGroupToSuites.prototype.group = jest.fn().mockReturnValue([]);
-  const mapper = new SpecToTestSuiteMapper();
+  const mapper = new SpecToTestSuiteMapper("");
 
   /* savedSpecs dont really matter cause the values are grouped by the mocked dependency SpecResultGroupToSuites */
   const savedSpecs: any[] = [];

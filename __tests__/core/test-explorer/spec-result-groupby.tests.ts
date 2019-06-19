@@ -34,14 +34,20 @@ test("SpecResultToSuiteGroupBy should return grouped values with multiple levels
   ] as any;
 
   const expectedResult = [
-    { name: "suite1", suites: [], tests: ["test1"] },
+    { name: "suite1", suites: [], tests: [{ name: "test1" }] },
     {
       name: "suite2",
-      tests: ["test2"],
-      suites: [{ name: "innersuite1", tests: ["test3", "test4"], suites: [{ name: "innersuite2", tests: ["test5"], suites: [] }] }],
+      tests: [{ name: "test2" }],
+      suites: [
+        {
+          name: "innersuite1",
+          tests: [{ name: "test3" }, { name: "test4" }],
+          suites: [{ name: "innersuite2", tests: [{ name: "test5" }], suites: [] }],
+        },
+      ],
     },
-    { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: ["test6"], suites: [] }] },
-    { name: "suite4", suites: [], tests: ["test8"] },
+    { name: "suite3", tests: [], suites: [{ name: "innersuite3", tests: [{ name: "test6" }], suites: [] }] },
+    { name: "suite4", suites: [], tests: [{ name: "test8" }] },
   ];
 
   const result = grouper.group(savedSpecs);

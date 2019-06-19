@@ -1,8 +1,9 @@
 import { SpecResultGroupToSuites } from "./spec-result-groupby";
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
+import * as path from "path";
 export class SpecToTestSuiteMapper {
   private readonly specResultGroupBy: SpecResultGroupToSuites;
-  public constructor() {
+  public constructor(private readonly projectRootPath: string) {
     this.specResultGroupBy = new SpecResultGroupToSuites();
   }
 
@@ -24,13 +25,15 @@ export class SpecToTestSuiteMapper {
       id: suiteName,
       label: suite.name,
       children: [],
+      file: path.join(this.projectRootPath, suite.filePath ? suite.filePath : ""),
     } as TestSuiteInfo;
 
-    const mappedTests = suite.tests.map((test: string) => {
+    const mappedTests = suite.tests.map((test: any) => {
       return {
         type: "test",
-        id: suiteName + " " + test,
-        label: test,
+        id: suiteName + " " + test.name,
+        label: test.name,
+        file: path.join(this.projectRootPath, test.filePath ? test.filePath : ""),
       } as TestInfo;
     });
 
