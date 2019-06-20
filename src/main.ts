@@ -4,7 +4,7 @@ import { Log, TestAdapterRegistrar } from "vscode-test-adapter-util";
 import { Adapter } from "./adapter";
 import { OUTPUT_CHANNEL } from "./core/shared/logger";
 import { UIExtensionMethods } from "./infrastructure/ui-extension-methods";
-import { ProjectType } from "./model/project-type.enum";
+import { ProjectType } from "./model/enums/project-type.enum";
 
 let testExplorerAdapters: Adapter[] = [];
 export async function activate(context: vscode.ExtensionContext) {

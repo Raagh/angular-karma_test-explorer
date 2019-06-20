@@ -1,7 +1,7 @@
 import { IOCContainer } from "./../../src/infrastructure/ioc-container";
 import * as vscode from "vscode";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
-import { ProjectType } from "../../src/model/project-type.enum";
+import { ProjectType } from "../../src/model/enums/project-type.enum";
 
 test("registerTestExplorerDependencies should return a valid AngularKarmaTestExplorer instance", () => {
   // Arrange

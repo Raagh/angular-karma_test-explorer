@@ -1,12 +1,12 @@
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { SpecToTestSuiteMapper } from "../../core/test-explorer/spec-to-test-suite.mapper";
 import { KarmaEvent } from "../../model/karma-event";
-import { KarmaEventName } from "../../model/karma-event-name.enum";
-import { TestState } from "../../model/test-state.enum";
+import { KarmaEventName } from "../../model/enums/karma-event-name.enum";
+import { TestState } from "../../model/enums/test-state.enum";
 import { Logger } from "../shared/logger";
 import { EventEmitter } from "../shared/event-emitter";
 import { commands } from "vscode";
-import { TestResult } from "../../model/test-status.enum";
+import { TestResult } from "../../model/enums/test-status.enum";
 
 export class KarmaEventListener {
   public isServerLoaded: boolean = false;

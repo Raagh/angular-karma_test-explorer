@@ -3,7 +3,7 @@ import { FileHelper } from "../core/integration/file-helper";
 import * as vscode from "vscode";
 import { Adapter } from "../adapter";
 import { TestServerValidation } from "../core/test-server/test-server-validation";
-import { ProjectType } from "../model/project-type.enum";
+import { ProjectType } from "../model/enums/project-type.enum";
 
 export class UIExtensionMethods {
   public constructor() {}

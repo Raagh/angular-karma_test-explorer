@@ -9,7 +9,7 @@ import { FileHelper } from "../core/integration/file-helper";
 import { KarmaHttpClient } from "../core/integration/karma-http-client";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
 import { EventEmitter } from "../core/shared/event-emitter";
-import { ProjectType } from "../model/project-type.enum";
+import { ProjectType } from "../model/enums/project-type.enum";
 import * as vscode from "vscode";
 
 export class IOCContainer {

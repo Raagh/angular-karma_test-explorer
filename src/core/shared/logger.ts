@@ -1,6 +1,6 @@
 import { OutputChannel } from "vscode";
-import { TestResult } from "../../model/test-status.enum";
-import { LogLevel } from "../../model/log-level.enum";
+import { TestResult } from "../../model/enums/test-status.enum";
+import { LogLevel } from "../../model/enums/log-level.enum";
 
 export const OUTPUT_CHANNEL = "Test Explorer Logs";
 

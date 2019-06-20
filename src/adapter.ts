@@ -12,7 +12,7 @@ import {
 import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
 import { TestExplorerConfiguration } from "./model/test-explorer-configuration";
-import { ProjectType } from "./model/project-type.enum";
+import { ProjectType } from "./model/enums/project-type.enum";
 
 export class Adapter implements TestAdapter {
   public config: TestExplorerConfiguration = {} as TestExplorerConfiguration;

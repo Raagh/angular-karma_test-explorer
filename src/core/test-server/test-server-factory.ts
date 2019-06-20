@@ -3,7 +3,7 @@ import { FileHelper } from "./../integration/file-helper";
 import { KarmaEventListener } from "./../integration/karma-event-listener";
 import { AngularServer } from "./../angular/angular-server";
 import { TestServer } from "../../model/test-server";
-import { ProjectType } from "../../model/project-type.enum";
+import { ProjectType } from "../../model/enums/project-type.enum";
 import { Logger } from "../shared/logger";
 import { CommandlineProcessHandler } from "../integration/commandline-process-handler";
 import { AngularProjectConfigLoader } from "../angular/angular-project-config-loader";

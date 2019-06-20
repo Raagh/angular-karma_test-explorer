@@ -1,6 +1,6 @@
 import { FileHelper } from "./file-helper";
-import { TestResult } from "../../model/test-status.enum";
-import { RunStatus } from "../../model/run-status.enum";
+import { TestResult } from "../../model/enums/test-status.enum";
+import { RunStatus } from "../../model/enums/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import { PathFinder } from "../shared/path-finder";
 import * as io from "socket.io-client";
