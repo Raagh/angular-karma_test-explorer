@@ -1,12 +1,15 @@
 import { EventEmitter } from "../../../src/core/shared/event-emitter";
 import { TestState } from "../../../src/model/enums/test-state.enum";
-import { TestEvent } from "vscode-test-adapter-api";
 import { KarmaEvent } from "../../../src/model/karma-event";
 import { TestResult } from "../../../src/model/enums/test-status.enum";
+import { TestEvent, TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent } from "vscode-test-adapter-api";
+import * as vscode from "vscode";
 
 test("should emit correctly a test state event", () => {
   // Arrange
-  const eventEmitterInterface = { fire() {} };
+  const eventEmitterInterface = { fire() {}, event: {}, dispose() {} } as vscode.EventEmitter<
+    TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent
+  >;
   jest.spyOn(eventEmitterInterface, "fire");
   const testName = "testName";
   const testState = TestState.Passed;
@@ -28,7 +31,9 @@ test("should emit correctly a test state event", () => {
 
 test("should emit correctly a test result event", () => {
   // Arrange
-  const eventEmitterInterface = { fire() {} };
+  const eventEmitterInterface = { fire() {}, event: {}, dispose() {} } as vscode.EventEmitter<
+    TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent
+  >;
   jest.spyOn(eventEmitterInterface, "fire");
   const testName = "testName";
   const karmaEvent = new KarmaEvent("karmaEventName", { status: TestResult.Success, failureMessages: ["it failed"] });
