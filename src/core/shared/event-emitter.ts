@@ -1,10 +1,13 @@
 import { KarmaEvent } from "./../../model/karma-event";
 import { TestState } from "../../model/enums/test-state.enum";
-import { TestEvent } from "vscode-test-adapter-api";
+import { TestEvent, TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent } from "vscode-test-adapter-api";
 import { TestResultToTestStateMapper } from "../test-explorer/test-result-to-test-state.mapper";
+import * as vscode from "vscode";
 
 export class EventEmitter {
-  public constructor(private readonly eventEmitterInterface: any) {}
+  public constructor(
+    private readonly eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
+  ) {}
 
   public emitTestStateEvent(testName: string, testState: TestState) {
     const testEvent = { type: "test", test: testName, state: testState } as TestEvent;
