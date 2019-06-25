@@ -33,11 +33,6 @@ const savedSpecs = [
     description: "test6",
     filePath: ".",
   },
-  {
-    suite: ["suite4"],
-    description: "test8",
-    filePath: ".",
-  },
 ] as SpecCompleteResponse[];
 
 test("SpecCompleteResponse should be mapped to a full TestSuiteInfo", () => {
@@ -48,5 +43,5 @@ test("SpecCompleteResponse should be mapped to a full TestSuiteInfo", () => {
   const result = mapper.map(savedSpecs);
 
   // Assert
-  expect(result).toEqual(expectedTests.mock);
+  expect(result.children).toEqual(expectedTests.mock);
 });
