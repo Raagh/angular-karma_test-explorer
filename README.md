@@ -16,6 +16,8 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Supports standalone karma.
 - Supports non CLI Angular projects.
 - Supports multi-root workspaces(only one angular app per workspace).
+- Adds CodeLenses to your test files for starting and debugging tests.
+- Adds Gutter decorations to your test files showing the tests' state.
 - Loads values from user karma.conf.js (some get removed to make the explorer work correctly).
 - Detects configuration changes and reload tests automatically.
 - Allows configuration for different type of workflows: Angular project path, project type, karma.conf path, default project name for multiple projects inside one root.
@@ -37,8 +39,6 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Support multiple angular apps per workspace.
 - Detect file changes(workspace, test definitions) and reload tests automatically.
 - Lets you choose test suites or individual tests in the explorer that should be run automatically after each file change.
-- Adds CodeLenses to your test files for starting and debugging tests.
-- Adds Gutter decorations to your test files showing the tests' state.
 - Adds line decorations to the source line where a test failed.
 
 ## Configuration
