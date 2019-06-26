@@ -14,7 +14,7 @@ export class KarmaRunner {
     return this.karmaEventListener.isServerLoaded;
   }
 
-  public async loadTests(projectRootPath: string): Promise<TestSuiteInfo[]> {
+  public async loadTests(projectRootPath: string): Promise<TestSuiteInfo> {
     const fakeTestPatternForSkippingEverything = "$#%#";
     const karmaRunParameters = this.karmaHttpCaller.createKarmaRunCallConfiguration(fakeTestPatternForSkippingEverything);
     this.karmaEventListener.lastRunTests = "";

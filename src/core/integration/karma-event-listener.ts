@@ -1,5 +1,5 @@
 import { TestSuiteInfo } from "vscode-test-adapter-api";
-import { SpecToTestSuiteMapper } from "../../core/test-explorer/spec-to-test-suite.mapper";
+import { SpecResponseToTestSuiteInfoMapper } from "../../core/test-explorer/spec-response-to-test-suite-info.mapper";
 import { KarmaEvent } from "../../model/karma-event";
 import { KarmaEventName } from "../../model/enums/karma-event-name.enum";
 import { TestState } from "../../model/enums/test-state.enum";
@@ -62,8 +62,8 @@ export class KarmaEventListener {
     });
   }
 
-  public getLoadedTests(projectRootPath: string): TestSuiteInfo[] {
-    const specToTestSuiteMapper = new SpecToTestSuiteMapper(projectRootPath);
+  public getLoadedTests(projectRootPath: string): TestSuiteInfo {
+    const specToTestSuiteMapper = new SpecResponseToTestSuiteInfoMapper(projectRootPath);
     return specToTestSuiteMapper.map(this.savedSpecs);
   }
 

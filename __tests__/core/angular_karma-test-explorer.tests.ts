@@ -1,6 +1,5 @@
 import { TestExplorerConfiguration } from "./../../src/model/test-explorer-configuration";
 import { AngularKarmaTestExplorer } from "../../src/core/angular-karma-test-explorer";
-import { TestExplorerHelper } from "../../src/core/test-explorer/test-explorer-helper";
 import { KarmaEventListener } from "../../src/core/integration/karma-event-listener";
 import { AngularServer } from "../../src/core/angular/angular-server";
 import { TestServerValidation } from "../../src/core/test-server/test-server-validation";
@@ -41,14 +40,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
   karmaRunner.isKarmaRunning.mockReturnValue(false);
   angularServer.start.mockResolvedValue();
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    testServerValidation,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener
-  );
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
   // Act
   const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
@@ -66,14 +58,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
   karmaRunner.isKarmaRunning.mockReturnValue(true);
   angularServer.start.mockResolvedValue();
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    testServerValidation,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener
-  );
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
   // Act
   const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
@@ -88,14 +73,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
 test("loadTests should return an empty test suite if its not a karma based project", async () => {
   // Arrange
   testServerValidation.isValidProject.mockReturnValue(false);
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    testServerValidation,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener
-  );
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
   // Act
   const loadedTests = await angularKarmaTestExplorer.loadTests(testExplorerConfiguration);
@@ -111,14 +89,7 @@ test("runTests should be called only once with the correct sent tests name", asy
   // Arrange
   karmaRunner.runTests.mockResolvedValue();
   karmaEventListener.runCompleteEvent = { results: [] };
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    testServerValidation,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener
-  );
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
   const fakeTests = ["fakeTests"];
 
   // Act
@@ -131,14 +102,7 @@ test("runTests should be called only once with the correct sent tests name", asy
 
 test("debug tests should throw not implemented exception", async () => {
   // Arrange
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(
-    karmaRunner,
-    testServerValidation,
-    logger,
-    angularServer,
-    new TestExplorerHelper(),
-    karmaEventListener
-  );
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
   const fakeTests = ["fakeTests"];
 
   // Act - Assert

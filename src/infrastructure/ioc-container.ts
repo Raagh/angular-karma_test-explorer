@@ -4,7 +4,6 @@ import { Logger } from "../core/shared/logger";
 import { TestServerValidation } from "../core/test-server/test-server-validation";
 import { KarmaEventListener } from "../core/integration/karma-event-listener";
 import { KarmaRunner } from "../core/karma/karma-runner";
-import { TestExplorerHelper } from "../core/test-explorer/test-explorer-helper";
 import { FileHelper } from "../core/integration/file-helper";
 import { KarmaHttpClient } from "../core/integration/karma-http-client";
 import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
@@ -22,7 +21,6 @@ export class IOCContainer {
   ): AngularKarmaTestExplorer {
     // poor man's dependency injection
     const fileHelper = new FileHelper();
-    const testExplorerHelper = new TestExplorerHelper();
     const karmaHelper = new TestServerValidation(fileHelper);
     const logger = new Logger(channel, isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
@@ -30,6 +28,6 @@ export class IOCContainer {
     const testServerFactory = new TestServerFactory(karmaEventListener, logger, fileHelper);
     const testServer = testServerFactory.createTestServer(projectType);
 
-    return new AngularKarmaTestExplorer(karmaRunner, karmaHelper, logger, testServer, testExplorerHelper, karmaEventListener);
+    return new AngularKarmaTestExplorer(karmaRunner, karmaHelper, logger, testServer, karmaEventListener);
   }
 }

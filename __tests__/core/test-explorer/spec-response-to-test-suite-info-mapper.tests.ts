@@ -27,7 +27,7 @@ test("suite with one test should be mapped to a full TestSuiteInfo", () => {
       ],
     },
   ] as TestSuiteInfo[];
-  const mapper = new SpecResponseToTestSuiteInfoMapper();
+  const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
   const result = mapper.map(savedSpecs);
@@ -110,7 +110,7 @@ test("suite with multiple level innersuites should be mapped to a full TestSuite
       ],
     },
   ] as TestSuiteInfo[];
-  const mapper = new SpecResponseToTestSuiteInfoMapper();
+  const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
   const result = mapper.map(savedSpecs);
@@ -152,7 +152,7 @@ test("suite with empty suite and complete innersuite test should be mapped to a 
       ],
     },
   ] as TestSuiteInfo[];
-  const mapper = new SpecResponseToTestSuiteInfoMapper();
+  const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
   const result = mapper.map(savedSpecs);

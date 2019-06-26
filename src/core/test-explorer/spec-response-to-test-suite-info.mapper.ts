@@ -1,8 +1,9 @@
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import { TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
+import * as path from "path";
 
 export class SpecResponseToTestSuiteInfoMapper {
-  public constructor() {}
+  public constructor(private readonly projectRootPath: string) {}
 
   public map(specs: SpecCompleteResponse[]): TestSuiteInfo {
     const rootSuiteNode = {
@@ -73,7 +74,7 @@ export class SpecResponseToTestSuiteInfoMapper {
     suiteNode.children.push({
       id: suiteLookup + " " + specComplete.description,
       label: specComplete.description,
-      file: specComplete.filePath,
+      file: path.join(this.projectRootPath, specComplete.filePath as string),
       type: "test",
     } as TestInfo);
   }
@@ -82,7 +83,7 @@ export class SpecResponseToTestSuiteInfoMapper {
     return {
       id: suiteLookup,
       label: specComplete.suite[specComplete.suite.length - 1],
-      file: specComplete.filePath,
+      file: path.join(this.projectRootPath, specComplete.filePath as string),
       type: "suite",
       children: [],
     } as TestSuiteInfo;
