@@ -15,6 +15,7 @@
 /.idea
 .project
 .classpath
+.ionide
 .c9/
 *.launch
 .settings/
