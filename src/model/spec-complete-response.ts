@@ -1,8 +1,10 @@
+import { TestResult } from "./enums/test-status.enum";
+
 export class SpecCompleteResponse {
   public failureMessages: string[];
   public suite: string[];
   public description: string;
-  public status: string;
+  public status: TestResult;
   public timeSpentInMilliseconds: string;
   public filePath?: string;
 
@@ -10,7 +12,7 @@ export class SpecCompleteResponse {
     _failureMessages: string[],
     _suite: string[],
     _description: string,
-    _status: string,
+    _status: TestResult,
     _timeSpentInMilliseconds: string,
     _filePath?: string
   ) {
