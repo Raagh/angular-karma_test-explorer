@@ -22,22 +22,25 @@ export class SpecResponseToTestSuiteInfoMapper {
   }
 
   private getOrCreateLowerSuiteNode(node: TestSuiteInfo, spec: SpecCompleteResponse, suiteNames: string[]): TestSuiteInfo {
-    for (let i = 0; i < suiteNames.length; i++) {
-      const suiteName = suiteNames[i];
-      if (suiteName == null) {
-        suiteNames.splice(i, 1);
-        const message = "[Karma bug found] Suite name is null. Please file an issue in the https://github.com/karma-runner/karma/issues";
-        global.console.error(message);
-        continue;
-      }
+    for (const suiteName of suiteNames) {
       let nextNode = this.findNodeByKey(node, suiteName);
       if (!nextNode) {
-        const locationHint = suiteNames.join(" ");
+        const locationHint = suiteNames.reduce((previousValue: any, currentValue: any, index: number) => {
+          if (previousValue === suiteName) {
+            spec.suite = [suiteName];
+            return suiteName;
+          }
+
+          spec.suite = suiteNames;
+          return [previousValue, currentValue].join(" ");
+        });
+
         nextNode = this.createSuite(spec, locationHint);
         node.children.push(nextNode);
       }
       node = nextNode;
     }
+
     return node;
   }
 
