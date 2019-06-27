@@ -1,12 +1,12 @@
 import { Config, ConfigOptions } from "karma";
 import * as path from "path";
 import * as TestExplorerCustomReporter from "../core/integration/test-explorer-custom-karma-reporter";
-import { TestExplorerHelper } from "../core/test-explorer/test-explorer-helper";
+import { UtilityHelper } from "../core/shared/utility-helper";
 
 export class KarmaConfigurator {
-  private readonly testExplorerHelper: TestExplorerHelper;
+  private readonly testExplorerHelper: UtilityHelper;
   constructor() {
-    this.testExplorerHelper = new TestExplorerHelper();
+    this.testExplorerHelper = new UtilityHelper();
   }
 
   public setMandatoryOptions(config: Config) {

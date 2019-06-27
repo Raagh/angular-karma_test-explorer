@@ -1,3 +1,12 @@
+### Version 1.0.0
+
+- Add file gutter decorations.
+- Add view source feature.
+- Add line decorations where the test failed.
+- Better errors messages in output channel.
+- Rework tree implementation
+- Added extra unit tests to integration parts.
+
 ### Version 0.3.3
 
 - Trying single build/release azure pipeline for correct uploading.

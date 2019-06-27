@@ -1,5 +1,5 @@
-import { TestState } from "./../../model/test-state.enum";
-import { TestResult } from "./../../model/test-status.enum";
+import { TestState } from "../../model/enums/test-state.enum";
+import { TestResult } from "../../model/enums/test-status.enum";
 export class TestResultToTestStateMapper {
   public constructor() {}
 

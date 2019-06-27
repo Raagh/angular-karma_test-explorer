@@ -2,7 +2,6 @@ import { KarmaRunner } from "./karma/karma-runner";
 import { TestServerValidation } from "./test-server/test-server-validation";
 import { KarmaEventListener } from "./integration/karma-event-listener";
 import { Logger } from "./shared/logger";
-import { TestExplorerHelper } from "./test-explorer/test-explorer-helper";
 import { TestSuiteInfo } from "vscode-test-adapter-api";
 import { TestExplorerConfiguration } from "../model/test-explorer-configuration";
 import { TestServer } from "../model/test-server";
@@ -12,9 +11,7 @@ export class AngularKarmaTestExplorer {
     private readonly karmaRunner: KarmaRunner,
     private readonly testServerValidation: TestServerValidation,
     private readonly logger: Logger,
-
     private readonly testServer: TestServer,
-    private readonly testExplorerHelper: TestExplorerHelper,
     private readonly karmaEventListener: KarmaEventListener
   ) {}
 
@@ -31,8 +28,7 @@ export class AngularKarmaTestExplorer {
 
     await this.testServer.start(config);
 
-    const testSuiteInfo = this.testExplorerHelper.createTestSuiteInfoRootElement("root", "Angular");
-    testSuiteInfo.children = await this.karmaRunner.loadTests();
+    const testSuiteInfo = await this.karmaRunner.loadTests(config.projectRootPath);
 
     this.logger.info("Test Loading completed!");
 

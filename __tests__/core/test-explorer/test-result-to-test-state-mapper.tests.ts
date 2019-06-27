@@ -1,6 +1,6 @@
 import { TestResultToTestStateMapper } from "../../../src/core/test-explorer/test-result-to-test-state.mapper";
-import { TestResult } from "../../../src/model/test-status.enum";
-import { TestState } from "../../../src/model/test-state.enum";
+import { TestResult } from "../../../src/model/enums/test-status.enum";
+import { TestState } from "../../../src/model/enums/test-state.enum";
 
 test("should map Failed test result to Failed test state", () => {
   // Arrage

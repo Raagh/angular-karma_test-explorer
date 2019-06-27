@@ -1,8 +1,11 @@
-import * as karma from "karma";
-import { TestResult } from "../../model/test-status.enum";
-import { RunStatus } from "../../model/run-status.enum";
+import { FileHelper } from "./file-helper";
+import { TestResult } from "../../model/enums/test-status.enum";
+import { RunStatus } from "../../model/enums/run-status.enum";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
+import { PathFinder } from "../shared/path-finder";
 import * as io from "socket.io-client";
+import * as karma from "karma";
+import * as path from "path";
 
 function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
   this.config = config;
@@ -14,6 +17,14 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
     this.socket.emit(eventName, { name: eventName, results: eventResults });
   };
 
+  const BASE_PATH = "src/app/";
+  const FILE_PATTERN = "**/*spec.ts";
+  const ENCODING = "utf-8";
+  const pattern = path.join(BASE_PATH, FILE_PATTERN);
+
+  const pathFinder = new PathFinder(new FileHelper());
+  const paths = pathFinder.getTestFilesPaths(pattern, ENCODING);
+
   baseReporterDecorator(this);
 
   this.adapters = [];
@@ -22,11 +33,17 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
     let status: TestResult = TestResult.Failed;
     if (spec.skipped) {
       status = TestResult.Skipped;
+      this.specSkipped(browser, spec);
     } else if (spec.success) {
       status = TestResult.Success;
     }
 
-    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time);
+    const filePath = pathFinder.getTestFilePath(paths, spec.suite[0], spec.description);
+    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath) as any;
+
+    if (result.status === TestResult.Failed) {
+      result.fullResponse = spec;
+    }
 
     emitEvent("spec_complete", result);
   };

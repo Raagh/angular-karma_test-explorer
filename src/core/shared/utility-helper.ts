@@ -1,16 +1,5 @@
-import { TestSuiteInfo } from "vscode-test-adapter-api";
-
-export class TestExplorerHelper {
+export class UtilityHelper {
   public constructor() {}
-
-  public createTestSuiteInfoRootElement(id: string, label: string) {
-    return {
-      type: "suite",
-      id,
-      label,
-      children: [],
-    } as TestSuiteInfo;
-  }
 
   public groupBy(xs: any, key: any) {
     return xs.reduce((rv: any, x: any) => {
