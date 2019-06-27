@@ -27,6 +27,7 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 
 ## Getting started
 
+- Open the project folder.
 - Install the extension.
 - Restart VS Code and open the Test view.
 - Run your tests using the ![Run](img/run.png) icon.
@@ -55,10 +56,11 @@ List of currently used properties:
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
 
-## Disclaimer
+## What about bugs and fixes?
 
-If you find a bug or think that a feature is missing and is not in the backlog please report it.
-If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
+- If something goes wrong you will see error logs on vscode `Test Explorer Logs` output channel.
+- If you find a bug or think that a feature is missing and is not in the backlog please report it using the appropiate github issue template.
+- If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
 
 ### VERSION/UPDATE PROBLEM
 
