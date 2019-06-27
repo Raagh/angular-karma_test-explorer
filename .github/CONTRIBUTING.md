@@ -6,6 +6,7 @@ This repository contains the implementation for `Angular/Karma Test Explorer` ex
 [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
 ## Development
+
 - install the [Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
 - fork and clone this repository and open it in VS Code
 - run `npm install`
@@ -19,20 +20,24 @@ Now you should see the test suite in the side panel (angular projects take longe
 ![Example loaded suite](../img/img-tests.png)
 
 # Making Changes
+
 - pick an existing bug or feature from the repository (or create your own).
 - create a new branch with a descriptive name, I suggest a prefix like feature/my-new-feature or bugfix/this-damm-bug.
 - make the code changes.
-- lease include unit tests (I am using jest) for any new functionality you submit.
+- include unit tests (I am using jest) for any new functionality you submit.
 - create a pull request on the repository, please link the pull request to the feature or bug related to your changes.
 - include a summary of the changes you made in the pull request.
 
 # Verifying Before Submitting
+
 - run unit tests with `npm run test` and verify all existing functionality is still working.
 
 # Extra Guidelines
-- if it's a bugfix and tests exist for that module make sure the changes dont break them or that the bug is now covered by test cases.
+
+- if it's a bugfix and tests exist for that module make sure the changes dont break them or that the bugfix is now covered by test cases.
 - make sure you have installed prettier and tslint and that all the code submitted is properly formatted.
 
 # Most important
+
 Dont be shy, comment on the issue at hand so the community and I can give you a hand.
-If there is something you dont understand please ask, I am more than willing to answer any questions.
+If there is something you dont understand please ask, I am more than willing to help you.
