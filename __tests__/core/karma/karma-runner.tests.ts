@@ -44,14 +44,13 @@ test("isKarmaRunning should return false if karma is not running", () => {
 
 test("loadTests should return valid tests when correct call is made to karma", async () => {
   // Arrange
-  const mockLoadedTests = [
-    {
-      type: "suite",
-      id: "root",
-      label: "Angular",
-      children: [],
-    } as TestSuiteInfo,
-  ];
+  const mockLoadedTests = {
+    type: "suite",
+    id: "root",
+    label: "root",
+    children: [],
+  } as TestSuiteInfo;
+
   const mockLoadedConfig = { config: { hostname: "fakeHostname" }, tests: "" };
   karmaEventListener.isServerLoaded = false;
   karmaHttpCaller.callKarmaRunWithConfig.mockResolvedValue();
@@ -70,14 +69,13 @@ test("loadTests should return valid tests when correct call is made to karma", a
 
 test("runTests should return valid tests when correct call is made to karma", async () => {
   // Arrange
-  const mockLoadedTests = [
-    {
-      type: "suite",
-      id: "root",
-      label: "Angular",
-      children: [],
-    } as TestSuiteInfo,
-  ];
+  const mockLoadedTests = {
+    type: "suite",
+    id: "root",
+    label: "Angular",
+    children: [],
+  } as TestSuiteInfo;
+
   const mockLoadedConfig = { config: { hostname: "fakeHostname" }, tests: "fakeTest" };
   karmaEventListener.isServerLoaded = false;
   karmaHttpCaller.callKarmaRunWithConfig.mockResolvedValue();

@@ -11,7 +11,6 @@ export class AngularKarmaTestExplorer {
     private readonly karmaRunner: KarmaRunner,
     private readonly testServerValidation: TestServerValidation,
     private readonly logger: Logger,
-
     private readonly testServer: TestServer,
     private readonly karmaEventListener: KarmaEventListener
   ) {}
