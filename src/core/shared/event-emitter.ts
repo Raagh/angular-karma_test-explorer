@@ -31,11 +31,20 @@ export class EventEmitter {
 
   private createErrorMessage(results: SpecCompleteResponse): string {
     const failureMessage = results.failureMessages[0];
+    const message = failureMessage.split("\n")[0];
+
+    if (!results.filePath) {
+      return message;
+    }
 
     try {
-      const lineNumber = parseInt(failureMessage.split(":")[1], undefined);
-      const columnNumber = parseInt(failureMessage.split(":")[2], undefined);
-      const message = failureMessage.split("\n")[0];
+      const errorLineAndColumnCollection = failureMessage.substring(failureMessage.indexOf(results.filePath)).split(":");
+      const lineNumber = parseInt(errorLineAndColumnCollection[1], undefined);
+      const columnNumber = parseInt(errorLineAndColumnCollection[2], undefined);
+
+      if (isNaN(lineNumber) || isNaN(columnNumber)) {
+        return message;
+      }
 
       return `${message} (line:${lineNumber} column:${columnNumber})`;
     } catch (error) {
@@ -44,13 +53,25 @@ export class EventEmitter {
   }
 
   private createDecorations(results: SpecCompleteResponse): TestDecoration[] | undefined {
+    if (!results.filePath) {
+      return undefined;
+    }
+
     try {
-      return results.failureMessages.map((failureMessage: string) => {
+      const decorations = results.failureMessages.map((failureMessage: string) => {
+        const errorLineAndColumnCollection = failureMessage.substring(failureMessage.indexOf(results.filePath as string)).split(":");
+        const lineNumber = parseInt(errorLineAndColumnCollection[1], undefined);
         return {
-          line: parseInt(failureMessage.split(":")[1], undefined),
+          line: lineNumber,
           message: failureMessage.split("\n")[0],
         };
       });
+
+      if (decorations.some(x => isNaN(x.line))) {
+        return undefined;
+      }
+
+      return decorations;
     } catch (error) {
       return undefined;
     }

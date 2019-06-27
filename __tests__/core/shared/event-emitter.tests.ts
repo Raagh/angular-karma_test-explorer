@@ -44,7 +44,11 @@ test("should emit correctly a test result event", () => {
   >;
   jest.spyOn(eventEmitterInterface, "fire");
   const testName = "testName";
-  const karmaEvent = new KarmaEvent("karmaEventName", { status: TestResult.Success, failureMessages });
+  const karmaEvent = new KarmaEvent("karmaEventName", {
+    status: TestResult.Success,
+    failureMessages,
+    filePath: "src/app/app.component.spec.ts",
+  });
   const eventEmitter = new EventEmitter(eventEmitterInterface);
 
   // Act
@@ -70,7 +74,11 @@ test("should emit correctly a test result event with test decorations", () => {
 
   jest.spyOn(eventEmitterInterface, "fire");
   const testName = "testName";
-  const karmaEvent = new KarmaEvent("karmaEventName", { status: TestResult.Success, failureMessages });
+  const karmaEvent = new KarmaEvent("karmaEventName", {
+    status: TestResult.Success,
+    failureMessages,
+    filePath: "src/app/app.component.spec.ts",
+  });
   const eventEmitter = new EventEmitter(eventEmitterInterface);
 
   // Act
