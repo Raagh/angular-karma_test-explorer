@@ -43,7 +43,7 @@ export class EventEmitter {
       const columnNumber = parseInt(errorLineAndColumnCollection[2], undefined);
 
       if (isNaN(lineNumber) || isNaN(columnNumber)) {
-        return message;
+        return failureMessage;
       }
 
       return `${message} (line:${lineNumber} column:${columnNumber})`;
