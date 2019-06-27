@@ -2,7 +2,10 @@
 
 - Add file gutter decorations.
 - Add view source feature.
-- Better errors in output channel.
+- Add line decorations where the test failed.
+- Better errors messages in output channel.
+- Rework tree implementation
+- Added extra unit tests to integration parts.
 
 ### Version 0.3.3
 
