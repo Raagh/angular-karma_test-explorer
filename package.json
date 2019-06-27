@@ -5,8 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "0.4.0",
-  "preview": true,
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",

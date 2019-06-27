@@ -1,4 +1,4 @@
-### Version 0.4.0
+### Version 1.0.0
 
 - Add file gutter decorations.
 - Add view source feature.

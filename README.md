@@ -61,8 +61,3 @@ List of currently used properties:
 - If something goes wrong you will see error logs on vscode `Test Explorer Logs` output channel.
 - If you find a bug or think that a feature is missing and is not in the backlog please report it using the appropiate github issue template.
 - If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
-
-### VERSION/UPDATE PROBLEM
-
-If you were using 1.0.3 version I made some mistakes in the publishing process and I had to republish the extension.
-If you re on this version and not getting updates please uninstall the extension and install it again to the latest preview release version (0.X.X)
