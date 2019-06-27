@@ -42,8 +42,7 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
     const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath) as any;
 
     if (result.status === TestResult.Failed) {
-      // const assertionObject = parseFailures(spec, result.description, formatError);
-      result.assertionObject = spec;
+      result.fullResponse = spec;
     }
 
     emitEvent("spec_complete", result);
@@ -88,51 +87,6 @@ function collectRunState(runResult: karma.TestResults): RunStatus {
     return RunStatus.Complete;
   }
 }
-
-// function parseFailures(result: any, specName: string, formatError: any) {
-//   let stack = "";
-//   result.log.forEach((log: any) => {
-//     stack += formatError(log, "\t");
-//   });
-//   if (stack.length === 0 && result.pending) {
-//     stack = "Pending test '" + specName + "'";
-//   }
-//   const firstAssertionError = Array.isArray(result.assertionErrors) ? result.assertionErrors[0] : null;
-//   return normalizeAssertionError(stack, firstAssertionError);
-// }
-
-// function normalizeAssertionError(stack: any, assertionError: any) {
-//   if (!assertionError) {
-//     return { stack };
-//   }
-//   stack = stack || "";
-//   let assertionMessage = assertionError.message;
-//   const assertionName = assertionError.name;
-//   const stackLeftTrimmed = stack.trimLeft();
-//   if (isString(assertionMessage) && stackLeftTrimmed.indexOf(assertionMessage) === 0) {
-//     stack = stackLeftTrimmed.substring(assertionMessage.length);
-//   }
-//   if (isString(assertionName) && isString(assertionMessage)) {
-//     const compoundMessage = assertionName + ": " + assertionMessage;
-//     if (stackLeftTrimmed.indexOf(compoundMessage) === 0) {
-//       assertionMessage = compoundMessage;
-//       stack = stackLeftTrimmed.substring(compoundMessage.length);
-//     }
-//   }
-//   if (stack.length > 0 && stack.charAt(0) === "\n") {
-//     stack = stack.substring(1);
-//   }
-//   return {
-//     message: assertionMessage,
-//     stack,
-//     expected: assertionError.expected,
-//     actual: assertionError.actual,
-//   };
-// }
-
-// function isString(variable: any) {
-//   return typeof variable === "string";
-// }
 
 TestExplorerCustomReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
 
