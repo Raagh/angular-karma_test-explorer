@@ -1,6 +1,6 @@
-### Version 1.0.1
+### Version 1.0.2
 
-- If error cannot be parsed return default karma error message.
+- Fix parsing bug if filePath of test is undefined.
 
 ### Version 1.0.0
 
