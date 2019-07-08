@@ -20,9 +20,10 @@ Please open vscode developer tools and check the console for any errors or logs 
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Angular Version [eg. 6.0.1]
+- OS: [e.g. iOS]
+- Angular Version [eg. 6.0.1]
 - Node version [eg. 6.0.1]
+- karma.conf.js path from the root folder you re opening in vscode.
 
 **Additional context**
 Add any other context about the problem here.
