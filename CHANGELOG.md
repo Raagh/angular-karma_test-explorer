@@ -8,7 +8,7 @@ and starts again, this envolves resources and time but ATM there is no other way
 
 ### Version 1.0.1
 
-- If error cannot be parsed return default karma error message.
+- Fix parsing bug if filePath of test is undefined.
 
 ### Version 1.0.0
 

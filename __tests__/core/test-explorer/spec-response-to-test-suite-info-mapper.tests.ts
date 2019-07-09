@@ -160,3 +160,37 @@ test("suite with empty suite and complete innersuite test should be mapped to a 
   // Assert
   expect(result.children).toEqual(expectedResult);
 });
+
+test("suite with one test and undefined filePath should not crash", () => {
+  // Arrange
+  const savedSpecs = [
+    {
+      suite: ["suite1"],
+      description: "test1",
+      filePath: undefined,
+    },
+  ] as SpecCompleteResponse[];
+  const expectedResult = [
+    {
+      id: "suite1",
+      label: "suite1",
+      type: "suite",
+      file: undefined,
+      children: [
+        {
+          id: "suite1 test1",
+          label: "test1",
+          type: "test",
+          file: undefined,
+        },
+      ],
+    },
+  ] as TestSuiteInfo[];
+  const mapper = new SpecResponseToTestSuiteInfoMapper("");
+
+  // Act
+  const result = mapper.map(savedSpecs);
+
+  // Assert
+  expect(result.children).toEqual(expectedResult);
+});

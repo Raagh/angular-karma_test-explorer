@@ -74,7 +74,7 @@ export class SpecResponseToTestSuiteInfoMapper {
     suiteNode.children.push({
       id: suiteLookup + " " + specComplete.description,
       label: specComplete.description,
-      file: path.join(this.projectRootPath, specComplete.filePath as string),
+      file: specComplete.filePath ? path.join(this.projectRootPath, specComplete.filePath as string) : undefined,
       type: "test",
     } as TestInfo);
   }
@@ -83,7 +83,7 @@ export class SpecResponseToTestSuiteInfoMapper {
     return {
       id: suiteLookup,
       label: specComplete.suite[specComplete.suite.length - 1],
-      file: path.join(this.projectRootPath, specComplete.filePath as string),
+      file: specComplete.filePath ? path.join(this.projectRootPath, specComplete.filePath as string) : undefined,
       type: "suite",
       children: [],
     } as TestSuiteInfo;
