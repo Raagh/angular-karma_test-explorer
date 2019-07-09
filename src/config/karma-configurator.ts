@@ -15,8 +15,14 @@ export class KarmaConfigurator {
     config.logLevel = config.LOG_INFO;
     config.autoWatch = false;
     config.autoWatchBatchDelay = 0;
-    config.browsers = ["ChromeHeadless"];
+    config.browsers = ["ChromeTestExplorer"];
     config.singleRun = false;
+    config.customLaunchers = {
+      ChromeTestExplorer: {
+        base: "ChromeHeadless",
+        flags: ["--remote-debugging-port=9333"],
+      },
+    };
   }
 
   public dontLoadOriginalConfigurationFileIntoBrowser(config: Config, originalConfigPath: string) {
