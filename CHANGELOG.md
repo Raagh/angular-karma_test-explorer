@@ -1,3 +1,11 @@
+### Version 1.0.2
+
+- Cancel current test run. 
+**WARNING** 
+This is a major hack, karma and angular dont support a way to stop current run without
+killing the test server, so when you click the cancel button what it really happens is that the test server is killed
+and starts again, this envolves resources and time but ATM there is no other way of doing it.
+
 ### Version 1.0.1
 
 - If error cannot be parsed return default karma error message.
