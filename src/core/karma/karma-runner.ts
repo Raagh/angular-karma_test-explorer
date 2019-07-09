@@ -34,6 +34,15 @@ export class KarmaRunner {
     await this.karmaHttpCaller.callKarmaRunWithConfig(karmaRunParameters.config);
   }
 
+  public async stopRun() {
+    return new Promise<void>(resolve => {
+      const stopper = require("karma").stopper;
+      stopper.stop({ port: 9876 }, (exitCode: any) => {
+        resolve();
+      });
+    });
+  }
+
   private log(tests: string[]): void {
     const [suit, ...description] = tests[0].split(" ");
     this.logger.info(`Running [ suite: ${suit}${description.length > 0 ? ", test: " + description.join(" ") : ""} ]`, {

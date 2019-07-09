@@ -45,6 +45,12 @@ export class AngularKarmaTestExplorer {
     this.logger.info("Run completed with status: " + runCompleteEvent.results);
   }
 
+  public async stopCurrentRun(): Promise<void> {
+    if (this.karmaRunner.isKarmaRunning()) {
+      this.testServer.stop();
+    }
+  }
+
   public debugTests(tests: string[]): void {
     throw new Error("Not Implemented");
   }

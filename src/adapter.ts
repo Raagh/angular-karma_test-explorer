@@ -97,9 +97,8 @@ export class Adapter implements TestAdapter {
     this.testExplorer.debugTests(tests);
   }
 
-  public cancel(): void {
-    // in a "real" TestAdapter this would kill the child process for the current test run (if there is any)
-    throw new Error("Method not implemented.");
+  public async cancel(): Promise<void> {
+    await this.testExplorer.stopCurrentRun();
   }
 
   public async dispose(): Promise<void> {
