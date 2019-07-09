@@ -47,7 +47,7 @@ export class AngularKarmaTestExplorer {
 
   public async stopCurrentRun(): Promise<void> {
     if (this.karmaRunner.isKarmaRunning()) {
-      this.testServer.stop();
+      await this.testServer.stopAsync();
     }
   }
 

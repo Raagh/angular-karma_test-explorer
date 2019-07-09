@@ -47,10 +47,12 @@ export class KarmaEventListener {
 
         socket.on("disconnect", (event: any) => {
           this.logger.info("AngularReporter closed connection with event: " + event);
+          const isKarmaBeingClosedByChrome = event === "transport close" && !this.karmaBeingReloaded;
+          const isKarmaBeingClosedOnReloadingByTestExplorer = event === "forced close" && this.karmaBeingReloaded;
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
-          if (event === "transport close" && !this.karmaBeingReloaded) {
+          if (isKarmaBeingClosedByChrome || isKarmaBeingClosedOnReloadingByTestExplorer) {
             commands.executeCommand("test-explorer.reload");
           }
         });
