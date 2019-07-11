@@ -7,6 +7,7 @@ import { Logger } from "../shared/logger";
 import { EventEmitter } from "../shared/event-emitter";
 import { commands } from "vscode";
 import { TestResult } from "../../model/enums/test-status.enum";
+import { ErrorCodes } from "../../model/enums/error-codes.enum";
 
 export class KarmaEventListener {
   public isServerLoaded: boolean = false;
@@ -47,8 +48,8 @@ export class KarmaEventListener {
 
         socket.on("disconnect", (event: any) => {
           this.logger.info("AngularReporter closed connection with event: " + event);
-          const isKarmaBeingClosedByChrome = event === "transport close" && !this.karmaBeingReloaded;
-          const isKarmaBeingClosedOnReloadingByTestExplorer = event === "forced close" && this.karmaBeingReloaded;
+          const isKarmaBeingClosedByChrome = event === ErrorCodes.TransportClose && !this.karmaBeingReloaded;
+          const isKarmaBeingClosedOnReloadingByTestExplorer = event === ErrorCodes.ForcedClose && this.karmaBeingReloaded;
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.

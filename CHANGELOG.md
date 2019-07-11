@@ -2,7 +2,7 @@
 
 - Debug tests feature.
 
-### Version 1.0.2
+### Version 1.0.3
 
 - Cancel current test run.
   **WARNING**

@@ -76,3 +76,22 @@ test("stop should effectively stop a the running angular process", async () => {
   expect(processHandler.kill).toBeCalledTimes(1);
   expect(karmaEventListener.stopListeningToKarma).toBeCalledTimes(1);
 });
+
+test("stopAsync should effectively stop a the running angular process", async () => {
+  // Arrange
+  karmaEventListener.isServerLoaded = true;
+  const angularServer = new AngularServer(
+    karmaEventListener,
+    new loggerMockedClass(),
+    processHandler,
+    angularProjectConfigLoader,
+    new AngularProcessConfigurator(fileHelper)
+  );
+
+  // Act
+  angularServer.stopAsync();
+
+  // Assert
+  expect(processHandler.killAsync).toBeCalledTimes(1);
+  expect(karmaEventListener.stopListeningToKarma).toBeCalledTimes(1);
+});

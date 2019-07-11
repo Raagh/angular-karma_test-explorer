@@ -100,6 +100,58 @@ test("runTests should be called only once with the correct sent tests name", asy
   expect(karmaRunner.runTests).toBeCalledTimes(1);
 });
 
+test("stopCurrentRun should stop server if server karma server is running", async () => {
+  // Arrange
+  karmaRunner.isKarmaRunning.mockReturnValue(true);
+  karmaEventListener.runCompleteEvent = { results: [] };
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
+
+  // Act
+  await angularKarmaTestExplorer.stopCurrentRun();
+
+  // Assert
+  expect(angularServer.stopAsync).toBeCalledTimes(1);
+});
+
+test("stopCurrentRun should not stop server if server karma server is not running", async () => {
+  // Arrange
+  karmaRunner.isKarmaRunning.mockReturnValue(false);
+  karmaEventListener.runCompleteEvent = { results: [] };
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
+
+  // Act
+  await angularKarmaTestExplorer.stopCurrentRun();
+
+  // Assert
+  expect(angularServer.stopAsync).toBeCalledTimes(0);
+});
+
+test("dispose should stop server if server karma server is running", async () => {
+  // Arrange
+  karmaRunner.isKarmaRunning.mockReturnValue(true);
+  karmaEventListener.runCompleteEvent = { results: [] };
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
+
+  // Act
+  await angularKarmaTestExplorer.dispose();
+
+  // Assert
+  expect(angularServer.stop).toBeCalledTimes(1);
+});
+
+test("dispose should not stop server if server karma server is not running", async () => {
+  // Arrange
+  karmaRunner.isKarmaRunning.mockReturnValue(false);
+  karmaEventListener.runCompleteEvent = { results: [] };
+  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
+
+  // Act
+  await angularKarmaTestExplorer.dispose();
+
+  // Assert
+  expect(angularServer.stop).toBeCalledTimes(0);
+});
+
 test("debug tests should throw not implemented exception", async () => {
   // Arrange
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
