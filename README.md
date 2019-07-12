@@ -13,6 +13,7 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Reload tests manually by the reload button in the UI.
 - Run all tests together, run set of tests, run single test and see results in the UI.
 - Shows a failed test's log when the test is selected in the explorer.
+- Debug tests.
 - Cancel current run. (READ NOTES AT THE END ABOUT THIS FEATURE).
 - Supports Angular CLI projects.
 - Supports standalone karma (specify "Karma" as projectType).
@@ -36,7 +37,6 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 
 ## Planned features
 
-- Debug tests.
 - Block during test execution.
 - Support Ionic projects.
 - Support multiple angular apps per workspace.
@@ -62,7 +62,8 @@ List of currently used properties:
 - If you find a bug or think that a feature is missing and is not in the backlog please report it using the appropiate github issue template.
 - If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
 
-## WARNING - "CANCEL CURRENT RUN" FEATURE ##
+## WARNING - "CANCEL CURRENT RUN" FEATURE
+
 This is a major hack, karma and angular dont support a way to stop current run without
 killing the test server, so when you click the cancel button what it really happens is that the test server is killed
 and starts again, this envolves resources and time but ATM there is no other way of doing it, use at your own risk.

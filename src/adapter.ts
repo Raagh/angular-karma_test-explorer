@@ -8,6 +8,7 @@ import {
   TestRunFinishedEvent,
   TestSuiteEvent,
   TestEvent,
+  TestSuiteInfo,
 } from "vscode-test-adapter-api";
 import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
@@ -22,6 +23,7 @@ export class Adapter implements TestAdapter {
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
   private readonly testExplorer: AngularKarmaTestExplorer;
   private isTestProcessRunning: boolean = false;
+  private loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -76,9 +78,9 @@ export class Adapter implements TestAdapter {
       this.config.defaultAngularProjectName = angularProject;
     }
 
-    const loadedTests = await this.testExplorer.loadTests(this.config);
+    this.loadedTests = await this.testExplorer.loadTests(this.config);
 
-    this.testsEmitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
+    this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
   }
 
   public async run(tests: string[]): Promise<void> {
@@ -98,17 +100,51 @@ export class Adapter implements TestAdapter {
 
   public async debug(tests: string[]): Promise<void> {
     // in a "real" TestAdapter this would start a test run in a child process and attach the debugger to it
-
     let currentSession: vscode.DebugSession | undefined;
 
-    const promise = this.run(tests);
-
-    if (!promise || !this.isTestProcessRunning) {
-      this.log.error("Starting the worker failed");
-      return;
+    const firstFileNode = this.loadedTests.children[0];
+    if (firstFileNode.file) {
+      const fileURI = vscode.Uri.file(firstFileNode.file);
+      const breakpoint = new vscode.SourceBreakpoint(new vscode.Location(fileURI, new vscode.Position(1, 0)));
+      vscode.debug.addBreakpoints([breakpoint]);
+      const subscription = vscode.debug.onDidTerminateDebugSession(session => {
+        if (currentSession !== session) {
+          return;
+        }
+        vscode.debug.removeBreakpoints([breakpoint]);
+        subscription.dispose();
+      });
     }
 
+    // const promise = this.run(tests);
+    // if (!promise || !this.isTestProcessRunning) {
+    //   this.log.error("Starting the worker failed");
+    //   return;
+    // }
+
     this.log.info("Starting the debug session");
+    this.manageVSCodeDebuggingSession(currentSession);
+  }
+
+  public async cancel(): Promise<void> {
+    await this.testExplorer.stopCurrentRun();
+  }
+
+  public async dispose(): Promise<void> {
+    this.testExplorer.dispose();
+
+    for (const disposable of this.disposables) {
+      disposable.dispose();
+    }
+    this.disposables = [];
+  }
+
+  private loadConfig() {
+    const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
+    this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
+  }
+
+  private async manageVSCodeDebuggingSession(currentSession?: vscode.DebugSession) {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(this.workspace.uri);
     await vscode.debug.startDebugging(workspaceFolder, {
       name: "Debug Angular/Karma Tests",
@@ -116,8 +152,7 @@ export class Adapter implements TestAdapter {
       request: "attach",
       protocol: "inspector",
       timeout: 30000,
-      stopOnEntry: true,
-      address: "localhost",
+      address: "localhost:9876",
       port: 9333,
       pathMapping: {
         "/": "${workspaceRoot}/",
@@ -142,23 +177,5 @@ export class Adapter implements TestAdapter {
       this.log.info("Debug session ended");
       subscription.dispose();
     });
-  }
-
-  public async cancel(): Promise<void> {
-    await this.testExplorer.stopCurrentRun();
-  }
-
-  public async dispose(): Promise<void> {
-    this.testExplorer.dispose();
-
-    for (const disposable of this.disposables) {
-      disposable.dispose();
-    }
-    this.disposables = [];
-  }
-
-  private loadConfig() {
-    const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
-    this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
   }
 }
