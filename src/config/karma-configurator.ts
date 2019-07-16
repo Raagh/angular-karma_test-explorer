@@ -20,7 +20,8 @@ export class KarmaConfigurator {
     config.customLaunchers = {
       ChromeTestExplorer: {
         base: "ChromeHeadless",
-        flags: ["--remote-debugging-port=9333"],
+        debug: true,
+        flags: ["--remote-debugging-port=9222"],
       },
     };
   }

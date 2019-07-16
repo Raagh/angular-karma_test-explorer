@@ -147,17 +147,12 @@ export class Adapter implements TestAdapter {
   private async manageVSCodeDebuggingSession(currentSession?: vscode.DebugSession) {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(this.workspace.uri);
     await vscode.debug.startDebugging(workspaceFolder, {
-      name: "Debug Angular/Karma Tests",
-      type: "chrome",
-      request: "attach",
-      protocol: "inspector",
-      timeout: 30000,
-      address: "localhost:9876",
-      port: 9333,
-      pathMapping: {
-        "/": "${workspaceRoot}/",
-        "/base/": "${workspaceRoot}/",
-      },
+      "name": "Debug tests",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "sourceMaps": true,
+      "webRoot": "${workspaceRoot}"
     });
 
     // workaround for Microsoft/vscode#70125
