@@ -1,5 +1,4 @@
 import { IOCContainer } from "./infrastructure/ioc-container";
-import * as vscode from "vscode";
 import {
   TestAdapter,
   TestLoadStartedEvent,
@@ -14,6 +13,8 @@ import { Log } from "vscode-test-adapter-util";
 import { AngularKarmaTestExplorer } from "./core/angular-karma-test-explorer";
 import { TestExplorerConfiguration } from "./model/test-explorer-configuration";
 import { ProjectType } from "./model/enums/project-type.enum";
+import * as vscode from "vscode";
+import { Debugger } from "./core/test-explorer/debugger";
 
 export class Adapter implements TestAdapter {
   public config: TestExplorerConfiguration = {} as TestExplorerConfiguration;
@@ -22,6 +23,7 @@ export class Adapter implements TestAdapter {
   private readonly testStatesEmitter = new vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>();
   private readonly autorunEmitter = new vscode.EventEmitter<void>();
   private readonly testExplorer: AngularKarmaTestExplorer;
+  private readonly debugger: Debugger;
   private isTestProcessRunning: boolean = false;
   private loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
 
@@ -59,13 +61,11 @@ export class Adapter implements TestAdapter {
     );
 
     this.loadConfig();
-    const container = new IOCContainer();
-    this.testExplorer = container.registerTestExplorerDependencies(
-      this.testStatesEmitter,
-      channel,
-      vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspace.uri).get("debugMode") as boolean,
-      projectType
-    );
+    const container = new IOCContainer(channel, vscode.workspace
+      .getConfiguration("angularKarmaTestExplorer", workspace.uri)
+      .get("debugMode") as boolean);
+    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, projectType);
+    this.debugger = container.registerDebuggerDependencies();
   }
 
   public async load(angularProject?: string): Promise<void> {
@@ -99,31 +99,17 @@ export class Adapter implements TestAdapter {
   }
 
   public async debug(tests: string[]): Promise<void> {
-    // in a "real" TestAdapter this would start a test run in a child process and attach the debugger to it
-    let currentSession: vscode.DebugSession | undefined;
-
-    const firstFileNode = this.loadedTests.children[0];
-    if (firstFileNode.file) {
-      const fileURI = vscode.Uri.file(firstFileNode.file);
-      const breakpoint = new vscode.SourceBreakpoint(new vscode.Location(fileURI, new vscode.Position(1, 0)));
-      vscode.debug.addBreakpoints([breakpoint]);
-      const subscription = vscode.debug.onDidTerminateDebugSession(session => {
-        if (currentSession !== session) {
-          return;
-        }
-        vscode.debug.removeBreakpoints([breakpoint]);
-        subscription.dispose();
-      });
+    if (!vscode.debug.activeDebugSession) {
+      this.log.info("Starting the debug session");
+      await this.debugger.manageVSCodeDebuggingSession(this.loadedTests.children[0].file as string, this.workspace, false);
     }
 
-    // const promise = this.run(tests);
-    // if (!promise || !this.isTestProcessRunning) {
-    //   this.log.error("Starting the worker failed");
-    //   return;
-    // }
+    const promise = this.run(tests);
 
-    this.log.info("Starting the debug session");
-    this.manageVSCodeDebuggingSession(currentSession);
+    if (!promise || !this.isTestProcessRunning) {
+      this.log.error("Starting debugging failed");
+      return;
+    }
   }
 
   public async cancel(): Promise<void> {
@@ -142,35 +128,5 @@ export class Adapter implements TestAdapter {
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
     this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
-  }
-
-  private async manageVSCodeDebuggingSession(currentSession?: vscode.DebugSession) {
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(this.workspace.uri);
-    await vscode.debug.startDebugging(workspaceFolder, {
-      "name": "Debug tests",
-      "type": "chrome",
-      "request": "attach",
-      "port": 9222,
-      "sourceMaps": true,
-      "webRoot": "${workspaceRoot}"
-    });
-
-    // workaround for Microsoft/vscode#70125
-    await new Promise(resolve => setImmediate(resolve));
-
-    currentSession = vscode.debug.activeDebugSession;
-    if (!currentSession) {
-      this.log.error("No active debug session - aborting");
-      return;
-    }
-
-    // Kill the process to ensure we're good once debugging is done
-    const subscription = vscode.debug.onDidTerminateDebugSession(session => {
-      if (currentSession !== session) {
-        return;
-      }
-      this.log.info("Debug session ended");
-      subscription.dispose();
-    });
   }
 }

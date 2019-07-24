@@ -10,24 +10,27 @@ import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } 
 import { EventEmitter } from "../core/shared/event-emitter";
 import { ProjectType } from "../model/enums/project-type.enum";
 import * as vscode from "vscode";
+import { Debugger } from "../core/test-explorer/debugger";
 
 export class IOCContainer {
-  public constructor() {}
+  public constructor(private readonly channel: vscode.OutputChannel, private readonly isDebugMode: boolean) {}
   public registerTestExplorerDependencies(
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
-    channel: vscode.OutputChannel,
-    isDebugMode: boolean,
     projectType: ProjectType
   ): AngularKarmaTestExplorer {
     // poor man's dependency injection
     const fileHelper = new FileHelper();
     const karmaHelper = new TestServerValidation(fileHelper);
-    const logger = new Logger(channel, isDebugMode);
+    const logger = new Logger(this.channel, this.isDebugMode);
     const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
     const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpClient());
     const testServerFactory = new TestServerFactory(karmaEventListener, logger, fileHelper);
     const testServer = testServerFactory.createTestServer(projectType);
 
     return new AngularKarmaTestExplorer(karmaRunner, karmaHelper, logger, testServer, karmaEventListener);
+  }
+
+  public registerDebuggerDependencies(): Debugger {
+    return new Debugger(new Logger(this.channel, this.isDebugMode));
   }
 }
