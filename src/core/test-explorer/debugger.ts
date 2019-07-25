@@ -4,9 +4,8 @@ import * as vscode from "vscode";
 export class Debugger {
   public constructor(private readonly logger: Logger) {}
 
-  public async manageVSCodeDebuggingSession(suiteFilePath: string, workspace: any, setBreakpointOnStart: boolean): Promise<void> {
+  public async manageVSCodeDebuggingSession(suiteFilePath: string, workspace: any): Promise<void> {
     let currentSession: vscode.DebugSession | undefined;
-    this.setBreakpointOnStart(suiteFilePath, setBreakpointOnStart, currentSession);
 
     currentSession = await this.startDebuggingSession(workspace, currentSession);
     if (!currentSession) {
@@ -38,20 +37,5 @@ export class Debugger {
     await new Promise(resolve => setImmediate(resolve));
     currentSession = vscode.debug.activeDebugSession;
     return currentSession;
-  }
-
-  private setBreakpointOnStart(suiteFilePath: string, setBreakpointOnStart: boolean, currentSession: vscode.DebugSession | undefined) {
-    if (suiteFilePath && setBreakpointOnStart) {
-      const fileURI = vscode.Uri.file(suiteFilePath);
-      const breakpoint = new vscode.SourceBreakpoint(new vscode.Location(fileURI, new vscode.Position(1, 0)));
-      vscode.debug.addBreakpoints([breakpoint]);
-      const subscription = vscode.debug.onDidTerminateDebugSession(session => {
-        if (currentSession !== session) {
-          return;
-        }
-        vscode.debug.removeBreakpoints([breakpoint]);
-        subscription.dispose();
-      });
-    }
   }
 }

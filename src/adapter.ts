@@ -101,7 +101,7 @@ export class Adapter implements TestAdapter {
   public async debug(tests: string[]): Promise<void> {
     if (!vscode.debug.activeDebugSession) {
       this.log.info("Starting the debug session");
-      await this.debugger.manageVSCodeDebuggingSession(this.loadedTests.children[0].file as string, this.workspace, false);
+      await this.debugger.manageVSCodeDebuggingSession(this.loadedTests.children[0].file as string, this.workspace);
     }
 
     const promise = this.run(tests);
