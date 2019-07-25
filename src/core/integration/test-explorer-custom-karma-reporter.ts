@@ -7,11 +7,14 @@ import * as io from "socket.io-client";
 import * as karma from "karma";
 import * as path from "path";
 
-function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, formatError: any) {
+function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, injector: any) {
   this.config = config;
   this.emitter = emitter;
   const defaultSocketPort = process.env.defaultSocketPort as string;
   this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true });
+  this.socket.heartbeatTimeout = 24 * 60 * 60 * 1000;
+  this.socket.heartbeatInterval = 24 * 60 * 60 * 1000;
+  configureTimeouts(injector);
 
   const emitEvent = (eventName: any, eventResults: any = null) => {
     this.socket.emit(eventName, { name: eventName, results: eventResults });
@@ -78,6 +81,28 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
   });
 }
 
+function configureTimeouts(injector: any) {
+  process.nextTick(() => {
+    const webServer = injector.get("webServer");
+    if (webServer) {
+      // IDE posts http '/run' request to trigger tests (see intellijRunner.js).
+      // If a request executes more than `httpServer.timeout`, it will be timed out.
+      // Disable timeout, as by default httpServer.timeout=120 seconds, not enough for suspended execution.
+      webServer.timeout = 0;
+    }
+    const socketServer = injector.get("socketServer");
+    if (socketServer) {
+      // Disable socket.io heartbeat (ping) to avoid browser disconnecting when debugging tests,
+      // because no ping requests are sent when test execution is suspended on a breakpoint.
+      // Default values are not enough for suspended execution:
+      //    'heartbeat timeout' (pingTimeout) = 60000 ms
+      //    'heartbeat interval' (pingInterval) = 25000 ms
+      socketServer.set("heartbeat timeout", 24 * 60 * 60 * 1000);
+      socketServer.set("heartbeat interval", 24 * 60 * 60 * 1000);
+    }
+  });
+}
+
 function collectRunState(runResult: karma.TestResults): RunStatus {
   if (runResult.disconnected) {
     return RunStatus.Timeout;
@@ -88,7 +113,7 @@ function collectRunState(runResult: karma.TestResults): RunStatus {
   }
 }
 
-TestExplorerCustomReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "formatError"];
+TestExplorerCustomReporter.$inject = ["baseReporterDecorator", "config", "logger", "emitter", "injector"];
 
 export const instance = TestExplorerCustomReporter;
 export const name = "AngularReporter";

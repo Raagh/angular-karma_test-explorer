@@ -16,6 +16,7 @@ export class KarmaConfigurator {
     config.autoWatch = false;
     config.autoWatchBatchDelay = 0;
     config.browsers = ["ChromeTestExplorer"];
+    config.browserNoActivityTimeout = undefined;
     config.singleRun = false;
     config.customLaunchers = {
       ChromeTestExplorer: {
