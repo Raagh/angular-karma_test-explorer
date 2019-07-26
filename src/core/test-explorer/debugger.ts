@@ -13,7 +13,6 @@ export class Debugger {
       return;
     }
 
-    // Kill the process to ensure we're good once debugging is done
     const subscription = vscode.debug.onDidTerminateDebugSession(session => {
       if (currentSession !== session) {
         return;

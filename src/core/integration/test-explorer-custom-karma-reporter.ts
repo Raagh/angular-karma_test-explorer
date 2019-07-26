@@ -85,7 +85,7 @@ function configureTimeouts(injector: any) {
   process.nextTick(() => {
     const webServer = injector.get("webServer");
     if (webServer) {
-      // IDE posts http '/run' request to trigger tests (see intellijRunner.js).
+      // IDE posts http '/run' request to trigger tests (see karma-http-client.ts).
       // If a request executes more than `httpServer.timeout`, it will be timed out.
       // Disable timeout, as by default httpServer.timeout=120 seconds, not enough for suspended execution.
       webServer.timeout = 0;
