@@ -7,6 +7,7 @@ export class SpecCompleteResponse {
   public status: TestResult;
   public timeSpentInMilliseconds: string;
   public filePath?: string;
+  public line?: number;
 
   public constructor(
     _failureMessages: string[],
@@ -14,7 +15,8 @@ export class SpecCompleteResponse {
     _description: string,
     _status: TestResult,
     _timeSpentInMilliseconds: string,
-    _filePath?: string
+    _filePath?: string,
+    _line?: number
   ) {
     this.failureMessages = _failureMessages;
     this.suite = _suite;
@@ -22,5 +24,6 @@ export class SpecCompleteResponse {
     this.status = _status;
     this.timeSpentInMilliseconds = _timeSpentInMilliseconds;
     this.filePath = _filePath;
+    this.line = _line;
   }
 }

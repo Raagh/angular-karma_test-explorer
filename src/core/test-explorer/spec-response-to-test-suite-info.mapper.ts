@@ -76,6 +76,7 @@ export class SpecResponseToTestSuiteInfoMapper {
       label: specComplete.description,
       file: specComplete.filePath ? path.join(this.projectRootPath, specComplete.filePath as string) : undefined,
       type: "test",
+      line: specComplete.line ? (specComplete.line as number) : undefined,
     } as TestInfo);
   }
 

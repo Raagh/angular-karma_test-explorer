@@ -1,5 +1,6 @@
 import { FileHelper } from "./../integration/file-helper";
 import * as glob from "glob";
+import * as RegExpEscape from "escape-string-regexp";
 
 export class PathFinder {
   private readonly regexPattern: RegExp = /((describe)|(it))\s*\(\s*((?<![\\])[\`\'\"])((?:.(?!(?<![\\])\4))*.?)\4/gi;
@@ -17,6 +18,15 @@ export class PathFinder {
     return paths;
   }
 
+  public getSpecLine(spec: string, path: string, encoding: string): number | undefined {
+    const fileText = this.fileHelper.readFile(path, encoding) as any;
+
+    if (!fileText) {
+      return;
+    }
+
+    return this.findLineContaining(spec, fileText);
+  }
   public getTestFilePath(paths: any, describe: any, it: any) {
     const testFile = Object.keys(paths).find(path => this.exist(paths, path, describe, it));
     if (testFile === undefined) {
@@ -26,7 +36,9 @@ export class PathFinder {
   }
 
   private getTestFileData(path: any, encoding: any) {
-    return this.removeNewLines(this.removeComments(this.fileHelper.readFile(path, encoding)));
+    const fileText = this.fileHelper.readFile(path, encoding);
+
+    return this.removeNewLines(this.removeComments(fileText));
   }
 
   private parseTestFile(paths: any, path: any, data: any) {
@@ -59,5 +71,18 @@ export class PathFinder {
 
   private removeNewLines(data: any) {
     return data.replace(/\r?\n|\r/g, "");
+  }
+
+  private findLineContaining(needle: string, haystack: string | undefined): number | undefined {
+    if (!haystack) {
+      return undefined;
+    }
+
+    const index = haystack.search(RegExpEscape(needle));
+    if (index < 0) {
+      return undefined;
+    }
+
+    return haystack.substr(0, index).split("\n").length - 1;
   }
 }

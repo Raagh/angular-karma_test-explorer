@@ -13,8 +13,9 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Reload tests manually by the reload button in the UI.
 - Run all tests together, run set of tests, run single test and see results in the UI.
 - Shows a failed test's log when the test is selected in the explorer.
-- Debug tests.
-- Cancel current run. (READ NOTES AT THE END ABOUT THIS FEATURE).
+- Block during test execution.
+- Debug tests (Please read the [official documentation for this extension](DOCUMENTATION.md)).
+- Cancel current run (Please read the [official documentation for this extension](DOCUMENTATION.md)).
 - Supports Angular CLI projects.
 - Supports standalone karma (specify "Karma" as projectType).
 - Supports non CLI Angular projects (specify "Angular" as projectType).
@@ -27,21 +28,16 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Allows configuration for different type of workflows: Angular project path, project type, karma.conf path, default project name for multiple projects inside one root.
 - Forwards the console output from Karma to a VS Code output channel(Test Explorer Logs).
 
-## Getting started
+## How to use it?
 
-- Open the project folder.
-- Install the extension.
-- Restart VS Code and open the Test view.
-- Run your tests using the ![Run](img/run.png) icon.
-- If a test failed click on it and you will see the fail information on vscode `Test Explorer` output channel.
+- Check the [official documentation for this extension](DOCUMENTATION.md).
 
 ## Planned features
 
-- Block during test execution.
+- Detect file changes(workspace, new test definitions) and reload tests automatically.
+- Lets you choose test suites or individual tests in the explorer that should be run automatically after each file change.
 - Support Ionic projects.
 - Support multiple angular apps per workspace.
-- Detect file changes(workspace, test definitions) and reload tests automatically.
-- Lets you choose test suites or individual tests in the explorer that should be run automatically after each file change.
 
 ## Configuration
 
@@ -56,14 +52,10 @@ List of currently used properties:
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
 
+if you need help with the configuration check the [official documentation for this extension](DOCUMENTATION.md), or submit a question in the issues section.
+
 ## What about bugs and fixes?
 
 - If something goes wrong you will see error logs on vscode `Test Explorer Logs` output channel.
 - If you find a bug or think that a feature is missing and is not in the backlog please report it using the appropiate github issue template.
 - If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
-
-## WARNING - "CANCEL CURRENT RUN" FEATURE
-
-This is a major hack, karma and angular dont support a way to stop current run without
-killing the test server, so when you click the cancel button what it really happens is that the test server is killed
-and starts again, this envolves resources and time but ATM there is no other way of doing it, use at your own risk.

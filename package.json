@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",
+    "escape-string-regexp": "^2.0.0",
     "express": "^4.16.4",
     "glob": "^7.1.4",
     "karma": "~4.0.1",
@@ -69,8 +70,8 @@
     "@types/semver": "~5.5.0",
     "@types/socket.io-client": "^1.4.32",
     "jest": "^24.1.0",
-    "jest-when": "^2.5.0",
-    "lodash": "^4.17.11",
+    "jest-when": "^2.6.0",
+    "lodash": "^4.17.15",
     "ts-jest": "^24.0.0",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",

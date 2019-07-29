@@ -1,14 +1,13 @@
 ### Version 1.1.0
 
 - Debug tests feature.
+- Block during test execution.
+- Created official documentation with examples of the different configurations.
+- Fixed a bug where codelenses and gutter decorations where not appearing from the get go.
 
 ### Version 1.0.3
 
 - Cancel current test run.
-  **WARNING**
-  This is a major hack, karma and angular dont support a way to stop current run without
-  killing the test server, so when you click the cancel button what it really happens is that the test server is killed
-  and starts again, this envolves resources and time but ATM there is no other way of doing it.
 
 ### Version 1.0.1
 

@@ -99,21 +99,13 @@ export class Adapter implements TestAdapter {
   }
 
   public async debug(tests: string[]): Promise<void> {
-    if (!vscode.debug.activeDebugSession) {
-      this.log.info("Starting the debug session");
-      await this.debugger.manageVSCodeDebuggingSession(this.loadedTests.children[0].file as string, this.workspace);
-    }
-
-    const promise = this.run(tests);
-
-    if (!promise || !this.isTestProcessRunning) {
-      this.log.error("Starting debugging failed");
-      return;
-    }
+    await this.debugger.manageVSCodeDebuggingSession(this.workspace);
+    await this.run(tests);
   }
 
   public async cancel(): Promise<void> {
     await this.testExplorer.stopCurrentRun();
+    this.isTestProcessRunning = false;
   }
 
   public async dispose(): Promise<void> {

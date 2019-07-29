@@ -41,8 +41,14 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
       status = TestResult.Success;
     }
 
+    let lineNumber = undefined;
     const filePath = pathFinder.getTestFilePath(paths, spec.suite[0], spec.description);
-    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath) as any;
+
+    if (filePath) {
+      lineNumber = pathFinder.getSpecLine(spec.description, filePath, ENCODING);
+    }
+
+    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath, lineNumber) as any;
 
     if (result.status === TestResult.Failed) {
       result.fullResponse = spec;

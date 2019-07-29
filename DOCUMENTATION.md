@@ -1,0 +1,47 @@
+## Getting started
+
+- Open the project folder.
+- Install the extension.
+- Restart VS Code and open the Test view.
+- Run your tests using the ![Run](img/run.png) icon.
+- Debug tests by setting breakpoints in your code and press the ![Debug](img/debug.png) icon to start debugging.
+- If a test failed click on it and you will see the fail information on vscode `Test Explorer` output channel, or gutter decorations inside the spec file.
+
+## Advanced Configuration
+
+If you want to open a folder were the project is just one folder inside your root (for example if you open a root folder and inside you have one folder for the Angular app and another for the API).
+You need to let the `Test Explorer` where the Angular app is located inside that root by adding the following extra configuration independent of the type of project:
+
+| Property                                   | Description                                                                      |
+| ------------------------------------------ | -------------------------------------------------------------------------------- |
+| `angularKarmaTestExplorer.projectRootPath` | The working directory where the project is located (relative to the root folder) |
+
+For `ANGULAR CLI` projects basic configuration is set as `DEFAULT`. Just open the folder and everything should start normally.
+
+For `ANGULAR NON CLI` projects you need to setup the following configuration:
+
+| Property                                     | Description                                                                          |
+| -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `angularKarmaTestExplorer.karmaConfFilePath` | The path where the karma.conf.js is located (relative to the angular project folder) |
+| `angularKarmaTestExplorer.projectType`       | 'Angular'                                                                            |
+
+For `KARMA` projects you need to setup the following configuration:
+
+| Property                                     | Description                                                                          |
+| -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `angularKarmaTestExplorer.karmaConfFilePath` | The path where the karma.conf.js is located (relative to the angular project folder) |
+| `angularKarmaTestExplorer.projectType`       | 'Karma'                                                                              |
+
+---
+
+## SPECIAL NOTES
+
+### "CANCEL CURRENT RUN" FEATURE
+
+This is a major hack, karma and angular dont support a way to stop current run without
+killing the test server, so when you click the cancel button what it really happens is that the test server is killed
+and starts again, this envolves resources and time but ATM there is no other way of doing it, use at your own risk.
+
+### "DEBUG TESTS" FEATURE
+
+Unfortunately because of limitations inside KarmaTestRunner the debugging session cannot be stopped automatically without restarting the entire karma test enviroment, since this is a very slow process it was decided that the user has to stop the debugging session in VSCODE manually before continuing running tests.If this is not done all consecuent runs will be debugged .

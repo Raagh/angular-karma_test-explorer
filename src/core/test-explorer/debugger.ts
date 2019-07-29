@@ -4,7 +4,11 @@ import * as vscode from "vscode";
 export class Debugger {
   public constructor(private readonly logger: Logger) {}
 
-  public async manageVSCodeDebuggingSession(suiteFilePath: string, workspace: any): Promise<void> {
+  public async manageVSCodeDebuggingSession(workspace: any): Promise<void> {
+    if (vscode.debug.activeDebugSession) {
+      return;
+    }
+
     let currentSession: vscode.DebugSession | undefined;
 
     currentSession = await this.startDebuggingSession(workspace, currentSession);
