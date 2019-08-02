@@ -14,8 +14,8 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Run all tests together, run set of tests, run single test and see results in the UI.
 - Shows a failed test's log when the test is selected in the explorer.
 - Block during test execution.
-- Debug tests (Please read the [official documentation for this extension](DOCUMENTATION.md)).
-- Cancel current run (Please read the [official documentation for this extension](DOCUMENTATION.md)).
+- Debug tests (Please read the [special notes](DOCUMENTATION.md) about this feature).
+- Cancel current run (Please read the [special notes](DOCUMENTATION.md) about this feature).
 - Supports Angular CLI projects.
 - Supports standalone karma (specify "Karma" as projectType).
 - Supports non CLI Angular projects (specify "Angular" as projectType).
@@ -30,7 +30,7 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 
 ## How to use it?
 
-- Check the [official documentation for this extension](DOCUMENTATION.md).
+- Check the [official documentation for this extension](DOCUMENTATION.md) to know the proper configuration for your specific scenario.
 
 ## Planned features
 
@@ -38,21 +38,6 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - Lets you choose test suites or individual tests in the explorer that should be run automatically after each file change.
 - Support Ionic projects.
 - Support multiple angular apps per workspace.
-
-## Configuration
-
-List of currently used properties:
-
-| Property                                               | Description                                                                                                                                    |
-| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `angularKarmaTestExplorer.defaultAngularProjectName`   | (Only for AngularCLI projects) Set the default angular project to be tested, if this is is null default project in angular.json will be loaded |
-| `angularKarmaTestExplorer.defaultSocketConnectionPort` | This is the port that will be used to connect Karma with the test explorer                                                                     |
-| `angularKarmaTestExplorer.debugMode`                   | This will enable debug mode, which will create a new output channel with detailed logs                                                         |
-| `angularKarmaTestExplorer.projectRootPath`             | The working directory where the project is located (relative to the root folder)                                                               |
-| `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
-| `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
-
-if you need help with the configuration check the [official documentation for this extension](DOCUMENTATION.md), or submit a question in the issues section.
 
 ## What about bugs and fixes?
 

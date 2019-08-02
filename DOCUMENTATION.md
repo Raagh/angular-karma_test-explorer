@@ -7,6 +7,28 @@
 - Debug tests by setting breakpoints in your code and press the ![Debug](img/debug.png) icon to start debugging.
 - If a test failed click on it and you will see the fail information on vscode `Test Explorer` output channel, or gutter decorations inside the spec file.
 
+## Configuration
+
+List of currently used properties:
+
+| Property                                               | Description                                                                                                                                    |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `angularKarmaTestExplorer.defaultAngularProjectName`   | (Only for AngularCLI projects) Set the default angular project to be tested, if this is is null default project in angular.json will be loaded |
+| `angularKarmaTestExplorer.defaultSocketConnectionPort` | This is the port that will be used to connect Karma with the test explorer                                                                     |
+| `angularKarmaTestExplorer.debugMode`                   | This will enable debug mode, which will create a new output channel with detailed logs                                                         |
+| `angularKarmaTestExplorer.projectRootPath`             | The working directory where the project is located (relative to the root folder)                                                               |
+| `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
+| `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
+
+Port 9999 is used as default for connecting the vscode instance and the karma instance. If you want to use a different port you can change it by
+setting the following property:
+
+| Property                                               | Description                                                                |
+| ------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `angularKarmaTestExplorer.defaultSocketConnectionPort` | This is the port that will be used to connect Karma with the test explorer |
+
+If you have multiple instances of vscode open make sure to setup a different port for each instance.
+
 ## Advanced Configuration
 
 If you want to open a folder were the project is just one folder inside your root (for example if you open a root folder and inside you have one folder for the Angular app and another for the API).
