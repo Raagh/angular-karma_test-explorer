@@ -12,7 +12,7 @@ export class CommandlineProcessHandler {
   }
 
   public isProcessRunning(): boolean {
-    return this.angularProcess != undefined;
+    return this.angularProcess !== undefined;
   }
 
   public killAsync(): Promise<void> {

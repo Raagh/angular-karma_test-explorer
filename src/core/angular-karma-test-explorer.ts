@@ -24,9 +24,9 @@ export class AngularKarmaTestExplorer {
       await this.testServer.stopAsync();
     }
 
-    await this.testServer.start(config);
+    const loadedProjectRootPath = await this.testServer.start(config);
 
-    const testSuiteInfo = await this.karmaRunner.loadTests(config.projectRootPath);
+    const testSuiteInfo = await this.karmaRunner.loadTests(loadedProjectRootPath);
 
     if (testSuiteInfo.children.length === 0) {
       this.logger.info("Test loading completed - No tests found");

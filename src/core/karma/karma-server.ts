@@ -13,7 +13,7 @@ export class KarmaServer implements TestServer {
     private readonly processConfigurator: KarmaProcessConfigurator
   ) {}
 
-  public async start(config: TestExplorerConfiguration): Promise<void> {
+  public async start(config: TestExplorerConfiguration): Promise<string> {
     const baseKarmaConfigFilePath = require.resolve(config.baseKarmaConfFilePath);
 
     const { command, processArguments } = this.processConfigurator.createProcessCommandAndArguments(baseKarmaConfigFilePath);
@@ -26,6 +26,8 @@ export class KarmaServer implements TestServer {
     this.processHandler.create(command, processArguments, options);
 
     await this.karmaEventListener.listenTillKarmaReady(config.defaultSocketConnectionPort);
+
+    return config.projectRootPath;
   }
 
   public stop(): void {

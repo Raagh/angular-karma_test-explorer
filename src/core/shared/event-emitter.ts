@@ -1,6 +1,15 @@
 import { KarmaEvent } from "./../../model/karma-event";
 import { TestState } from "../../model/enums/test-state.enum";
-import { TestEvent, TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestDecoration } from "vscode-test-adapter-api";
+import {
+  TestEvent,
+  TestRunStartedEvent,
+  TestRunFinishedEvent,
+  TestSuiteEvent,
+  TestDecoration,
+  TestLoadStartedEvent,
+  TestLoadFinishedEvent,
+  TestSuiteInfo,
+} from "vscode-test-adapter-api";
 import { TestResultToTestStateMapper } from "../test-explorer/test-result-to-test-state.mapper";
 import * as vscode from "vscode";
 import { SpecCompleteResponse } from "../../model/spec-complete-response";
@@ -27,6 +36,13 @@ export class EventEmitter {
     }
 
     this.eventEmitterInterface.fire(testEvent);
+  }
+
+  public emitTestsLoadedEvent(loadedTests: TestSuiteInfo) {
+    const emitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
+
+    emitter.fire({ type: "started" } as TestLoadStartedEvent);
+    emitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
 
   private createErrorMessage(results: SpecCompleteResponse): string {

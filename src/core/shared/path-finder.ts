@@ -29,9 +29,7 @@ export class PathFinder {
   }
   public getTestFilePath(paths: any, describe: any, it: any) {
     const testFile = Object.keys(paths).find(path => this.exist(paths, path, describe, it));
-    if (testFile === undefined) {
-      global.console.log("Test file path not found!" + JSON.stringify(paths) + "|" + describe + "|" + it);
-    }
+
     return testFile;
   }
 

@@ -26,7 +26,7 @@ export class KarmaEventListener {
       this.karmaBeingReloaded = false;
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
+      const io = require("socket.io")(this.server, { forceNew: true });
       io.set("heartbeat interval", 24 * 60 * 60 * 1000);
       io.set("heartbeat timeout", 24 * 60 * 60 * 1000);
 
@@ -50,13 +50,11 @@ export class KarmaEventListener {
         });
 
         socket.on("disconnect", (event: any) => {
-          this.logger.info("AngularReporter closed connection with event: " + event);
           const isKarmaBeingClosedByChrome = event === ErrorCodes.TransportClose && !this.karmaBeingReloaded;
-          const isKarmaBeingClosedOnReloadingByTestExplorer = event === ErrorCodes.ForcedClose && this.karmaBeingReloaded;
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
-          if (isKarmaBeingClosedByChrome || isKarmaBeingClosedOnReloadingByTestExplorer) {
+          if (isKarmaBeingClosedByChrome) {
             commands.executeCommand("test-explorer.reload");
           }
         });

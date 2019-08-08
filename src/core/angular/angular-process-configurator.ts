@@ -31,7 +31,7 @@ export class AngularProcessConfigurator {
       cliArgs = commonArgs;
       cliCommand = "ng";
     } else if (isAngularInstalledLocally) {
-      cliArgs = ["ng", ...commonArgs];
+      cliArgs = ["@angular/cli", ...commonArgs];
       cliCommand = "npx";
     } else {
       const error = "@angular/cli is not installed, install it and restart vscode";
