@@ -6,7 +6,14 @@ import { KarmaEventListener } from "../core/integration/karma-event-listener";
 import { KarmaRunner } from "../core/karma/karma-runner";
 import { FileHelper } from "../core/integration/file-helper";
 import { KarmaHttpClient } from "../core/integration/karma-http-client";
-import { TestRunStartedEvent, TestRunFinishedEvent, TestSuiteEvent, TestEvent } from "vscode-test-adapter-api";
+import {
+  TestRunStartedEvent,
+  TestRunFinishedEvent,
+  TestSuiteEvent,
+  TestEvent,
+  TestLoadStartedEvent,
+  TestLoadFinishedEvent,
+} from "vscode-test-adapter-api";
 import { EventEmitter } from "../core/shared/event-emitter";
 import { ProjectType } from "../model/enums/project-type.enum";
 import * as vscode from "vscode";
@@ -16,13 +23,14 @@ export class IOCContainer {
   public constructor(private readonly channel: vscode.OutputChannel, private readonly isDebugMode: boolean) {}
   public registerTestExplorerDependencies(
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
+    testLoadedEmitterInterface: vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>,
     projectType: ProjectType
   ): AngularKarmaTestExplorer {
     // poor man's dependency injection
     const fileHelper = new FileHelper();
     const karmaHelper = new TestServerValidation(fileHelper);
     const logger = new Logger(this.channel, this.isDebugMode);
-    const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface));
+    const karmaEventListener = new KarmaEventListener(logger, new EventEmitter(eventEmitterInterface, testLoadedEmitterInterface));
     const karmaRunner = new KarmaRunner(karmaEventListener, logger, new KarmaHttpClient());
     const testServerFactory = new TestServerFactory(karmaEventListener, logger, fileHelper);
     const testServer = testServerFactory.createTestServer(projectType);

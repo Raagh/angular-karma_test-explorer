@@ -38,7 +38,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
   // Arrange
   testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(false);
-  angularServer.start.mockResolvedValue();
+  angularServer.start.mockResolvedValue("");
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
@@ -56,7 +56,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
   // Arrange
   testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(true);
-  angularServer.start.mockResolvedValue();
+  angularServer.start.mockResolvedValue("");
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 

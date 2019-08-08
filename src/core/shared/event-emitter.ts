@@ -16,7 +16,8 @@ import { SpecCompleteResponse } from "../../model/spec-complete-response";
 
 export class EventEmitter {
   public constructor(
-    private readonly eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>
+    private readonly eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
+    private readonly testLoadedEmitterInterface: vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>
   ) {}
 
   public emitTestStateEvent(testName: string, testState: TestState) {
@@ -39,10 +40,8 @@ export class EventEmitter {
   }
 
   public emitTestsLoadedEvent(loadedTests: TestSuiteInfo) {
-    const emitter = new vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>();
-
-    emitter.fire({ type: "started" } as TestLoadStartedEvent);
-    emitter.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
+    this.testLoadedEmitterInterface.fire({ type: "started" } as TestLoadStartedEvent);
+    this.testLoadedEmitterInterface.fire({ type: "finished", suite: loadedTests } as TestLoadFinishedEvent);
   }
 
   private createErrorMessage(results: SpecCompleteResponse): string {

@@ -64,7 +64,7 @@ export class Adapter implements TestAdapter {
     const container = new IOCContainer(channel, vscode.workspace
       .getConfiguration("angularKarmaTestExplorer", workspace.uri)
       .get("debugMode") as boolean);
-    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, projectType);
+    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, this.testsEmitter, projectType);
     this.debugger = container.registerDebuggerDependencies();
   }
 

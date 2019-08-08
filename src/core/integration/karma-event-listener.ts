@@ -18,6 +18,7 @@ export class KarmaEventListener {
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
+  // private projectRootPath: string = "";
 
   public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {}
 
@@ -43,6 +44,7 @@ export class KarmaEventListener {
           this.savedSpecs = [];
         });
         socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => {
+          // this.eventEmitter.emitTestsLoadedEvent(this.getLoadedTests(this.projectRootPath));
           this.runCompleteEvent = event;
         });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
@@ -67,6 +69,7 @@ export class KarmaEventListener {
   }
 
   public getLoadedTests(projectRootPath: string): TestSuiteInfo {
+    // this.projectRootPath = projectRootPath;
     const specToTestSuiteMapper = new SpecResponseToTestSuiteInfoMapper(projectRootPath);
     return specToTestSuiteMapper.map(this.savedSpecs);
   }
