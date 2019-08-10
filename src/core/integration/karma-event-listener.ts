@@ -85,11 +85,11 @@ export class KarmaEventListener {
 
     const testName = results.fullName;
 
-    if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
-      this.eventEmitter.emitTestStateEvent(testName, TestState.Running);
+    if (testName === this.lastRunTests[0] || this.lastRunTests === "") {
+      this.eventEmitter.emitTestStateEvent(results.id, TestState.Running);
       this.savedSpecs.push(results);
 
-      this.eventEmitter.emitTestResultEvent(testName, event);
+      this.eventEmitter.emitTestResultEvent(results.id, event);
 
       if (this.lastRunTests !== "") {
         this.testStatus = results.status;

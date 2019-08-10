@@ -104,8 +104,10 @@ export class Adapter implements TestAdapter {
 
       this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
+      const testSpecName = this.findNode(this.loadedTests, tests[0]).fullName;
+
       // in a "real" TestAdapter this would start a test run in a child process
-      await this.testExplorer.runTests(tests);
+      await this.testExplorer.runTests([testSpecName]);
 
       this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
       this.isTestProcessRunning = false;
@@ -134,5 +136,21 @@ export class Adapter implements TestAdapter {
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
     this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
+  }
+
+  private findNode(node: any, suiteLookup: string): any {
+    if (node.id === suiteLookup) {
+      return node;
+    } else {
+      if (node.children !== undefined) {
+        for (const child of node.children) {
+          const result = this.findNode(child, suiteLookup);
+          if (result != null) {
+            return result;
+          }
+        }
+      }
+    }
+    return null;
   }
 }
