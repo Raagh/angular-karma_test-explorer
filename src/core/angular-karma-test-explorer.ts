@@ -37,8 +37,8 @@ export class AngularKarmaTestExplorer {
     return testSuiteInfo;
   }
 
-  public async runTests(tests: string[]): Promise<void> {
-    await this.karmaRunner.runTests(tests);
+  public async runTests(tests: string[], isComponentRun: boolean): Promise<void> {
+    await this.karmaRunner.runTests(tests, isComponentRun);
 
     const { testStatus, runCompleteEvent } = this.karmaEventListener;
 

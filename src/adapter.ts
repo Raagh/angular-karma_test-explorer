@@ -25,7 +25,7 @@ export class Adapter implements TestAdapter {
   private readonly testExplorer: AngularKarmaTestExplorer;
   private readonly debugger: Debugger;
   private isTestProcessRunning: boolean = false;
-  private loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
+  public loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -104,10 +104,10 @@ export class Adapter implements TestAdapter {
 
       this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
-      const testSpecName = this.findNode(this.loadedTests, tests[0]).fullName;
+      const testSpec = this.findNode(this.loadedTests, tests[0], "id");
+      const isComponent = testSpec.type === "suite";
 
-      // in a "real" TestAdapter this would start a test run in a child process
-      await this.testExplorer.runTests([testSpecName]);
+      await this.testExplorer.runTests([testSpec.fullName], isComponent);
 
       this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
       this.isTestProcessRunning = false;
@@ -138,13 +138,13 @@ export class Adapter implements TestAdapter {
     this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
   }
 
-  private findNode(node: any, suiteLookup: string): any {
-    if (node.id === suiteLookup) {
+  private findNode(node: any, suiteLookup: string, propertyLookup: string): any {
+    if (node[propertyLookup] === suiteLookup) {
       return node;
     } else {
       if (node.children !== undefined) {
         for (const child of node.children) {
-          const result = this.findNode(child, suiteLookup);
+          const result = this.findNode(child, suiteLookup, propertyLookup);
           if (result != null) {
             return result;
           }

@@ -15,6 +15,7 @@ export class KarmaEventListener {
   public lastRunTests: string = "";
   public testStatus: TestResult | any;
   public runCompleteEvent: KarmaEvent | any;
+  public isComponentRun: boolean = false;
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
@@ -84,8 +85,11 @@ export class KarmaEventListener {
     const { results } = event;
 
     const testName = results.fullName;
+    const isTestNamePerfectMatch = testName === this.lastRunTests[0];
+    const isRootComponent = this.lastRunTests === "";
+    const isComponent = this.isComponentRun && testName.includes(this.lastRunTests);
 
-    if (testName === this.lastRunTests[0] || this.lastRunTests === "") {
+    if (isTestNamePerfectMatch || isRootComponent || isComponent) {
       this.eventEmitter.emitTestStateEvent(results.id, TestState.Running);
       this.savedSpecs.push(results);
 
