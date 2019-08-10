@@ -119,7 +119,7 @@
           "description": "This will enable debug mode, which will create a new output channel with detailed logs",
           "type": "boolean",
           "scope": "resource",
-          "default": true
+          "default": false
         },
         "angularKarmaTestExplorer.projectType": {
           "description": "Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI",

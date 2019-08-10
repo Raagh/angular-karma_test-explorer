@@ -60,6 +60,20 @@ export class Adapter implements TestAdapter {
       })
     );
 
+    this.disposables.push(
+      vscode.workspace.onDidSaveTextDocument(document => {
+        if (!this.config) {
+          return;
+        }
+
+        const filename = document.uri.fsPath;
+        if (filename.startsWith(workspace.uri.fsPath)) {
+          this.log.info("Sending autorun event");
+          this.autorunEmitter.fire();
+        }
+      })
+    );
+
     this.loadConfig();
     const container = new IOCContainer(channel, vscode.workspace
       .getConfiguration("angularKarmaTestExplorer", workspace.uri)

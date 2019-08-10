@@ -56,7 +56,17 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
       lineNumber = pathFinder.getSpecLine(spec.description, filePath, ENCODING);
     }
 
-    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath, lineNumber) as any;
+    const result = new SpecCompleteResponse(
+      spec.id,
+      spec.log,
+      spec.suite,
+      spec.description,
+      spec.fullName,
+      status,
+      spec.time,
+      filePath,
+      lineNumber
+    ) as any;
 
     if (result.status === TestResult.Failed) {
       result.fullResponse = spec;

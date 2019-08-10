@@ -82,12 +82,8 @@ export class KarmaEventListener {
 
   private onSpecComplete(event: KarmaEvent) {
     const { results } = event;
-    const { suite, description, status } = results;
 
-    let testName = suite + " " + description;
-    if (suite.length > 1) {
-      testName = suite.join(" ") + " " + description;
-    }
+    const testName = results.fullName;
 
     if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
       this.eventEmitter.emitTestStateEvent(testName, TestState.Running);
@@ -96,7 +92,7 @@ export class KarmaEventListener {
       this.eventEmitter.emitTestResultEvent(testName, event);
 
       if (this.lastRunTests !== "") {
-        this.testStatus = status;
+        this.testStatus = results.status;
       }
     }
   }

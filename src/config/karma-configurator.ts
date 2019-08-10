@@ -13,7 +13,7 @@ export class KarmaConfigurator {
     // remove 'logLevel' changing
     // https://github.com/karma-runner/karma/issues/614 is ready
     config.logLevel = config.LOG_INFO;
-    config.autoWatch = true;
+    config.autoWatch = false;
     config.autoWatchBatchDelay = 0;
     config.browsers = ["ChromeTestExplorer"];
     config.browserNoActivityTimeout = undefined;
