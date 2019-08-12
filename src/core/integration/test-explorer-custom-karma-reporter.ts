@@ -12,7 +12,7 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
   this.config = config;
   this.emitter = emitter;
   const defaultSocketPort = process.env.defaultSocketPort as string;
-  this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true });
+  this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true, reconnection: true });
   this.socket.heartbeatTimeout = 24 * 60 * 60 * 1000;
   this.socket.heartbeatInterval = 24 * 60 * 60 * 1000;
 

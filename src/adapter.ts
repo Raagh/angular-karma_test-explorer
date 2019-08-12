@@ -89,18 +89,22 @@ export class Adapter implements TestAdapter {
   }
 
   public async load(angularProject?: string): Promise<void> {
-    this.loadConfig();
-    this.log.info("Loading tests");
+    if (!this.isTestProcessRunning) {
+      this.isTestProcessRunning = true;
+      this.loadConfig();
+      this.log.info("Loading tests");
 
-    this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
+      this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    if (angularProject !== undefined) {
-      this.config.defaultAngularProjectName = angularProject;
+      if (angularProject !== undefined) {
+        this.config.defaultAngularProjectName = angularProject;
+      }
+
+      this.loadedTests = await this.testExplorer.loadTests(this.config);
+
+      this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
+      this.isTestProcessRunning = false;
     }
-
-    this.loadedTests = await this.testExplorer.loadTests(this.config);
-
-    this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
   }
 
   public async run(tests: string[]): Promise<void> {

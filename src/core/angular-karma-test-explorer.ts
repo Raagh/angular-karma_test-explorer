@@ -48,12 +48,7 @@ export class AngularKarmaTestExplorer {
 
   public async runTests(tests: string[], isComponentRun: boolean): Promise<void> {
     await this.karmaRunner.runTests(tests, isComponentRun);
-
-    const { testStatus, runCompleteEvent } = this.karmaEventListener;
-
-    this.logger.status(testStatus);
-
-    this.logger.info("Run completed with status: " + runCompleteEvent.results);
+    this.logger.status(this.karmaEventListener.testStatus);
   }
 
   public async stopCurrentRun(): Promise<void> {
