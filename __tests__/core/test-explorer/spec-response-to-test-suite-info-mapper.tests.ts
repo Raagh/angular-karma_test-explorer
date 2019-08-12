@@ -13,7 +13,7 @@ test("suite with one test should be mapped to a full TestSuiteInfo", () => {
       line: undefined,
     },
   ] as SpecCompleteResponse[];
-  const expectedResult = [
+  const expectedResult = ([
     {
       id: "suite1",
       label: "suite1",
@@ -31,7 +31,7 @@ test("suite with one test should be mapped to a full TestSuiteInfo", () => {
         },
       ],
     },
-  ] as TestSuiteInfo[];
+  ] as unknown) as TestSuiteInfo[];
   const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
@@ -69,7 +69,7 @@ test("suite with multiple level innersuites should be mapped to a full TestSuite
       id: "spec0",
     },
   ] as SpecCompleteResponse[];
-  const expectedResult = [
+  const expectedResult = ([
     {
       id: "suite2",
       label: "suite2",
@@ -129,7 +129,7 @@ test("suite with multiple level innersuites should be mapped to a full TestSuite
         },
       ],
     },
-  ] as TestSuiteInfo[];
+  ] as unknown) as TestSuiteInfo[];
   const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
@@ -149,7 +149,7 @@ test("suite with empty suite and complete innersuite test should be mapped to a 
       filePath: ".",
     },
   ] as SpecCompleteResponse[];
-  const expectedResult = [
+  const expectedResult = ([
     {
       id: "suite3",
       label: "suite3",
@@ -176,7 +176,7 @@ test("suite with empty suite and complete innersuite test should be mapped to a 
         },
       ],
     },
-  ] as TestSuiteInfo[];
+  ] as unknown) as TestSuiteInfo[];
   const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
@@ -196,7 +196,7 @@ test("suite with one test and undefined filePath should not crash", () => {
       filePath: undefined,
     },
   ] as SpecCompleteResponse[];
-  const expectedResult = [
+  const expectedResult = ([
     {
       id: "suite1",
       label: "suite1",
@@ -214,7 +214,7 @@ test("suite with one test and undefined filePath should not crash", () => {
         },
       ],
     },
-  ] as TestSuiteInfo[];
+  ] as unknown) as TestSuiteInfo[];
   const mapper = new SpecResponseToTestSuiteInfoMapper("");
 
   // Act
