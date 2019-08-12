@@ -5,28 +5,36 @@ import { SpecCompleteResponse } from "../../model/spec-complete-response";
 import { PathFinder } from "../shared/path-finder";
 import * as io from "socket.io-client";
 import * as karma from "karma";
-import * as path from "path";
+
+// import { ErrorCodes } from "../../model/enums/error-codes.enum";
 
 function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, config: any, logger: any, emitter: any, injector: any) {
   this.config = config;
   this.emitter = emitter;
   const defaultSocketPort = process.env.defaultSocketPort as string;
-  this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true });
+  this.socket = io("http://localhost:" + defaultSocketPort + "/", { forceNew: true, reconnection: true });
   this.socket.heartbeatTimeout = 24 * 60 * 60 * 1000;
   this.socket.heartbeatInterval = 24 * 60 * 60 * 1000;
+
+  // this.socket.on("disconnect", (event: any) => {
+  //   const isKarmaBeingClosedByChrome = event === ErrorCodes.TransportClose;
+
+  //   if (isKarmaBeingClosedByChrome) {
+  //     this.socket.connect();
+  //   }
+  // });
+
   configureTimeouts(injector);
 
   const emitEvent = (eventName: any, eventResults: any = null) => {
     this.socket.emit(eventName, { name: eventName, results: eventResults });
   };
 
-  const BASE_PATH = "src/app/";
   const FILE_PATTERN = "**/*spec.ts";
   const ENCODING = "utf-8";
-  const pattern = path.join(BASE_PATH, FILE_PATTERN);
 
   const pathFinder = new PathFinder(new FileHelper());
-  const paths = pathFinder.getTestFilesPaths(pattern, ENCODING);
+  const paths = pathFinder.getTestFilesPaths(FILE_PATTERN, ENCODING);
 
   baseReporterDecorator(this);
 
@@ -41,14 +49,24 @@ function TestExplorerCustomReporter(this: any, baseReporterDecorator: any, confi
       status = TestResult.Success;
     }
 
-    let lineNumber = undefined;
+    let lineNumber;
     const filePath = pathFinder.getTestFilePath(paths, spec.suite[0], spec.description);
 
     if (filePath) {
       lineNumber = pathFinder.getSpecLine(spec.description, filePath, ENCODING);
     }
 
-    const result = new SpecCompleteResponse(spec.log, spec.suite, spec.description, status, spec.time, filePath, lineNumber) as any;
+    const result = new SpecCompleteResponse(
+      spec.id,
+      spec.log,
+      spec.suite,
+      spec.description,
+      spec.fullName,
+      status,
+      spec.time,
+      filePath,
+      lineNumber
+    ) as any;
 
     if (result.status === TestResult.Failed) {
       result.fullResponse = spec;

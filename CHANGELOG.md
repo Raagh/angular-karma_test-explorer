@@ -1,3 +1,10 @@
+### Version 1.2.0
+
+- Autorun tests automatically.
+- Support codelenses for monorepo libraries.
+- Fix bug were local version of angular/cli was not being detected properly.
+- Cleanup logging.
+
 ### Version 1.1.0
 
 - Debug tests feature.

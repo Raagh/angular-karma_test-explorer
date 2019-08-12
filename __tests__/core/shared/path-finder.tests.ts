@@ -33,6 +33,13 @@ describe("Path finder tests", () => {
         expect(path.it[0]).toBe("d1");
       });
 
+      it("1st test file with complex path match suite 1 and description 1", () => {
+        const paths: any = pathFinder.getTestFilesPaths("path/path2/path3/**/*.spec.ts", "utf-8");
+        const path: any = paths["path/path2/path3/t1.spec.js"];
+        expect(path.describe[0]).toBe("s1");
+        expect(path.it[0]).toBe("d1");
+      });
+
       it("2sd test file match suite 2 and description 2", () => {
         const paths: any = pathFinder.getTestFilesPaths("**/*.spec.ts", "utf-8");
         const path: any = paths["path/t2.spec.js"];

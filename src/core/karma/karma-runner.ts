@@ -17,20 +17,21 @@ export class KarmaRunner {
   public async loadTests(projectRootPath: string): Promise<TestSuiteInfo> {
     const fakeTestPatternForSkippingEverything = "$#%#";
     const karmaRunParameters = this.karmaHttpCaller.createKarmaRunCallConfiguration(fakeTestPatternForSkippingEverything);
-    this.karmaEventListener.lastRunTests = "";
+    this.karmaEventListener.lastRunTests = "root";
 
     await this.karmaHttpCaller.callKarmaRunWithConfig(karmaRunParameters.config);
 
     return this.karmaEventListener.getLoadedTests(projectRootPath);
   }
 
-  public async runTests(tests: string[]): Promise<void> {
+  public async runTests(tests: string[], isComponentRun: boolean): Promise<void> {
     this.log(tests);
 
     const karmaRunParameters = this.karmaHttpCaller.createKarmaRunCallConfiguration(tests);
 
     this.karmaEventListener.isTestRunning = true;
     this.karmaEventListener.lastRunTests = karmaRunParameters.tests;
+    this.karmaEventListener.isComponentRun = isComponentRun;
     await this.karmaHttpCaller.callKarmaRunWithConfig(karmaRunParameters.config);
   }
 

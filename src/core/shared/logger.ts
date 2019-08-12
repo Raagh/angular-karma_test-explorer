@@ -28,17 +28,15 @@ export class Logger {
   }
 
   public info(msg: string, ...params: any[]) {
-    if (this.isDebuggingMode) {
-      global.console.log(this.formatMsg(msg, LogLevel.INFO));
+    global.console.log(this.formatMsg(msg, LogLevel.INFO));
 
-      if (this.outputChannel !== undefined) {
-        this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
-      }
+    if (this.outputChannel !== undefined) {
+      this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.INFO));
+    }
 
-      if (params.length > 0) {
-        if (params[0]!.addDividerForKarmaLogs) {
-          this.divideKarmaLogsContent();
-        }
+    if (params.length > 0) {
+      if (params[0]!.addDividerForKarmaLogs) {
+        this.divideKarmaLogsContent();
       }
     }
   }
@@ -72,19 +70,17 @@ export class Logger {
   }
 
   public status(status: TestResult) {
-    if (this.isDebuggingMode) {
-      let msg;
-      if (status === TestResult.Success) {
-        msg = `[SUCCESS] ✅ Passed`;
-      } else if (status === TestResult.Failed) {
-        msg = `[FAILURE] ❌ failed`;
-      } else {
-        msg = `[SKIPPED] Test Skipped`;
-      }
+    let msg;
+    if (status === TestResult.Success) {
+      msg = `[SUCCESS] ✅ Passed`;
+    } else if (status === TestResult.Failed) {
+      msg = `[FAILURE] ❌ failed`;
+    } else {
+      msg = `[SKIPPED] Test Skipped`;
+    }
 
-      if (this.outputChannel !== undefined) {
-        this.outputChannel.appendLine(msg);
-      }
+    if (this.outputChannel !== undefined) {
+      this.outputChannel.appendLine(msg);
     }
   }
 

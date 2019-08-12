@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -51,7 +51,6 @@
     "resolve-global": "^0.1.0",
     "socket.io": "2.2.0",
     "socket.io-client": "2.2.0",
-    "socket.io-json-parser": "^2.1.0",
     "tree-kill": "^1.2.1",
     "tslib": "^1.9.3",
     "vscode-test-adapter-api": "^1.6.0",
@@ -119,7 +118,7 @@
           "description": "This will enable debug mode, which will create a new output channel with detailed logs",
           "type": "boolean",
           "scope": "resource",
-          "default": true
+          "default": false
         },
         "angularKarmaTestExplorer.projectType": {
           "description": "Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI",

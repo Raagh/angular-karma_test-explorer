@@ -7,6 +7,7 @@ import { TestExplorerConfiguration } from "../model/test-explorer-configuration"
 import { TestServer } from "../model/test-server";
 
 export class AngularKarmaTestExplorer {
+  private loadedProjectRootPath: string = "";
   public constructor(
     private readonly karmaRunner: KarmaRunner,
     private readonly testServerValidation: TestServerValidation,
@@ -24,9 +25,9 @@ export class AngularKarmaTestExplorer {
       await this.testServer.stopAsync();
     }
 
-    await this.testServer.start(config);
+    this.loadedProjectRootPath = await this.testServer.start(config);
 
-    const testSuiteInfo = await this.karmaRunner.loadTests(config.projectRootPath);
+    const testSuiteInfo = await this.karmaRunner.loadTests(this.loadedProjectRootPath);
 
     if (testSuiteInfo.children.length === 0) {
       this.logger.info("Test loading completed - No tests found");
@@ -37,24 +38,23 @@ export class AngularKarmaTestExplorer {
     return testSuiteInfo;
   }
 
-  public async runTests(tests: string[]): Promise<void> {
-    await this.karmaRunner.runTests(tests);
+  public async reloadTestDefinitions(): Promise<TestSuiteInfo> {
+    await this.karmaRunner.loadTests(this.loadedProjectRootPath);
 
-    const { testStatus, runCompleteEvent } = this.karmaEventListener;
+    // We have to call it twice to force karma reload the definitions
+    // without having to enable autowatch = true;
+    return await this.karmaRunner.loadTests(this.loadedProjectRootPath);
+  }
 
-    this.logger.status(testStatus);
-
-    this.logger.info("Run completed with status: " + runCompleteEvent.results);
+  public async runTests(tests: string[], isComponentRun: boolean): Promise<void> {
+    await this.karmaRunner.runTests(tests, isComponentRun);
+    this.logger.status(this.karmaEventListener.testStatus);
   }
 
   public async stopCurrentRun(): Promise<void> {
     if (this.karmaRunner.isKarmaRunning()) {
       await this.testServer.stopAsync();
     }
-  }
-
-  public debugTests(tests: string[]): void {
-    throw new Error("Not Implemented");
   }
 
   public dispose(): void {

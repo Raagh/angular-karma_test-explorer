@@ -38,7 +38,7 @@ test("loadTests should return a valid set of tests if its the first run", async 
   // Arrange
   testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(false);
-  angularServer.start.mockResolvedValue();
+  angularServer.start.mockResolvedValue("");
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
@@ -56,7 +56,7 @@ test("loadTests should return a valid set of tests if its the reload run", async
   // Arrange
   testServerValidation.isValidProject.mockReturnValue(true);
   karmaRunner.isKarmaRunning.mockReturnValue(true);
-  angularServer.start.mockResolvedValue();
+  angularServer.start.mockResolvedValue("");
   karmaRunner.loadTests.mockResolvedValue(expectedTests.mock);
   const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
 
@@ -93,10 +93,10 @@ test("runTests should be called only once with the correct sent tests name", asy
   const fakeTests = ["fakeTests"];
 
   // Act
-  await angularKarmaTestExplorer.runTests(fakeTests);
+  await angularKarmaTestExplorer.runTests(fakeTests, true);
 
   // Assert
-  expect(karmaRunner.runTests).toBeCalledWith(fakeTests);
+  expect(karmaRunner.runTests).toBeCalledWith(fakeTests, true);
   expect(karmaRunner.runTests).toBeCalledTimes(1);
 });
 
@@ -150,17 +150,4 @@ test("dispose should not stop server if server karma server is not running", asy
 
   // Assert
   expect(angularServer.stop).toBeCalledTimes(0);
-});
-
-test("debug tests should throw not implemented exception", async () => {
-  // Arrange
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
-  const fakeTests = ["fakeTests"];
-
-  // Act - Assert
-  try {
-    await angularKarmaTestExplorer.debugTests(fakeTests);
-  } catch (e) {
-    expect(e.message).toBe("Not Implemented");
-  }
 });

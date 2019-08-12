@@ -10,6 +10,7 @@ export class SpecResponseToTestSuiteInfoMapper {
       type: "suite",
       id: "root",
       label: "root",
+      fullName: "root",
       children: [],
     } as TestSuiteInfo;
 
@@ -72,7 +73,8 @@ export class SpecResponseToTestSuiteInfoMapper {
 
   private createTest(specComplete: SpecCompleteResponse, suiteNode: TestSuiteInfo, suiteLookup: string) {
     suiteNode.children.push({
-      id: suiteLookup + " " + specComplete.description,
+      id: specComplete.id,
+      fullName: suiteLookup + " " + specComplete.description,
       label: specComplete.description,
       file: specComplete.filePath ? path.join(this.projectRootPath, specComplete.filePath as string) : undefined,
       type: "test",
@@ -83,6 +85,7 @@ export class SpecResponseToTestSuiteInfoMapper {
   private createSuite(specComplete: SpecCompleteResponse, suiteLookup: string): TestSuiteInfo {
     return {
       id: suiteLookup,
+      fullName: specComplete.suite[specComplete.suite.length - 1],
       label: specComplete.suite[specComplete.suite.length - 1],
       file: specComplete.filePath ? path.join(this.projectRootPath, specComplete.filePath as string) : undefined,
       type: "suite",

@@ -15,9 +15,11 @@ export class KarmaEventListener {
   public lastRunTests: string = "";
   public testStatus: TestResult | any;
   public runCompleteEvent: KarmaEvent | any;
+  public isComponentRun: boolean = false;
   private savedSpecs: any[] = [];
   private server: any;
   private karmaBeingReloaded: boolean = false;
+  // private projectRootPath: string = "";
 
   public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {}
 
@@ -26,7 +28,7 @@ export class KarmaEventListener {
       this.karmaBeingReloaded = false;
       const app = require("express")();
       this.server = require("http").createServer(app);
-      const io = require("socket.io")(this.server, { pingInterval: 10, pingTimeout: 240000, forceNew: true });
+      const io = require("socket.io")(this.server, { forceNew: true });
       io.set("heartbeat interval", 24 * 60 * 60 * 1000);
       io.set("heartbeat timeout", 24 * 60 * 60 * 1000);
 
@@ -43,6 +45,7 @@ export class KarmaEventListener {
           this.savedSpecs = [];
         });
         socket.on(KarmaEventName.RunComplete, (event: KarmaEvent) => {
+          // this.eventEmitter.emitTestsLoadedEvent(this.getLoadedTests(this.projectRootPath));
           this.runCompleteEvent = event;
         });
         socket.on(KarmaEventName.SpecComplete, (event: KarmaEvent) => {
@@ -50,13 +53,11 @@ export class KarmaEventListener {
         });
 
         socket.on("disconnect", (event: any) => {
-          this.logger.info("AngularReporter closed connection with event: " + event);
           const isKarmaBeingClosedByChrome = event === ErrorCodes.TransportClose && !this.karmaBeingReloaded;
-          const isKarmaBeingClosedOnReloadingByTestExplorer = event === ErrorCodes.ForcedClose && this.karmaBeingReloaded;
 
           // workaround: if the connection is closed by chrome, we just reload the test enviroment
           // TODO: fix chrome closing all socket connections.
-          if (isKarmaBeingClosedByChrome || isKarmaBeingClosedOnReloadingByTestExplorer) {
+          if (isKarmaBeingClosedByChrome) {
             commands.executeCommand("test-explorer.reload");
           }
         });
@@ -69,6 +70,7 @@ export class KarmaEventListener {
   }
 
   public getLoadedTests(projectRootPath: string): TestSuiteInfo {
+    // this.projectRootPath = projectRootPath;
     const specToTestSuiteMapper = new SpecResponseToTestSuiteInfoMapper(projectRootPath);
     return specToTestSuiteMapper.map(this.savedSpecs);
   }
@@ -81,21 +83,20 @@ export class KarmaEventListener {
 
   private onSpecComplete(event: KarmaEvent) {
     const { results } = event;
-    const { suite, description, status } = results;
 
-    let testName = suite + " " + description;
-    if (suite.length > 1) {
-      testName = suite.join(" ") + " " + description;
-    }
+    const testName = results.fullName;
+    const isTestNamePerfectMatch = testName === this.lastRunTests[0];
+    const isRootComponent = this.lastRunTests === "root";
+    const isComponent = this.isComponentRun && testName.includes(this.lastRunTests);
 
-    if (testName.includes(this.lastRunTests) || this.lastRunTests === "") {
-      this.eventEmitter.emitTestStateEvent(testName, TestState.Running);
+    if (isTestNamePerfectMatch || isRootComponent || isComponent) {
+      this.eventEmitter.emitTestStateEvent(results.id, TestState.Running);
       this.savedSpecs.push(results);
 
-      this.eventEmitter.emitTestResultEvent(testName, event);
+      this.eventEmitter.emitTestResultEvent(results.id, event);
 
       if (this.lastRunTests !== "") {
-        this.testStatus = status;
+        this.testStatus = results.status;
       }
     }
   }

@@ -29,7 +29,7 @@ export class AngularServer implements TestServer {
     }
   }
 
-  public async start(config: TestExplorerConfiguration): Promise<void> {
+  public async start(config: TestExplorerConfiguration): Promise<string> {
     const baseKarmaConfigFilePath = require.resolve(config.baseKarmaConfFilePath);
 
     const project = this.angularProjectConfigLoader.getDefaultAngularProjectConfig(config.projectRootPath, config.defaultAngularProjectName);
@@ -45,5 +45,7 @@ export class AngularServer implements TestServer {
     this.processHandler.create(cliCommand, cliArgs, options);
 
     await this.karmaEventListener.listenTillKarmaReady(config.defaultSocketConnectionPort);
+
+    return project.rootPath;
   }
 }

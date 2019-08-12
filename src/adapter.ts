@@ -25,7 +25,7 @@ export class Adapter implements TestAdapter {
   private readonly testExplorer: AngularKarmaTestExplorer;
   private readonly debugger: Debugger;
   private isTestProcessRunning: boolean = false;
-  private loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
+  public loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
@@ -60,27 +60,51 @@ export class Adapter implements TestAdapter {
       })
     );
 
+    this.disposables.push(
+      vscode.workspace.onDidSaveTextDocument(async document => {
+        if (!this.config) {
+          return;
+        }
+
+        const filename = document.uri.fsPath;
+        if (filename.startsWith(workspace.uri.fsPath)) {
+          // this.loadedTests = {} as TestSuiteInfo;
+          // this.loadedTests = await this.testExplorer.reloadTestDefinitions();
+
+          // this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
+          // this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
+
+          this.log.info("Sending autorun event");
+          this.autorunEmitter.fire();
+        }
+      })
+    );
+
     this.loadConfig();
     const container = new IOCContainer(channel, vscode.workspace
       .getConfiguration("angularKarmaTestExplorer", workspace.uri)
       .get("debugMode") as boolean);
-    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, projectType);
+    this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, this.testsEmitter, projectType);
     this.debugger = container.registerDebuggerDependencies();
   }
 
   public async load(angularProject?: string): Promise<void> {
-    this.loadConfig();
-    this.log.info("Loading tests");
+    if (!this.isTestProcessRunning) {
+      this.isTestProcessRunning = true;
+      this.loadConfig();
+      this.log.info("Loading tests");
 
-    this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
+      this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
 
-    if (angularProject !== undefined) {
-      this.config.defaultAngularProjectName = angularProject;
+      if (angularProject !== undefined) {
+        this.config.defaultAngularProjectName = angularProject;
+      }
+
+      this.loadedTests = await this.testExplorer.loadTests(this.config);
+
+      this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
+      this.isTestProcessRunning = false;
     }
-
-    this.loadedTests = await this.testExplorer.loadTests(this.config);
-
-    this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
   }
 
   public async run(tests: string[]): Promise<void> {
@@ -90,8 +114,10 @@ export class Adapter implements TestAdapter {
 
       this.testStatesEmitter.fire({ type: "started", tests } as TestRunStartedEvent);
 
-      // in a "real" TestAdapter this would start a test run in a child process
-      await this.testExplorer.runTests(tests);
+      const testSpec = this.findNode(this.loadedTests, tests[0], "id");
+      const isComponent = testSpec.type === "suite";
+
+      await this.testExplorer.runTests([testSpec.fullName], isComponent);
 
       this.testStatesEmitter.fire({ type: "finished" } as TestRunFinishedEvent);
       this.isTestProcessRunning = false;
@@ -120,5 +146,21 @@ export class Adapter implements TestAdapter {
   private loadConfig() {
     const config = vscode.workspace.getConfiguration("angularKarmaTestExplorer", this.workspace.uri);
     this.config = new TestExplorerConfiguration(config, this.workspace.uri.path);
+  }
+
+  private findNode(node: any, suiteLookup: string, propertyLookup: string): any {
+    if (node[propertyLookup] === suiteLookup) {
+      return node;
+    } else {
+      if (node.children !== undefined) {
+        for (const child of node.children) {
+          const result = this.findNode(child, suiteLookup, propertyLookup);
+          if (result != null) {
+            return result;
+          }
+        }
+      }
+    }
+    return null;
   }
 }
