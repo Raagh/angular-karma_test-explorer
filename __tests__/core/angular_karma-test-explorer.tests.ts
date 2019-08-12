@@ -151,16 +151,3 @@ test("dispose should not stop server if server karma server is not running", asy
   // Assert
   expect(angularServer.stop).toBeCalledTimes(0);
 });
-
-test("debug tests should throw not implemented exception", async () => {
-  // Arrange
-  const angularKarmaTestExplorer = new AngularKarmaTestExplorer(karmaRunner, testServerValidation, logger, angularServer, karmaEventListener);
-  const fakeTests = ["fakeTests"];
-
-  // Act - Assert
-  try {
-    await angularKarmaTestExplorer.debugTests(fakeTests);
-  } catch (e) {
-    expect(e.message).toBe("Not Implemented");
-  }
-});

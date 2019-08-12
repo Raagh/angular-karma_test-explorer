@@ -45,3 +45,5 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 - If you find a bug or think that a feature is missing and is not in the backlog please report it using the appropiate github issue template.
 - If you wanna help out please read the [contribution guidelines for this project](.github/CONTRIBUTING.md).
 - If you have any urgent question you might wanna check our [Gitter Channel](https://gitter.im/Angular-Karma-Test-Explorer/Bugs) for a direct chat with me or other people using the extension.
+
+## Do you like my work? Then consider [becoming a Patron!](https://www.patreon.com/bePatron?u=23135460)
