@@ -68,11 +68,11 @@ export class Adapter implements TestAdapter {
 
         const filename = document.uri.fsPath;
         if (filename.startsWith(workspace.uri.fsPath)) {
-          this.loadedTests = {} as TestSuiteInfo;
-          this.loadedTests = await this.testExplorer.reloadTestDefinitions();
+          // this.loadedTests = {} as TestSuiteInfo;
+          // this.loadedTests = await this.testExplorer.reloadTestDefinitions();
 
-          this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
-          this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
+          // this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
+          // this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
 
           this.log.info("Sending autorun event");
           this.autorunEmitter.fire();

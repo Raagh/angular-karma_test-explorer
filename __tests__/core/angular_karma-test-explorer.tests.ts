@@ -93,10 +93,10 @@ test("runTests should be called only once with the correct sent tests name", asy
   const fakeTests = ["fakeTests"];
 
   // Act
-  await angularKarmaTestExplorer.runTests(fakeTests);
+  await angularKarmaTestExplorer.runTests(fakeTests, true);
 
   // Assert
-  expect(karmaRunner.runTests).toBeCalledWith(fakeTests);
+  expect(karmaRunner.runTests).toBeCalledWith(fakeTests, true);
   expect(karmaRunner.runTests).toBeCalledTimes(1);
 });
 

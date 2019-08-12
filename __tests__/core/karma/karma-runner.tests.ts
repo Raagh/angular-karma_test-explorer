@@ -85,7 +85,7 @@ test("runTests should return valid tests when correct call is made to karma", as
   const karmaRunner = new KarmaRunner(karmaEventListener, new loggerMockedClass(), karmaHttpCaller);
 
   // Act
-  await karmaRunner.runTests(["fakeTest"]);
+  await karmaRunner.runTests(["fakeTest"], true);
 
   // Assert
   expect(karmaEventListener.isTestRunning).toBeTruthy();
