@@ -17,13 +17,26 @@ export class AngularProcessConfigurator {
     return options;
   }
 
-  public createProcessCommandAndArguments(projectName: string, baseKarmaConfigFilePath: string, workspaceRootPath: string) {
+  public createProcessCommandAndArguments(
+    projectName: string,
+    baseKarmaConfigFilePath: string,
+    workspaceRootPath: string,
+    angularProcessCommand: string,
+    angularProcessArguments: string[]
+  ) {
     const path = require("path");
     const resolveGlobal = require("resolve-global");
     const isAngularInstalledGlobally = resolveGlobal.silent("@angular/cli") != null;
     const isAngularInstalledLocally = this.fileHelper.doesFileExists(path.join(workspaceRootPath, "node_modules", "@angular", "cli", "bin", "ng"));
 
-    const commonArgs = ["test", projectName, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false"];
+    if (angularProcessCommand) {
+      return {
+        cliCommand: angularProcessCommand,
+        cliArgs: [projectName, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false", ...angularProcessArguments],
+      };
+    }
+
+    const commonArgs = ["test", projectName, `--karma-config="${baseKarmaConfigFilePath}"`, "--progress=false", ...angularProcessArguments];
     let cliCommand: string = "";
     let cliArgs: string[] = [];
 

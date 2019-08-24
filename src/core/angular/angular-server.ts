@@ -37,10 +37,20 @@ export class AngularServer implements TestServer {
     const { cliCommand, cliArgs } = this.angularProcessConfigurator.createProcessCommandAndArguments(
       project.name,
       baseKarmaConfigFilePath,
-      config.projectRootPath
+      config.projectRootPath,
+      config.angularProcessCommand,
+      config.angularProcessArguments
     );
 
     this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
+
+    if (config.angularProcessCommand) {
+      this.logger.info(`Using specific command: ${config.angularProcessCommand}`);
+    }
+
+    if (config.angularProcessArguments && config.angularProcessArguments.length > 0) {
+      this.logger.info(`Using specific arguments: ${config.angularProcessArguments}`);
+    }
 
     this.processHandler.create(cliCommand, cliArgs, options);
 

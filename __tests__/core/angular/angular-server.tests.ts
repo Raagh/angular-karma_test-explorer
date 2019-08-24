@@ -33,6 +33,9 @@ beforeEach(() => {
     defaultSocketConnectionPort: 2000,
     userKarmaConfFilePath: "",
     baseKarmaConfFilePath: "",
+    angularProcessArguments: [],
+    projectType: "AngularCLI",
+    angularProcessCommand: "",
   } as TestExplorerConfiguration;
 });
 

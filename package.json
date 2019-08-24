@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -125,6 +125,19 @@
           "type": "string",
           "scope": "resource",
           "default": "AngularCLI"
+        },
+        "angularKarmaTestExplorer.angularProcessCommand": {
+          "description": "Setup the specific command you want to execute to launch angular, only use it if you need to pass on some specific memory value",
+          "type": "string",
+          "scope": "resource"
+        },
+        "angularKarmaTestExplorer.angularProcessArguments": {
+          "description": "Setup the specific arguments you want to execute when launching angular, we aware that some arguments can cause this extension not to work properly",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "resource"
         }
       }
     },

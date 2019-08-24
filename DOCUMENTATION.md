@@ -19,6 +19,7 @@ List of currently used properties:
 | `angularKarmaTestExplorer.projectRootPath`             | The working directory where the project is located (relative to the root folder)                                                               |
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
+| `angularKarmaTestExplorer.angularProcessCommand`       | If you run angular with a specific configuration in your ng test command you can setup it here                                                 |
 
 Port 9999 is used as default for connecting the vscode instance and the karma instance. If you want to use a different port you can change it by
 setting the following property:
@@ -30,6 +31,13 @@ setting the following property:
 If you have multiple instances of vscode open make sure to setup a different port for each instance.
 
 ## Advanced Configuration
+
+In some cases your specific projects needs to run on higher node memory to work, people in this cases generally run this command to do `ng test => node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng test`
+is that is your case you can use the property
+
+| Property                                         | Example                                                                  |
+| ------------------------------------------------ | ------------------------------------------------------------------------ |
+| `angularKarmaTestExplorer.angularProcessCommand` | `node --max_old_space_size=4000 ./node_modules/@angular/cli/bin/ng test` |
 
 If you want to open a folder were the project is just one folder inside your root (for example if you open a root folder and inside you have one folder for the Angular app and another for the API).
 You need to let the `Test Explorer` where the Angular app is located inside that root by adding the following extra configuration independent of the type of project:

@@ -11,6 +11,8 @@ export class TestExplorerConfiguration {
     this.userKarmaConfFilePath = path.join(workspacePath, projectRootPath, karmaConfFilePath);
     this.baseKarmaConfFilePath = path.join(__dirname, "..", "config", "test-explorer-karma.conf.js");
     this.projectType = config.get("projectType") as string;
+    this.angularProcessCommand = config.get("angularProcessCommand") as string;
+    this.angularProcessArguments = config.get("angularProcessArguments") as string[];
   }
 
   public defaultAngularProjectName: string;
@@ -19,4 +21,6 @@ export class TestExplorerConfiguration {
   public userKarmaConfFilePath: string;
   public baseKarmaConfFilePath: string;
   public projectType: string;
+  public angularProcessCommand: string;
+  public angularProcessArguments: string[];
 }

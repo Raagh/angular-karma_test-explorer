@@ -1,3 +1,8 @@
+### Version 1.2.1
+
+- Let the user setup an specific ng test command for high memory consuming scenarios.
+- Let the user specify the arguments for the ng test command.
+
 ### Version 1.2.0
 
 - Autorun tests automatically.

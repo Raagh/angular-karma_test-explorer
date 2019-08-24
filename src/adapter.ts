@@ -51,7 +51,9 @@ export class Adapter implements TestAdapter {
           configChange.affectsConfiguration("angularKarmaTestExplorer.defaultSocketConnectionPort", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.projectRootPath", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.projectType", this.workspace.uri)
+          configChange.affectsConfiguration("angularKarmaTestExplorer.projectType", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProcessCommand", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProcessArguments", this.workspace.uri)
         ) {
           this.log.info("Sending reload event");
 
@@ -68,11 +70,14 @@ export class Adapter implements TestAdapter {
 
         const filename = document.uri.fsPath;
         if (filename.startsWith(workspace.uri.fsPath)) {
+          // this.isTestProcessRunning = true;
           // this.loadedTests = {} as TestSuiteInfo;
           // this.loadedTests = await this.testExplorer.reloadTestDefinitions();
 
           // this.testsEmitter.fire({ type: "started" } as TestLoadStartedEvent);
           // this.testsEmitter.fire({ type: "finished", suite: this.loadedTests } as TestLoadFinishedEvent);
+
+          // this.isTestProcessRunning = false;
 
           this.log.info("Sending autorun event");
           this.autorunEmitter.fire();
