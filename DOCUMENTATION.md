@@ -74,4 +74,4 @@ and starts again, this involves resources and time but ATM there is no other way
 
 ### "DEBUG TESTS" FEATURE
 
-Unfortunately because of limitations inside KarmaTestRunner the debugging session cannot be stopped automatically without restarting the entire karma test enviroment, since this is a very slow process it was decided that the user has to stop the debugging session in VSCODE manually before continuing running tests.If this is not done all consequent runs will be debugged .
+Unfortunately because of limitations inside KarmaTestRunner the debugging session cannot be stopped automatically without restarting the entire karma test enviroment, since this is a very slow process it was decided that the user has to stop the debugging session in VSCODE manually before continuing running tests. If this is not done all consequent runs will be debugged .
