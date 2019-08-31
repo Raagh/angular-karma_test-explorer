@@ -132,7 +132,7 @@
           "scope": "resource"
         },
         "angularKarmaTestExplorer.angularProcessArguments": {
-          "description": "Setup the specific arguments you want to execute when launching angular, we aware that some arguments can cause this extension not to work properly",
+          "description": "Setup the specific arguments you want to execute when launching angular, be aware that some arguments can cause this extension not to work properly",
           "type": "array",
           "items": {
             "type": "string"
