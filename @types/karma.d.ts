@@ -1,6 +1,6 @@
 import * as karma from "karma";
 declare module "karma" {
-  interface Config extends karma.ConfigOptions { }
+  interface Config extends karma.ConfigOptions {}
   interface ConfigOptions {
     detached?: boolean;
     configFile?: string;
