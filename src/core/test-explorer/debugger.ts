@@ -35,6 +35,13 @@ export class Debugger {
       port: 9222,
       sourceMaps: true,
       webRoot: "${workspaceRoot}",
+      sourceMapPathOverrides: {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*",
+        "/*": "*",
+        "/./~/*": "${webRoot}/node_modules/*",
+      },
     });
     // workaround for Microsoft/vscode#70125
     await new Promise(resolve => setImmediate(resolve));

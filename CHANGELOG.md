@@ -1,3 +1,8 @@
+### Version 1.2.2
+
+- Make breakpoints working when debugging tests
+- Update all packages to latest versions in package.json
+
 ### Version 1.2.1
 
 - Let the user setup an specific ng test command for high memory consuming scenarios.
