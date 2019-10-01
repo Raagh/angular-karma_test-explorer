@@ -61,7 +61,7 @@ export class AngularProjectConfigLoader {
     const projects: AngularProject[] = [];
     for (const projectName of Object.keys(angularJsonObject.projects)) {
       const projectConfig = angularJsonObject.projects[projectName];
-      if (projectConfig.architect.test === undefined) {
+      if (projectConfig.architect.test === undefined || projectConfig.architect.test.options.karmaConfig  === undefined) {
         continue;
       }
 
