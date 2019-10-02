@@ -1,3 +1,7 @@
+### Version 1.2.3
+
+- Fixes crash when karmaConfig doesn't exist for some projects in angular.json
+
 ### Version 1.2.2
 
 - Make breakpoints working when debugging tests
