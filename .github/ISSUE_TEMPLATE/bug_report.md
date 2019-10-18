@@ -7,6 +7,10 @@ assignees: Raagh
 
 ---
 
+**Before submitting the bug report**
+- Make sure you enable DebugMode in vscode preferences and check the output channel Test Explorer Logs.
+- Make sure your project runs and 'ng test' properly runs all tests.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
