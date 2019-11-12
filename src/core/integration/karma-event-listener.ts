@@ -99,7 +99,7 @@ export class KarmaEventListener {
   }
 
   private onBrowserConnected(resolve: (value?: void | PromiseLike<void>) => void) {
-    resolve();
     this.isServerLoaded = true;
+    resolve();
   }
 }

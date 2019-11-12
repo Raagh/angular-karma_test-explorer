@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -47,6 +47,7 @@
     "karma": "~4.3.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^2.0.1",
+    "node": "^13.1.0",
     "request-promise": "^4.2.4",
     "resolve-global": "^1.0.0",
     "socket.io": "2.2.0",
@@ -82,7 +83,8 @@
     "vscode": "^1.23.0"
   },
   "extensionDependencies": [
-    "hbenl.vscode-test-explorer"
+    "hbenl.vscode-test-explorer",
+    "msjsdiag.debugger-for-chrome"
   ],
   "activationEvents": [
     "*"

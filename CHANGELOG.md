@@ -1,3 +1,8 @@
+### Version 1.2.4
+
+- Fixed angular project path on all possible drive letters
+- Made the "Debugger For Chrome" extension mandatory to avoid confusion
+
 ### Version 1.2.3
 
 - Fixes crash when karmaConfig doesn't exist for some projects in angular.json
