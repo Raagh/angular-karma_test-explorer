@@ -2,7 +2,7 @@ import path = require("path");
 
 export class TestExplorerConfiguration {
   public constructor(config: any, workspaceVSCODEPath: string) {
-    const workspacePath = workspaceVSCODEPath.replace(/^\/([a-z]):\//, "$1:/");
+    const workspacePath = workspaceVSCODEPath.replace(/^\/([A-Za-z]):\//, "$1:/");
     const projectRootPath = config.get("projectRootPath") as string;
     const karmaConfFilePath = config.get("karmaConfFilePath") as string;
     this.defaultAngularProjectName = config.get("defaultAngularProjectName") as string;
