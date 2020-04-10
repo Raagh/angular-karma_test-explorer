@@ -12,14 +12,14 @@ export class TestServerValidation {
     const angularJsonPath = path.join(projectRootPath, "angular.json");
     const angularCliJsonPath = path.join(projectRootPath, ".angular-cli.json");
 
-    return projectType == "AngularCLI" && (this.fileHelper.doesFileExists(angularJsonPath) || this.fileHelper.doesFileExists(angularCliJsonPath));
+    return projectType === "AngularCLI" && (this.fileHelper.doesFileExists(angularJsonPath) || this.fileHelper.doesFileExists(angularCliJsonPath));
   }
 
   private isAngularProject(projectType: string) {
-    return projectType == "Angular";
+    return projectType === "Angular";
   }
 
   private isKarmaProject(projectType: string) {
-    return projectType == "Karma";
+    return projectType === "Karma";
   }
 }
