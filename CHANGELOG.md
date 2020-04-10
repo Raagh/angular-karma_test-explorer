@@ -1,3 +1,8 @@
+### Version 1.2.5
+
+- Update npm dependencies
+- Add functionality to make Debugger from chrome configuration editable
+
 ### Version 1.2.4
 
 - Fixed angular project path on all possible drive letters

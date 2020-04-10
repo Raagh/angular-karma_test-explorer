@@ -13,6 +13,7 @@ export class TestExplorerConfiguration {
     this.projectType = config.get("projectType") as string;
     this.angularProcessCommand = config.get("angularProcessCommand") as string;
     this.angularProcessArguments = config.get("angularProcessArguments") as string[];
+    this.debuggerConfiguration = JSON.parse(JSON.stringify(config.get("debuggerConfiguration")));
   }
 
   public defaultAngularProjectName: string;
@@ -23,4 +24,5 @@ export class TestExplorerConfiguration {
   public projectType: string;
   public angularProcessCommand: string;
   public angularProcessArguments: string[];
+  public debuggerConfiguration: any;
 }

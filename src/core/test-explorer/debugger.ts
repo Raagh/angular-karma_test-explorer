@@ -4,20 +4,20 @@ import * as vscode from "vscode";
 export class Debugger {
   public constructor(private readonly logger: Logger) {}
 
-  public async manageVSCodeDebuggingSession(workspace: any): Promise<void> {
+  public async manageVSCodeDebuggingSession(workspace: any, debuggerConfiguration: any): Promise<void> {
     if (vscode.debug.activeDebugSession) {
       return;
     }
 
     let currentSession: vscode.DebugSession | undefined;
 
-    currentSession = await this.startDebuggingSession(workspace, currentSession);
+    currentSession = await this.startDebuggingSession(workspace, currentSession, debuggerConfiguration);
     if (!currentSession) {
       this.logger.error("No active debug session - aborting");
       return;
     }
 
-    const subscription = vscode.debug.onDidTerminateDebugSession(session => {
+    const subscription = vscode.debug.onDidTerminateDebugSession((session) => {
       if (currentSession !== session) {
         return;
       }
@@ -26,25 +26,11 @@ export class Debugger {
     });
   }
 
-  private async startDebuggingSession(workspace: any, currentSession: vscode.DebugSession | undefined) {
+  private async startDebuggingSession(workspace: any, currentSession: vscode.DebugSession | undefined, debuggerConfiguration: any) {
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(workspace.uri);
-    await vscode.debug.startDebugging(workspaceFolder, {
-      name: "Debug tests",
-      type: "chrome",
-      request: "attach",
-      port: 9222,
-      sourceMaps: true,
-      webRoot: "${workspaceRoot}",
-      sourceMapPathOverrides: {
-        "webpack:/*": "${webRoot}/*",
-        "/./*": "${webRoot}/*",
-        "/src/*": "${webRoot}/*",
-        "/*": "*",
-        "/./~/*": "${webRoot}/node_modules/*",
-      },
-    });
+    await vscode.debug.startDebugging(workspaceFolder, debuggerConfiguration);
     // workaround for Microsoft/vscode#70125
-    await new Promise(resolve => setImmediate(resolve));
+    await new Promise((resolve) => setImmediate(resolve));
     currentSession = vscode.debug.activeDebugSession;
     return currentSession;
   }

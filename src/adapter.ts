@@ -43,7 +43,7 @@ export class Adapter implements TestAdapter {
     this.disposables.push(this.testStatesEmitter);
     this.disposables.push(this.autorunEmitter);
     this.disposables.push(
-      vscode.workspace.onDidChangeConfiguration(async configChange => {
+      vscode.workspace.onDidChangeConfiguration(async (configChange) => {
         this.log.info("Configuration changed");
 
         if (
@@ -53,7 +53,8 @@ export class Adapter implements TestAdapter {
           configChange.affectsConfiguration("angularKarmaTestExplorer.karmaConfFilePath", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.projectType", this.workspace.uri) ||
           configChange.affectsConfiguration("angularKarmaTestExplorer.angularProcessCommand", this.workspace.uri) ||
-          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProcessArguments", this.workspace.uri)
+          configChange.affectsConfiguration("angularKarmaTestExplorer.angularProcessArguments", this.workspace.uri) ||
+          configChange.affectsConfiguration("angularKarmaTestExplorer.debuggerConfiguration", this.workspace.uri)
         ) {
           this.log.info("Sending reload event");
 
@@ -63,7 +64,7 @@ export class Adapter implements TestAdapter {
     );
 
     this.disposables.push(
-      vscode.workspace.onDidSaveTextDocument(async document => {
+      vscode.workspace.onDidSaveTextDocument(async (document) => {
         if (!this.config) {
           return;
         }
@@ -86,9 +87,10 @@ export class Adapter implements TestAdapter {
     );
 
     this.loadConfig();
-    const container = new IOCContainer(channel, vscode.workspace
-      .getConfiguration("angularKarmaTestExplorer", workspace.uri)
-      .get("debugMode") as boolean);
+    const container = new IOCContainer(
+      channel,
+      vscode.workspace.getConfiguration("angularKarmaTestExplorer", workspace.uri).get("debugMode") as boolean
+    );
     this.testExplorer = container.registerTestExplorerDependencies(this.testStatesEmitter, this.testsEmitter, projectType);
     this.debugger = container.registerDebuggerDependencies();
   }
@@ -130,7 +132,7 @@ export class Adapter implements TestAdapter {
   }
 
   public async debug(tests: string[]): Promise<void> {
-    await this.debugger.manageVSCodeDebuggingSession(this.workspace);
+    await this.debugger.manageVSCodeDebuggingSession(this.workspace, this.config.debuggerConfiguration);
     await this.run(tests);
   }
 
