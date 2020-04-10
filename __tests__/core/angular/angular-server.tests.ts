@@ -36,6 +36,7 @@ beforeEach(() => {
     angularProcessArguments: [],
     projectType: "AngularCLI",
     angularProcessCommand: "",
+    debuggerConfiguration: "",
   } as TestExplorerConfiguration;
 });
 
