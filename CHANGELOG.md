@@ -1,3 +1,7 @@
+### [Unreleased]
+
+- Remove Debugger for Chrome dependency
+
 ### Version 1.2.5
 
 - Update npm dependencies
