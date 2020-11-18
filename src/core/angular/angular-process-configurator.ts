@@ -3,7 +3,7 @@ import { FileHelper } from "../integration/file-helper";
 import { window } from "vscode";
 
 export class AngularProcessConfigurator {
-  public constructor(private readonly fileHelper: FileHelper) {}
+  public constructor(private readonly fileHelper: FileHelper) { }
 
   public createProcessOptions(projectRootPath: string, userKarmaConfigPath: string, defaultSocketPort: number) {
     const testExplorerEnvironment = Object.create(process.env);
@@ -44,7 +44,7 @@ export class AngularProcessConfigurator {
       cliArgs = commonArgs;
       cliCommand = "ng";
     } else if (isAngularInstalledLocally) {
-      cliArgs = ["@angular/cli", ...commonArgs];
+      cliArgs = ["-p", "@angular/cli", ...commonArgs];
       cliCommand = "npx";
     } else {
       const error = "@angular/cli is not installed, install it and restart vscode";
