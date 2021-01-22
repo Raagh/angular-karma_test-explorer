@@ -25,7 +25,7 @@ export class Adapter implements TestAdapter {
   private readonly testExplorer: AngularKarmaTestExplorer;
   private readonly debugger: Debugger;
   private isTestProcessRunning: boolean = false;
-  public loadedTests: TestSuiteInfo = {} as TestSuiteInfo;
+  public loadedTests: TestSuiteInfo | undefined;
 
   get tests(): vscode.Event<TestLoadStartedEvent | TestLoadFinishedEvent> {
     return this.testsEmitter.event;
