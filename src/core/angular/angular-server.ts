@@ -13,7 +13,7 @@ export class AngularServer implements TestServer {
     private readonly processHandler: CommandlineProcessHandler,
     private readonly angularProjectConfigLoader: AngularProjectConfigLoader,
     private readonly angularProcessConfigurator: AngularProcessConfigurator
-  ) {}
+  ) { }
 
   public async stopAsync(): Promise<void> {
     if (this.karmaEventListener.isServerLoaded || this.processHandler.isProcessRunning()) {
@@ -42,7 +42,7 @@ export class AngularServer implements TestServer {
       config.angularProcessArguments
     );
 
-    this.logger.info(`Starting Angular test enviroment for project: ${project.name}`);
+    this.logger.info(`Starting Angular test environment for project: ${project.name}`);
 
     if (config.angularProcessCommand) {
       this.logger.info(`Using specific command: ${config.angularProcessCommand}`);
@@ -51,7 +51,7 @@ export class AngularServer implements TestServer {
     if (config.angularProcessArguments && config.angularProcessArguments.length > 0) {
       this.logger.info(`Using specific arguments: ${config.angularProcessArguments}`);
     }
-
+  
     this.processHandler.create(cliCommand, cliArgs, options);
 
     await this.karmaEventListener.listenTillKarmaReady(config.defaultSocketConnectionPort);

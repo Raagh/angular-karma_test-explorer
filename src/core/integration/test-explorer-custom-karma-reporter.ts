@@ -121,8 +121,13 @@ function configureTimeouts(injector: any) {
       // Default values are not enough for suspended execution:
       //    'heartbeat timeout' (pingTimeout) = 60000 ms
       //    'heartbeat interval' (pingInterval) = 25000 ms
-      socketServer.set("heartbeat timeout", 24 * 60 * 60 * 1000);
-      socketServer.set("heartbeat interval", 24 * 60 * 60 * 1000);
+      try {
+        socketServer.set("heartbeat timeout", 24 * 60 * 60 * 1000);
+        socketServer.set("heartbeat interval", 24 * 60 * 60 * 1000);
+      } catch {
+        // TODO: look at karma upgrade issue?
+        console.error('Karma 6 support not yet ready!');
+      }
     }
   });
 }
