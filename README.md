@@ -1,8 +1,7 @@
 # Angular/Karma Test Explorer for Visual Studio Code
 
 The `Angular/Karma Test Explorer` extension allows you to run or debug your Angular or Karma tests with the
-[Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) and
-the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extensions on Visual Studio Code.
+[Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension on Visual Studio Code.
 
 ![Example run tests](img/img-running-tests-readme.png)
 

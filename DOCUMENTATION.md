@@ -21,14 +21,14 @@ List of currently used properties:
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
 | `angularKarmaTestExplorer.angularProcessCommand`       | If you run angular with a specific configuration in your ng test command you can setup it here                                                 |
-| `angularKarmaTestExplorer.debuggerConfiguration`       | If the current Debugger For Chrome configuration doesn't work for you, here you can enter your own                                             |
+| `angularKarmaTestExplorer.debuggerConfiguration`       | If the current debugger for Chrome configuration doesn't work for you, here you can enter your own                                             |
 
-Default VSCode Chrome Debugger configuration:
+Default VSCode Chrome debugger configuration:
 
 ```json
 {
   "name": "Debug tests",
-  "type": "chrome",
+  "type": "pwa-chrome",
   "request": "attach",
   "port": 9222,
   "sourceMaps": true,
@@ -43,7 +43,7 @@ Default VSCode Chrome Debugger configuration:
 }
 ```
 
-No validation is done to the debugger configuration, is your responsibility to setup something that works.
+No validation is done to the debugger configuration, is your responsibility to setup something that works. You can find documentation for VSCode's JavaScript debugger options [here](https://github.com/microsoft/vscode-js-debug/blob/master/OPTIONS.md).
 
 Port 9999 is used as default for connecting the vscode instance and the karma instance. If you want to use a different port you can change it by
 setting the following property:

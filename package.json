@@ -5,7 +5,7 @@
   "icon": "img/test-explorer_icon.png",
   "author": "Patricio Ferraggi <pattferraggi@gmail.com>",
   "publisher": "raagh",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -83,8 +83,7 @@
     "vscode": "^1.23.0"
   },
   "extensionDependencies": [
-    "hbenl.vscode-test-explorer",
-    "msjsdiag.debugger-for-chrome"
+    "hbenl.vscode-test-explorer"
   ],
   "activationEvents": [
     "*"
@@ -147,7 +146,7 @@
           "scope": "resource",
           "default": {
             "name": "Debug tests",
-            "type": "chrome",
+            "type": "pwa-chrome",
             "request": "attach",
             "port": 9222,
             "sourceMaps": true,
