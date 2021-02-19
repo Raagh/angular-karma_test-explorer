@@ -83,8 +83,7 @@
     "vscode": "^1.23.0"
   },
   "extensionDependencies": [
-    "hbenl.vscode-test-explorer",
-    "msjsdiag.debugger-for-chrome"
+    "hbenl.vscode-test-explorer"
   ],
   "activationEvents": [
     "*"
@@ -147,7 +146,7 @@
           "scope": "resource",
           "default": {
             "name": "Debug tests",
-            "type": "chrome",
+            "type": "pwa-chrome",
             "request": "attach",
             "port": 9222,
             "sourceMaps": true,
