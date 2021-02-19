@@ -14,6 +14,16 @@ export class CommandlineProcessHandler {
 
   public create(command: string, processArguments: string[], options: SpawnOptions): void {
 
+    let sConfigPath: string = '';
+    if (options.env) {
+      if (options.env.userKarmaConfigPath) {
+        sConfigPath = `, env.userKarmaConfigPath: ${options.env.userKarmaConfigPath}`;
+      }
+    }
+
+    this.logger.info(`Running command: "${command} ${processArguments.join(' ')}"
+    with options: {cwd: ${options.cwd}${sConfigPath}}`);
+
     this.angularProcess = spawn(command, processArguments, options);
     this.setupProcessOutputs();
 
