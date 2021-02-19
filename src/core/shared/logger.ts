@@ -42,21 +42,17 @@ export class Logger {
   }
 
   public warn(msg: string, ...params: any[]) {
-    if (this.isDebuggingMode) {
-      global.console.log(this.formatMsg(msg, LogLevel.WARN));
+    global.console.log(this.formatMsg(msg, LogLevel.WARN));
       if (this.outputChannel !== undefined) {
         this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.WARN));
       }
-    }
   }
 
   public error(msg: string, ...params: any[]) {
-    if (this.isDebuggingMode) {
-      global.console.log(this.formatMsg(msg, LogLevel.ERROR));
+    global.console.log(this.formatMsg(msg, LogLevel.ERROR));
       if (this.outputChannel !== undefined) {
         this.outputChannel.appendLine(this.formatMsg(msg, LogLevel.ERROR));
       }
-    }
   }
 
   public karmaLogs(msg: string) {

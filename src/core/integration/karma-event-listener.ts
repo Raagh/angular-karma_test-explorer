@@ -73,7 +73,7 @@ export class KarmaEventListener {
       });
 
       setTimeout(() => {
-        this.logger.info('ERROR: Timeout waiting to connect to Karma');
+        this.logger.error('Timeout waiting to connect to Karma');
         clearInterval(nInterval);
         reject('Timeout waiting to connect to Karma');
       }, 300000);
