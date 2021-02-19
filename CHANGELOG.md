@@ -1,4 +1,8 @@
-### [Unreleased]
+### Version 1.2.7
+
+- Adding visibility to hangups around launching Karma
+
+### Version 1.2.6 [Unreleased]
 
 - Remove Debugger for Chrome dependency
 
