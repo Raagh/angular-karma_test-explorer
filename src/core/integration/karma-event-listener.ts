@@ -23,7 +23,9 @@ export class KarmaEventListener {
   public constructor(private readonly logger: Logger, private readonly eventEmitter: EventEmitter) {}
 
   public listenTillKarmaReady(defaultSocketPort?: number): Promise<void> {
-    return new Promise<void>(resolve => {
+
+    return new Promise<void>((resolve, reject) => {
+
       this.karmaBeingReloaded = false;
       const app = require("express")();
       this.server = require("http").createServer(app);
@@ -33,8 +35,13 @@ export class KarmaEventListener {
 
       const port = defaultSocketPort !== 0 ? defaultSocketPort : 9999;
 
+      const nInterval = setInterval(() => {
+        this.logger.info('Waiting to connect to Karma...');
+      }, 5000);
+
       io.on("connection", (socket: any) => {
         socket.on(KarmaEventName.BrowserConnected, () => {
+          clearInterval(nInterval);
           this.onBrowserConnected(resolve);
         });
         socket.on(KarmaEventName.BrowserError, (event: KarmaEvent) => {
@@ -64,6 +71,13 @@ export class KarmaEventListener {
       this.server.listen(port, () => {
         this.logger.info("Listening to AngularReporter events on port " + port);
       });
+
+      setTimeout(() => {
+        this.logger.info('ERROR: Timeout waiting to connect to Karma');
+        clearInterval(nInterval);
+        reject('Timeout waiting to connect to Karma');
+      }, 300000);
+
     });
   }
 

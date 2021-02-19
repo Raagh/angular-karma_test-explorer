@@ -20,12 +20,15 @@ import * as vscode from "vscode";
 import { Debugger } from "../core/test-explorer/debugger";
 
 export class IOCContainer {
+
   public constructor(private readonly channel: vscode.OutputChannel, private readonly isDebugMode: boolean) {}
+  
   public registerTestExplorerDependencies(
     eventEmitterInterface: vscode.EventEmitter<TestRunStartedEvent | TestRunFinishedEvent | TestSuiteEvent | TestEvent>,
     testLoadedEmitterInterface: vscode.EventEmitter<TestLoadStartedEvent | TestLoadFinishedEvent>,
     projectType: ProjectType
   ): AngularKarmaTestExplorer {
+
     // poor man's dependency injection
     const fileHelper = new FileHelper();
     const karmaHelper = new TestServerValidation(fileHelper);

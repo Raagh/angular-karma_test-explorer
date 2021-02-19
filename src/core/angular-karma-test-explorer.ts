@@ -16,9 +16,9 @@ export class AngularKarmaTestExplorer {
     private readonly karmaEventListener: KarmaEventListener
   ) {}
 
-  public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo> {
+  public async loadTests(config: TestExplorerConfiguration): Promise<TestSuiteInfo | undefined> {
     if (!this.testServerValidation.isValidProject(config.projectRootPath, config.projectType)) {
-      return {} as TestSuiteInfo;
+      return undefined;
     }
 
     if (this.karmaRunner.isKarmaRunning()) {

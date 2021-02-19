@@ -6,6 +6,7 @@
 - Run your tests using the ![Run](img/run.png) icon.
 - Debug tests by setting breakpoints in your code and press the ![Debug](img/debug.png) icon to start debugging.
 - If a test failed click on it and you will see the fail information on vscode `Test Explorer` output channel, or gutter decorations inside the spec file.
+- NOTE: for Angular CLI projects, this will only run the 'test' architect target. 
 
 ## Configuration
 
