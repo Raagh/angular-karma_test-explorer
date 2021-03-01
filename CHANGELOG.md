@@ -1,5 +1,6 @@
 ### Version 1.2.8
 
+- Command used to run karma is now explictly shown in the log window to aid in troubleshooting
 - Catching and displaying additional errors related to the child process used to launch karma
 - Fixing issue where errors and warnings were not being shown if not in debug mode
 - Reporting error where having karma v6 installed caused the karma process to silently die. No official karma 6 support yet, just improved error handling.
