@@ -20,7 +20,7 @@ List of currently used properties:
 | `angularKarmaTestExplorer.projectRootPath`             | The working directory where the project is located (relative to the root folder)                                                               |
 | `angularKarmaTestExplorer.karmaConfFilePath`           | The path where the karma.conf.js is located (relative to the angular project folder)                                                           |
 | `angularKarmaTestExplorer.projectType`                 | Setup the type of project you re using('AngularCLI', 'Angular' or 'Karma'). Default value is AngularCLI                                        |
-| `angularKarmaTestExplorer.angularProcessCommand`       | If you run angular with a specific configuration in your ng test command you can setup it here                                                 |
+| `angularKarmaTestExplorer.angularProcessCommand`       | If you want to run a specific configuration in your ng test command you can setup it here. If no value is provided, defaults to `ng test`. Example: `nx test-karma`                                                 |
 | `angularKarmaTestExplorer.debuggerConfiguration`       | If the current debugger for Chrome configuration doesn't work for you, here you can enter your own                                             |
 
 Default VSCode Chrome debugger configuration:
