@@ -44,7 +44,8 @@ test("start should effectively start a new angular process", async () => {
   // Arrange
   angularProjectConfigLoader.getDefaultAngularProjectConfig.mockReturnValue(new AngularProject("test-project", "", "", true));
   fileHelper.doesFileExists.mockReturnValue(true);
-  processHandler.create.mockReturnValue({ stdout: { on() {} }, stderr: { on() {} }, on() {} });
+  processHandler.create.mockReturnValue();
+  
   const angularServer = new AngularServer(
     karmaEventListener,
     new loggerMockedClass(),
