@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
-assignees: Raagh
+assignees: s4m0r4m4
 
 ---
 
