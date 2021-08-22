@@ -10,7 +10,7 @@ export class PathFinder {
 
   public getTestFilesPaths(pattern: string, encoding: string) {
     const paths = {};
-    const results = glob.sync(pattern);
+    const results = glob.sync(pattern, { nodir: true });
     results.map((path: any, index: any, array: any) => {
       this.parseTestFile(paths, path, this.getTestFileData(path, encoding));
     });
