@@ -76,8 +76,8 @@
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3",
-    "vsce": "^1.66.0",
-    "vscode": "^1.1.36"
+    "vsce": "^1.96.1",
+    "vscode": "^1.1.37"
   },
   "engines": {
     "vscode": "^1.23.0"
