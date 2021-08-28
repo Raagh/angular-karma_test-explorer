@@ -101,7 +101,7 @@ test("should emit correctly a test result event with test decorations", () => {
       test: testName,
       state: TestState.Passed,
       message: "Expected 'test-project' to equal 'test-projectsdsdsd'. (line:22 column:23)",
-      decorations: [{ line: 22, message: "Expected 'test-project' to equal 'test-projectsdsdsd'." }],
+      decorations: [{ line: 21, message: "Expected 'test-project' to equal 'test-projectsdsdsd'." }],
     } as TestEvent)
   );
 });
