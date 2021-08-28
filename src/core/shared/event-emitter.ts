@@ -77,12 +77,12 @@ export class EventEmitter {
         const errorLineAndColumnCollection = failureMessage.substring(failureMessage.indexOf(results.filePath as string)).split(":");
         const lineNumber = parseInt(errorLineAndColumnCollection[1], undefined);
         return {
-          line: lineNumber,
+          line: lineNumber - 1,
           message: failureMessage.split("\n")[0],
         };
       });
 
-      if (decorations.some(x => isNaN(x.line))) {
+      if (decorations.some((x) => isNaN(x.line))) {
         return undefined;
       }
 
