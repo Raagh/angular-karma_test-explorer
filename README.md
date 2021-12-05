@@ -7,6 +7,9 @@ The `Angular/Karma Test Explorer` extension allows you to run or debug your Angu
 
 [![Build Status](https://dev.azure.com/raagh/angular-karma-test-explorer/_apis/build/status/angular-karma-test-explorer-CI?branchName=master)](https://dev.azure.com/raagh/angular-karma-test-explorer/_build/latest?definitionId=2?branchName=master)
 
+
+## THIS EXTENSION IS NO LONGER BEING UPDATED, PLEASE CONSIDER USING [THIS](https://marketplace.visualstudio.com/items?itemName=lucono.karma-test-explorer)
+
 ## Features
 
 - See all angular tests in the side bar without running them.
